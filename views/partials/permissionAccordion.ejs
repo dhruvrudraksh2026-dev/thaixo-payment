@@ -1,0 +1,37 @@
+<div class="accordion-item">
+    <h2 class="accordion-header" id="<%= id %>Heading">
+        <button class="accordion-button collapsed gap-2 accordion-light-primary" type="button" data-bs-toggle="collapse"
+            data-bs-target="#<%= id %>" aria-expanded="false" aria-controls="<%= id %>Collapse">
+            <%= label %>
+        </button>
+    </h2>
+    <div class="accordion-collapse collapse" id="<%= id %>" aria-labelledby="<%= id %>Heading">
+        <div class="accordion-body">
+            <div class="rtl-input">
+                <div class="form-check-size row pb-3">
+                    <div class="d-flex justify-content-start w-100">
+                        <div class="form-check">
+                            <input class="form-check-input me-2 checkAll" id="<%= id %>CheckAll" type="checkbox"
+                                data-id="<%= id %>">
+                            <label class="form-check-label" for="<%= id %>CheckAll">Select All</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-check-size row">
+                    <% permissions.forEach((permission , index)=> { %>
+                        <div class="col-lg-2 col-md-3 col-sm-6 col-12">
+                            <div class="form-check">
+                                <input class="form-check-input me-2 permissions <%= id %>permissions"
+                                    id="<%= id %><%= permission %>" data-id="<%= id %>"
+                                    name="permissions[<%= id %>][<%= permission %>]" type="checkbox">
+                                <label class="form-check-label" for="<%= id %><%= permission %>">
+                                    <%= permission %>
+                                </label>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

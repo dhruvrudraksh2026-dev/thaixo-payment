@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Multipurpose, super flexible, powerful, clean modern responsive bootstrap 5 admin template"
+        name="description">
+    <meta
+        content="admin template, ki-admin admin template, dashboard template, flat admin template, responsive admin template, web app"
+        name="keywords">
+    <meta content="la-themes" name="author">
+    
+    <title>Login | ThaiXo Payments Panel</title>
+    
+    <link href="/assets/images/logo/ThaiXo_Favicon.png" rel="icon" type="image/x-icon">
+    <link href="/assets/images/logo/ThaiXo_Favicon.png" rel="shortcut icon" type="image/x-icon">
+
+    <link href="/assets/vendor/fontawesome/css/all.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+
+    <link href="/assets/vendor/tabler-icons/tabler-icons.css" rel="stylesheet" type="text/css">
+
+    <link href="/assets/vendor/phosphor/phosphor-bold.css" rel="stylesheet">
+
+    <link href="/assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <link href="/assets/css/style.css" rel="stylesheet" type="text/css">
+
+    <link href="/assets/css/responsive.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="sign-in-bg">
+    <div class="app-wrapper d-block">
+        <div class="">
+            <!-- Body main section starts -->
+            <div class="container main-container">
+                <div class="row main-content-box">
+                    <div class="col-lg-7 image-content-box d-none d-lg-block">
+                        <div class="form-container">
+                            <div class="signup-content mt-4">
+                                <span>
+                                    <!-- <img alt="" class="img-fluid " src="/assets/images/logo/ThaiXoAdminLogo.jpg"> -->
+                                </span>
+                            </div>
+
+                            <div class="signup-bg-img"
+                                style="display: flex;justify-content: center;align-items: center;">
+                                <img alt="" class="img-fluid" src="/assets/images/logo/ThaiXoAdminLogo.jpg"
+                                    style="margin-top: 80px;margin-left: 40px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 form-content-box">
+                        <div class="form-container ">
+                            <form class="app-form" id="login-form">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="mb-5 text-center text-lg-start">
+                                            <h2 class="text-white f-w-600">Welcome To <span class="text-dark">ThaiXo
+                                                    Payments Panel</span> </h2>
+                                            <p class="f-s-16 mt-2">Sign in with your data that you entered during your
+                                                registration</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="email" placeholder="email" type="text"
+                                                name="email">
+                                            <label for="email">Username</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="password" placeholder="password"
+                                                type="password" name="password">
+                                            <label for="floatingInput">Password</label>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-12 mt-3">
+                                        <button class="btn btn-primary btn-lg w-100" type="submit">Sign In</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Body main section ends -->
+        </div>
+    </div>
+    <%- include('partials/modals') %>
+
+        <!-- latest jquery-->
+        <script src="/assets/js/jquery-3.6.3.min.js"></script>
+
+        <!-- Bootstrap js-->
+        <script src="/assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="/js/init/loginInit.js" type="module"></script>
+
+</body>
+
+</html>
