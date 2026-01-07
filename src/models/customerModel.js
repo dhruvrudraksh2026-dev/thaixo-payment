@@ -1,5 +1,4 @@
 import db from "../../config/db.js";
-import { getCustomerById } from "../../public/js/api/customerApi.js";
 
 class customerModel 
 {
