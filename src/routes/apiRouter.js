@@ -19,6 +19,7 @@ router.get("/customer-transactions/:id", customerTransactionsController.getCusto
 router.get("/customer-transactions/total/:id", customerTransactionsController.getCustomerTransactionsTotalMinutesById);
 
 router.get("/customers/thai", customerController.getThaiCustomers);
+router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);
 router.get("/customer/:id", customerController.getCustomerById);
 
 router.use((req, res, next) =>

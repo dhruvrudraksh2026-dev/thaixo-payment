@@ -1,4 +1,5 @@
 import db from "../../config/db.js";
+import { getCustomerById } from "../../public/js/api/customerApi.js";
 
 class customerModel 
 {
@@ -8,15 +9,25 @@ class customerModel
         return rows;
     }
 
-    static getCustomerById = async (id) =>
+    static getCustomerById = async (id, transaction = db) =>
     {
-        const [rows] = await db.query(`SELECT c.* FROM customer c WHERE c.id = ?`, [id]);
+        const [rows] = await transaction.query(`SELECT c.* FROM customer c WHERE c.id = ?`, [id]);
         if (rows.length > 0)
         {
             return rows[0];
         }
         return false;
     };
+
+    static updateGeneratedOtpById = async (id, otp, transaction = db) =>
+    {
+        const [result] = await transaction.query(`UPDATE customer SET secure_otp = ? WHERE id = ?`, [otp, id]);
+        if (result.affectedRows > 0)
+        {
+            return await this.getCustomerById(id);
+        }
+        return false;
+    }
 }
 
 export default customerModel;

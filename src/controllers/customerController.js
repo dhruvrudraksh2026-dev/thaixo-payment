@@ -43,6 +43,37 @@ class customerController
             return res.json(Response.failure("Failed To Fetch Customer"));
         }
     };
+
+    static updateGeneratedOtpById = async (req, res, next) =>
+    {
+        try
+        {
+            const id = req.params.id;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+            const customer = await customerModel.getCustomerById(id);
+            if (!customer)
+            {
+                return res.json(Response.failure("Customer Not Found"));
+            }
+
+            const generatedOTP = Math.floor(10000 + Math.random() * 90000);
+
+            const updatedCustomer = await customerModel.updateGeneratedOtpById(id, generatedOTP);
+
+            if (!updatedCustomer)
+            {
+                return res.json(Response.failure("Secure OTP Generation Failed"));
+            }
+
+            return res.json(Response.success("Secure OTP Generated Successfully", updatedCustomer));
+        } catch (error)
+        {
+            next(error);
+        }
+    }
 }
 
 export default customerController;

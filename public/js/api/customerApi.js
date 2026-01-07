@@ -23,3 +23,17 @@ export const getCustomerById = async (id) =>
             }
         });
 };
+
+export const updateGeneratedOtpById = async (id) =>
+{
+    return await $.ajax(
+        {
+            url: `/api/customer/${id}/generate-otp`,
+            method: "POST",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        }
+    );
+}
