@@ -9,6 +9,7 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
                 <td>${transaction.package_name ?? ""}</td>
                 <td>${transaction.minutes ?? ""}</td>
                 <td>${transaction.rate_per_minute ?? ""}</td>
+                <td>${transaction.earnings ?? ""}</td>
                 <td>${transaction.created_at ?? ""}</td>
             </tr>
         `);
@@ -36,6 +37,27 @@ export const renderCustomerOtp = (data, division) =>
         (
             `
                 ${secureOTP ? `<i class="fa fa-check-circle" aria-hidden="true"></i> <div class="fw-semibold">Secure OTP Is: ${secureOTP}</div>` : ``}
+            `
+        );
+}
+
+export const renderToggleWhiteListedSection = (data, division) =>
+{
+    division.html
+        (
+            `
+                <button type="button" data-id="${data.id}" class="btn btn-warning py-1" style="width: 100px;" id="toggle-white-listed-btn">${data.white_listed ? "Unlist" : "List"}</button>
+            `
+        );
+}
+
+export const renderWhiteListedBadge = (data, division) =>
+{
+    const whiteListedBadge = data.white_listed === 1 ? `<span class="badge bg-success px-4 py-1">Yes</span>` : `<span class="badge bg-danger px-4 py-1">No</span>`;
+    division.html
+        (
+            `
+                ${whiteListedBadge}
             `
         );
 }

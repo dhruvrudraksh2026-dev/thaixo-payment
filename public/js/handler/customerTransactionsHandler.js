@@ -1,7 +1,7 @@
-import { getCustomerById, updateGeneratedOtpById } from "../api/customerApi.js";
+import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
 import { getCustomerTransactionMinutesById } from "../api/customerTransactionsApi.js";
 import { renderCustomerInfo } from "../dom/customerDom.js";
-import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions } from "../dom/customerTransactionsDom.js";
+import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge } from "../dom/customerTransactionsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
 let dataTable;
@@ -10,6 +10,7 @@ export const setupTransactionsViewHandler = () =>
 {
     fetchAndViewCustomersTransactions();
     $(document).on("click", "#generate-secure-otp-btn", handleGenerateOtp);
+    $(document).on("click", "#toggle-white-listed-btn", handleToggleWhiteListed);
 }
 
 export const fetchAndViewCustomersTransactions = async () =>
@@ -31,6 +32,7 @@ export const fetchAndViewCustomersTransactions = async () =>
         renderCustomerTransactions(data.transactions, $("#customer-transactions-table-body"));
         renderCustomerInfo(data.customer, $(".customer-details"));
         renderCustomerOtpSection(data.customer, $("#generate-secure-otp"));
+        renderToggleWhiteListedSection(data.customer, $("#toggle-white-listed"));
         dataTable = $("#customer-transactions-table").DataTable();
     })
 }
@@ -42,7 +44,18 @@ const handleGenerateOtp = async (e) =>
     const id = $(e.currentTarget).data("id");
     updateGeneratedOtpById(id).then(response => checkAndExecute(response, () =>
     {
-        console.log(response);
         renderCustomerOtp(response.data, $("#secure-otp"));
+    }));
+}
+
+const handleToggleWhiteListed = async (e) =>
+{
+    const btn = $(e.currentTarget);
+    btn.blur();
+    const id = $(e.currentTarget).data("id");
+    toggleWhiteListedById(id).then(response => checkAndExecute(response, () =>
+    {
+        renderWhiteListedBadge(response.data, $("#white-listed-badge"));
+        renderToggleWhiteListedSection(response.data, $("#toggle-white-listed"));
     }));
 }

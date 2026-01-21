@@ -27,6 +27,16 @@ class customerModel
         }
         return false;
     }
+
+    static toggleWhiteListedById = async (id, transaction = db) =>
+    {
+        const [result] = await transaction.query(`UPDATE customer SET white_listed = !white_listed WHERE id = ?`, [id]);
+        if (result.affectedRows > 0)
+        {
+            return await this.getCustomerById(id);
+        }
+        return false;
+    }
 }
 
 export default customerModel;

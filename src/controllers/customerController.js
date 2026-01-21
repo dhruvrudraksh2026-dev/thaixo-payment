@@ -44,6 +44,36 @@ class customerController
         }
     };
 
+    static toggleWhiteListedById = async (req, res) =>
+    {
+        try
+        {
+            const id = req.params.id;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            const customer = await customerModel.getCustomerById(id);
+            if (!customer)
+            {
+                return res.json(Response.failure("Customer Not Found"));
+            }
+
+            const updatedCustomer = await customerModel.toggleWhiteListedById(id);
+
+            if (!updatedCustomer)
+            {
+                return res.json(Response.failure("Failed To Toggle White List"));
+            }
+
+            return res.json(Response.success("White List Toggled Successfully", updatedCustomer));
+        } catch (error)
+        {
+            return res.json(Response.failure("Failed To Toggle White List"));
+        }
+    };
+
     static updateGeneratedOtpById = async (req, res, next) =>
     {
         try

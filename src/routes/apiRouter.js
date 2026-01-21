@@ -20,6 +20,7 @@ router.get("/customer-transactions/total/:id", customerTransactionsController.ge
 
 router.get("/customers/thai", customerController.getThaiCustomers);
 router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);
+router.patch("/customer/:id/toggle-white-listed", customerController.toggleWhiteListedById);
 router.get("/customer/:id", customerController.getCustomerById);
 
 router.use((req, res, next) =>

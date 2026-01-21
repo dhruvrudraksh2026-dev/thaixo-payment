@@ -10,6 +10,7 @@ export const renderCustomers = (data, tableBody) =>
                 <td>${customer.mobile_no}</td>
                 <td><span class="badge text-bg-${customer.status ? "success" : "danger"}">${customer.status ? "Active" : "Inactive"}</span></td>
                 <td><span class="badge text-bg-${customer.suspended ? "success" : "danger"}">${customer.suspended ? "Yes" : "No"}</span></td>
+                <td><span class="badge text-bg-${customer.white_listed ? "success" : "danger"}">${customer.white_listed ? "Yes" : "No"}</span></td>
                 <td>
                    <a href="/customer-transactions-details/${customer.id}"> <button class="btn btn-primary m-1 viewButton" data-id="${customer.id}">View</button> </a>
                 </td>
@@ -21,8 +22,9 @@ export const renderCustomers = (data, tableBody) =>
 export const renderCustomerInfo = (data, container) =>
 {
     container.empty();
-    const { id, name, dob, gender, mobile_no, status, about_self, suspended } = data;
+    const { id, name, dob, gender, mobile_no, status, about_self, suspended, white_listed } = data;
     const statusBadge = status === 1 ? `<span class="badge bg-success px-3 py-2">Active</span>` : `<span class="badge bg-danger px-3 py-2">Inactive</span>`;
+    const whiteListedBadge = white_listed === 1 ? `<span class="badge bg-success px-4 py-1">Yes</span>` : `<span class="badge bg-danger px-4 py-1">No</span>`;
     const cardHTML = `
         <div class="card shadow-sm border-0 px-4 py-3 mb-0">
         <div class="d-flex align-items-center justify-content-between position-relative flex-wrap">
@@ -61,6 +63,11 @@ export const renderCustomerInfo = (data, container) =>
                 <div class="fw-medium text-truncate">
                 ${about_self || "N/A"}
                 </div>
+            </div>
+
+            <div class="text-center">
+                <small class="text-uppercase text-black fw-semibold">White Listed</small>
+                <div class="fw-medium" id="white-listed-badge">${whiteListedBadge}</div>
             </div>
 
             <!-- Suspended Badge -->
