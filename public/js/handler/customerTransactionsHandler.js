@@ -10,7 +10,7 @@ export const setupTransactionsViewHandler = () =>
 {
     fetchAndViewCustomersTransactions();
     $(document).on("click", "#generate-secure-otp-btn", handleGenerateOtp);
-    $(document).on("click", "#toggle-white-listed-btn", handleToggleWhiteListed);
+    $(document).on("click", "#toggle-white-listed-btn", handleToggleWhiteListedBtnClick);
 }
 
 export const fetchAndViewCustomersTransactions = async () =>
@@ -48,14 +48,25 @@ const handleGenerateOtp = async (e) =>
     }));
 }
 
-const handleToggleWhiteListed = async (e) =>
+const handleToggleWhiteListedBtnClick = async (e) =>
 {
     const btn = $(e.currentTarget);
+    btn.attr("disabled", true);
     btn.blur();
     const id = $(e.currentTarget).data("id");
+
+    const isListed = (btn.text().replace(/\s+/g, ' ').trim()) === "List" ? false : true;
+
+    if (!confirm(`Are you sure you want to ${isListed ? "Unlist" : "List"} this Customer?`))
+    {
+        btn.removeAttr("disabled");
+        return;
+    }
+
     toggleWhiteListedById(id).then(response => checkAndExecute(response, () =>
     {
         renderWhiteListedBadge(response.data, $("#white-listed-badge"));
         renderToggleWhiteListedSection(response.data, $("#toggle-white-listed"));
+        btn.removeAttr("disabled");
     }));
 }

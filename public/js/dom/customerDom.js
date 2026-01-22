@@ -34,8 +34,14 @@ export const renderCustomerInfo = (data, container) =>
             <div>
                 <h6 class="mb-1 fw-semibold">${name || "N/A"}</h6>
                 <div class="d-flex align-items-center gap-2">
-                <small class="text-muted">ID: ${id || "-"}</small>
-                ${statusBadge}
+                    <small class="text-muted">ID: ${id || "-"}</small>
+                    ${statusBadge}
+                    <!-- Suspended Badge -->
+                    ${suspended ? `
+                    <div class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">
+                        Suspended
+                    </div>
+                    ` : ""}
                 </div>
             </div>
             </div>
@@ -68,15 +74,7 @@ export const renderCustomerInfo = (data, container) =>
             <div class="text-center">
                 <small class="text-uppercase text-black fw-semibold">White Listed</small>
                 <div class="fw-medium" id="white-listed-badge">${whiteListedBadge}</div>
-            </div>
-
-            <!-- Suspended Badge -->
-            ${suspended ? `
-            <div class="position-relative top-0 end-0 mt-2 me-2
-                        badge bg-danger-subtle text-danger fw-semibold px-3 py-2">
-                Suspended
-            </div>
-            ` : ""}
+            </div>            
             </div>
         </div>
         </div>

@@ -16,11 +16,11 @@ class customerController
             return res.json(Response.success("Customers Fetched Successfully", customers));
         } catch (error)
         {
-            return res.json(Response.failure("Failed To Fetch Customers"));
+            next(error);
         }
     };
 
-    static getCustomerById = async (req, res) =>
+    static getCustomerById = async (req, res, next) =>
     {
         try
         {
@@ -39,12 +39,11 @@ class customerController
             return res.json(Response.success("Customer Fetched Successfully", customer));
         } catch (error)
         {
-
-            return res.json(Response.failure("Failed To Fetch Customer"));
+            next(error);
         }
     };
 
-    static toggleWhiteListedById = async (req, res) =>
+    static toggleWhiteListedById = async (req, res, next) =>
     {
         try
         {
@@ -61,7 +60,6 @@ class customerController
             }
 
             const updatedCustomer = await customerModel.toggleWhiteListedById(id);
-
             if (!updatedCustomer)
             {
                 return res.json(Response.failure("Failed To Toggle White List"));
@@ -70,7 +68,7 @@ class customerController
             return res.json(Response.success("White List Toggled Successfully", updatedCustomer));
         } catch (error)
         {
-            return res.json(Response.failure("Failed To Toggle White List"));
+            next(error);
         }
     };
 

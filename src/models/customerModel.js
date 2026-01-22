@@ -28,9 +28,22 @@ class customerModel
         return false;
     }
 
+    static isCustomerWhiteListedById = async (id, transaction = db) =>
+    {
+        const [rows] = await transaction.query(`SELECT white_listed FROM customer WHERE id = ?`, [id]);
+        if (rows.length > 0)
+        {
+            return Boolean(rows[0]?.white_listed);
+        }
+        return false;
+    }
+
     static toggleWhiteListedById = async (id, transaction = db) =>
     {
-        const [result] = await transaction.query(`UPDATE customer SET white_listed = !white_listed WHERE id = ?`, [id]);
+        const isWhiteListed = await this.isCustomerWhiteListedById(id);
+        let bonus_coins = !isWhiteListed ? 250 : 0; // If Not White Listed Then It will be White Listed So Update the Coins Then
+
+        const [result] = await transaction.query(`UPDATE customer SET white_listed = !white_listed, coins = ? WHERE id = ?`, [bonus_coins, id]);
         if (result.affectedRows > 0)
         {
             return await this.getCustomerById(id);
