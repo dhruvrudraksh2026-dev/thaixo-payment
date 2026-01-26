@@ -1,6 +1,6 @@
 import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
-import { getCustomerTransactionMinutesById } from "../api/customerTransactionsApi.js";
-import { renderCustomerInfo } from "../dom/customerDom.js";
+import { getCustomerTransactionMinutesById, getCustomerTransactionsTotalAmountById } from "../api/customerTransactionsApi.js";
+import { renderCustomerInfo, renderTotalAmount } from "../dom/customerDom.js";
 import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge } from "../dom/customerTransactionsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
@@ -11,6 +11,8 @@ export const setupTransactionsViewHandler = () =>
     fetchAndViewCustomersTransactions();
     $(document).on("click", "#generate-secure-otp-btn", handleGenerateOtp);
     $(document).on("click", "#toggle-white-listed-btn", handleToggleWhiteListedBtnClick);
+
+    fetchTotalTransactionAmount();
 }
 
 export const fetchAndViewCustomersTransactions = async () =>
@@ -34,7 +36,20 @@ export const fetchAndViewCustomersTransactions = async () =>
         renderCustomerOtpSection(data.customer, $("#generate-secure-otp"));
         renderToggleWhiteListedSection(data.customer, $("#toggle-white-listed"));
         dataTable = $("#customer-transactions-table").DataTable();
-    })
+    });
+}
+
+export const fetchTotalTransactionAmount = async () =>
+{
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    const response = await getCustomerTransactionsTotalAmountById(id);
+
+    checkAndExecute(response, () =>
+    {
+        renderTotalAmount(response.data, $("#totalEarningsAmount"));
+    });
 }
 
 const handleGenerateOtp = async (e) =>

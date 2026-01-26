@@ -25,7 +25,7 @@ class customerTransactionsController
         }
     }
 
-    static getCustomerTransactionsTotalMinutesById = async (req, res, next) =>
+    static getCustomerTransactionsTotalAmountById = async (req, res, next) =>
     {
         try
         {
@@ -34,7 +34,7 @@ class customerTransactionsController
             {
                 return res.json(Response.failure("Customer Transactions Id Not Found"));
             }
-            const customer_transactions_minutes = await customerTransactionsModel.getCustomerTransactionsTotalMinutesById(id);
+            const customer_transactions_minutes = await customerTransactionsModel.getCustomerTransactionsTotalAmountById(id);
             if (!customer_transactions_minutes)
             {
                 return res.json(Response.failure("Customer Transactions Total Minutes Not Found"));

@@ -10,6 +10,7 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
                 <td>${transaction.minutes ?? ""}</td>
                 <td>${transaction.rate_per_minute ?? ""}</td>
                 <td>${transaction.earnings ?? ""}</td>
+                <td><span class="badge text-bg-${transaction.status ? "warning" : "success"}">${transaction.status ? "Pending" : "Done"}</td>
                 <td>${transaction.created_at ?? ""}</td>
             </tr>
         `);

@@ -16,7 +16,7 @@ router.use(ApiAuthentication);
 router.get("check", (req, res) => res.json(Response.success("API Is Working Fine")));
 
 router.get("/customer-transactions/:id", customerTransactionsController.getCustomerTransactionsById);
-router.get("/customer-transactions/total/:id", customerTransactionsController.getCustomerTransactionsTotalMinutesById);
+router.get("/customer-transactions/total/:id", customerTransactionsController.getCustomerTransactionsTotalAmountById);
 
 router.get("/customers/thai", customerController.getThaiCustomers);
 router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);

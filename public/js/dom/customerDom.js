@@ -84,3 +84,18 @@ export const renderCustomerInfo = (data, container) =>
 
     container.append(cardHTML);
 };
+
+export const renderTotalAmount = (data, container) =>
+{
+    container.empty();
+    container.html(
+        `
+        <div class="card-body">
+            <h6 class="text-muted mb-1">Total Earnings</h6>
+            <h2 class="fw-bold text-success mb-0">
+                ₹ <span id="earningsValue">${data.total_amount}</span>
+            </h2>
+        </div>
+        `
+    );
+}

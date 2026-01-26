@@ -9,10 +9,10 @@ class customerTransactionsModel
         return rows;
     }
 
-    static getCustomerTransactionsTotalMinutesById = async (id, transaction = db) =>
+    static getCustomerTransactionsTotalAmountById = async (id, transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT SUM(minutes) AS minutes FROM customer_transactions WHERE customer_id = ?", [id]);
-        return rows[0]?.minutes || 0;
+        const [rows] = await transaction.query("SELECT SUM(earnings) AS total_amount FROM customer_transactions WHERE customer_id = ?", [id]);
+        return rows[0] || 0;
     }
 }
 
