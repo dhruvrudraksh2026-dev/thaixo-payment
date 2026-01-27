@@ -36,3 +36,47 @@ export const getCustomerTransactionTotalMinutesById = async (id) =>
             }
         });
 };
+
+export const addCustomerTransaction = async (formData) =>
+{
+    return $.ajax(
+        {
+            url: "/api/customer-transaction",
+            method: "POST",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            },
+            data: formData,
+            processData: false,
+            contentType: false
+        });
+}
+
+export const editCustomerTransaction = async (formData) =>
+{
+    return $.ajax(
+        {
+            url: "/api/customer-transaction",
+            method: "PUT",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            },
+            data: formData,
+            processData: false,
+            contentType: false
+        });
+}
+
+export const getCustomerTransactionByCustomerIdAndTimestamp = async (data) =>
+{
+    return $.ajax({
+        url: '/api/customer-transaction',
+        method: 'GET',
+        data,
+        processData: false,
+        contentType: false
+    });
+
+}

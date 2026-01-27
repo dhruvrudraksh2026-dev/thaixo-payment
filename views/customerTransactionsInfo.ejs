@@ -78,8 +78,15 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="card">
-                                                <div class="card-header pb-0 card-no-border">
+                                                <div
+                                                    class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center">
                                                     <h4>Transactions Info</h4>
+                                                    <div class="addButtonDiv">
+                                                        <button class="btn btn-primary fs-6 fw-semibold"
+                                                            data-bs-toggle="modal" data-bs-target="#addModal"
+                                                            type="button" id="addTransactionBtn">Add
+                                                            Transaction</button>
+                                                    </div>
                                                 </div>
                                                 <div class="card-body p-0">
                                                     <div class="app-datatable-default overflow-auto">
@@ -94,6 +101,7 @@
                                                                     <th>Earnings</th>
                                                                     <th>Status</th>
                                                                     <th>Time</th>
+                                                                    <th>Action</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="customer-transactions-table-body"></tbody>
@@ -120,6 +128,101 @@
             </div>
     </div>
 
+    <!-- Add Modal -->
+    <div class="modal fade bd-example-modal-lg" id="addModal" tabindex="-1" role="dialog"
+        aria-labelledby="myExtraLargeModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary-900">
+                    <h5 class="modal-title text-white" id="addModalLabel">Add Transaction</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body dark-modal">
+                    <div class="large-modal-header">
+                    </div>
+                    <div class="large-modal-body d-block">
+                        <form class="stepper-one row g-3 custom-input" id="addForm" enctype="multipart/form-data">
+                            <input type="text" id="addPackageId" name="packageId" hidden />
+                            <input id="addCustomerId" name="customerId" type="text" hidden />
+
+                            <div class="col-12">
+                                <label class="col-sm-12 form-label" for="addAmount">Amount<span
+                                        class="text-danger">*</span></label>
+                                <input class="form-control" id="addAmount" name="amount" type="number"
+                                    placeholder="Enter Amount To Be Paid" step="0.01" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold" for="addStatus">
+                                    Status <span class="text-danger">*</span>
+                                </label>
+
+                                <select class="form-select shadow-sm" name="status" id="addStatus" required>
+                                    <option selected disabled>Select Payment Status</option>
+                                    <option value="PENDING">🟡 Pending</option>
+                                    <option value="DONE">🟢 Done</option>
+                                    <option value="CANCELLED">🔴 Cancelled</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-12">
+                                <button class="btn btn-light-primary" type="submit" id="addSubmit">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade bd-example-modal-lg" id="editModal" tabindex="-1" role="dialog"
+        aria-labelledby="myExtraLargeModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary-900">
+                    <h5 class="modal-title text-white" id="editModalLabel">Edit Transaction</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body dark-modal">
+                    <div class="large-modal-header">
+                    </div>
+                    <div class="large-modal-body d-block">
+                        <form class="stepper-one row g-3 custom-input" id="editForm" enctype="multipart/form-data">
+                            <input type="text" id="editPackageId" name="packageId" hidden />
+                            <input id="editCustomerId" name="customerId" type="text" hidden />
+                            <input id="editCreatedAt" name="createdAt" type="text" hidden />
+
+                            <div class="col-12">
+                                <label class="col-sm-12 form-label" for="editAmount">Amount<span
+                                        class="text-danger">*</span></label>
+                                <input class="form-control" id="editAmount" name="amount" type="number"
+                                    placeholder="Enter Amount To Be Paid" step="0.01" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold" for="editStatus">
+                                    Status <span class="text-danger">*</span>
+                                </label>
+
+                                <select class="form-select shadow-sm" name="status" id="editStatus" required>
+                                    <option selected disabled>Select Payment Status</option>
+                                    <option value="PENDING">🟡 Pending</option>
+                                    <option value="DONE">🟢 Done</option>
+                                    <option value="CANCELLED">🔴 Cancelled</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-light-primary" type="submit" id="editSubmit">Edit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/assets/js/jquery-3.6.3.min.js"></script>
 

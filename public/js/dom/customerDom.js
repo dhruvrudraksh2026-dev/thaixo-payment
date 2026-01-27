@@ -22,7 +22,7 @@ export const renderCustomers = (data, tableBody) =>
 export const renderCustomerInfo = (data, container) =>
 {
     container.empty();
-    const { id, name, dob, gender, mobile_no, status, about_self, suspended, white_listed } = data;
+    const { id, name, dob, gender, mobile_no, status, about_self, coins, suspended, white_listed } = data;
     const statusBadge = status === 1 ? `<span class="badge bg-success px-3 py-2">Active</span>` : `<span class="badge bg-danger px-3 py-2">Inactive</span>`;
     const whiteListedBadge = white_listed === 1 ? `<span class="badge bg-success px-4 py-1">Yes</span>` : `<span class="badge bg-danger px-4 py-1">No</span>`;
     const cardHTML = `
@@ -71,6 +71,13 @@ export const renderCustomerInfo = (data, container) =>
                 </div>
             </div>
 
+            <div style="max-width: 240px;">
+                <small class="text-uppercase text-muted">Coins</small>
+                <div class="fw-medium text-truncate" id="coinsText">
+                ${coins}
+                </div>
+            </div>
+
             <div class="text-center">
                 <small class="text-uppercase text-black fw-semibold">White Listed</small>
                 <div class="fw-medium" id="white-listed-badge">${whiteListedBadge}</div>
@@ -80,22 +87,5 @@ export const renderCustomerInfo = (data, container) =>
         </div>
     `;
 
-
-
     container.append(cardHTML);
 };
-
-export const renderTotalAmount = (data, container) =>
-{
-    container.empty();
-    container.html(
-        `
-        <div class="card-body">
-            <h6 class="text-muted mb-1">Total Earnings</h6>
-            <h2 class="fw-bold text-success mb-0">
-                ₹ <span id="earningsValue">${data.total_amount}</span>
-            </h2>
-        </div>
-        `
-    );
-}
