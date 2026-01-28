@@ -59,6 +59,16 @@
                                                 </div>
                                                 <div class="card-body p-0">
                                                     <div class="customer-details" style="padding: 10px;"></div>
+                                                    <div id="customer-earning-details"
+                                                        class="customer-earning-details card text-start shadow-sm m-2"
+                                                        style="padding: 10px;">
+                                                        <div class="totalEarningsBlock">
+                                                            <div id="totalEarningsAmount"></div>
+                                                        </div>
+                                                        <div class="totalPaidAmountBlock">
+                                                            <div id="totalPaidAmount"></div>
+                                                        </div>
+                                                    </div>
                                                     <div
                                                         class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
                                                         <div id="generate-secure-otp"
@@ -108,9 +118,38 @@
                                                         </table>
                                                     </div>
                                                     <hr class="divider" />
-                                                    <div id="totalEarningsAmount"
+                                                    <div id="totalEarningsByDateRage"
                                                         class="card text-center shadow-sm p-2 m-2">
+                                                        <div
+                                                            class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center mb-4">
+                                                            <h4>Total Earnings By Date Range</h4>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <form id="dateRangeForm" class="row g-3 align-items-end">
+                                                                <div class="col-md-4">
+                                                                    <label for="startDate" class="form-label">Start
+                                                                        Date</label>
+                                                                    <input type="date" class="form-control"
+                                                                        id="startDate" name="startDate" required>
+                                                                </div>
 
+                                                                <div class="col-md-4">
+                                                                    <label for="endDate" class="form-label">End
+                                                                        Date</label>
+                                                                    <input type="date" class="form-control" id="endDate"
+                                                                        name="endDate" required>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <button type="submit" class="btn btn-primary w-100">
+                                                                        Apply Filter
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="card-footer text-start p-2 m-2">
+                                                            <div id="dateRangeEarningsResult"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -193,6 +232,9 @@
                             <input type="text" id="editPackageId" name="packageId" hidden />
                             <input id="editCustomerId" name="customerId" type="text" hidden />
                             <input id="editCreatedAt" name="createdAt" type="text" hidden />
+                            <input id="editIndex" name="index" type="text" hidden />
+                            <input id="editRate" name="rate" type="text" hidden />
+                            <input id="editMinutes" name="minutes" type="text" hidden />
 
                             <div class="col-12">
                                 <label class="col-sm-12 form-label" for="editAmount">Amount<span
@@ -224,22 +266,24 @@
         </div>
     </div>
 
-    <script src="/assets/js/jquery-3.6.3.min.js"></script>
+    <%- include('partials/modals') %>
 
-    <script src="/assets/vendor/simplebar/simplebar.js"></script>
+        <script src="/assets/js/jquery-3.6.3.min.js"></script>
 
-    <script src="/assets/vendor/phosphor/phosphor.js"></script>
+        <script src="/assets/vendor/simplebar/simplebar.js"></script>
 
-    <script src="/assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="/assets/vendor/phosphor/phosphor.js"></script>
 
-    <script src="/assets/vendor/prism/prism.min.js"></script>
-    <script src="/assets/vendor/datatable/jquery.dataTables.min.js"></script>
+        <script src="/assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
 
-    <script src="/assets/js/script.js"></script>
+        <script src="/assets/vendor/prism/prism.min.js"></script>
+        <script src="/assets/vendor/datatable/jquery.dataTables.min.js"></script>
 
-    <script src="/js/init/customerTransactionsInit.js" type="module"></script>
-    <script src="/js/utils/jsCookie.js"></script>
-    <script src="/js/utils/helper.js" type="module"></script>
+        <script src="/assets/js/script.js"></script>
+
+        <script src="/js/init/customerTransactionsInit.js" type="module"></script>
+        <script src="/js/utils/jsCookie.js"></script>
+        <script src="/js/utils/helper.js" type="module"></script>
 </body>
 
 </html>

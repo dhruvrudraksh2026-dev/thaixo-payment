@@ -21,6 +21,24 @@ class customerTransactionsModel
         return rows[0] || {};
     }
 
+    static getCustomerEarningsTotalAmountById = async (id, transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT SUM(earnings) as total_earnings FROM customer_transactions WHERE rate_per_minute != 0 AND minutes != 0 AND customer_id = ?", [id]);
+        return rows[0] || {};
+    }
+
+    static getCustomerEarningsPaidAmountById = async (id, transaction = db) =>
+    {
+        const [rows] = await transaction.query(`SELECT SUM(earnings) as total_paid FROM customer_transactions WHERE rate_per_minute = 0 AND minutes = 0 AND status = "DONE" AND customer_id = ?`, [id]);
+        return rows[0] || {};
+    }
+
+    static getCustomerEarningsTotalAmountByDateRange = async (data, transaction = db) =>
+    {
+        const [rows] = await transaction.query(`SELECT SUM(earnings) as total_earnings FROM customer_transactions WHERE rate_per_minute != 0 AND minutes != 0 AND (created_at BETWEEN ? AND ?) AND customer_id = ?;`, [data.startDate, data.endDate, data.id]);
+        return rows[0] || {};
+    }
+
     static getCustomerTransactionsTotalAmountById = async (id, transaction = db) =>
     {
         const [rows] = await transaction.query("SELECT SUM(earnings) AS total_amount FROM customer_transactions WHERE customer_id = ?", [id]);
@@ -32,7 +50,7 @@ class customerTransactionsModel
         const [result] = await transaction.query("INSERT INTO customer_transactions(customer_id, package_id, minutes, rate_per_minute, earnings, status ) VALUES ( ? , ? , ? , ? , ? , ?)", [data.customerId, data.packageId, data.minutes, data.rate, data.amount, data.status]);
         if (result.affectedRows > 0)
         {
-            return this.getAllCustomerTransactionsById(data.customerId);
+            return this.getCustomerTransactionByCustomerId(data.customerId);
         }
         return false;
     }

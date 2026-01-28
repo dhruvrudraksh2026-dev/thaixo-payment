@@ -19,7 +19,10 @@ router.get("/customer-transactions/:id", customerTransactionsController.getAllCu
 router.get("/customer-transactions/total/:id", customerTransactionsController.getCustomerTransactionsTotalAmountById);
 router.post("/customer-transaction", upload.none(), customerTransactionsController.addCustomerTransaction);
 router.put("/customer-transaction", upload.none(), customerTransactionsController.editCustomerTransaction);
-router.get("/customer-transaction", upload.none(), customerTransactionsController.getCustomerTransactionByCustomerIdAndTimestamp); // Get customer transaction using customer id and timestamp
+
+router.get("/customer-transaction/:id/earnings/total", customerTransactionsController.getCustomerEarningsTotalAmountById);
+router.get("/customer-transaction/:id/earnings/paid", customerTransactionsController.getCustomerEarningsPaidAmountById);
+router.get("/customer-transaction/:id/earnings", customerTransactionsController.getCustomerEarningsTotalAmountByDateRange); // Date Range Earnings
 
 router.get("/customers/thai", customerController.getThaiCustomers);
 router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);

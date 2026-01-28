@@ -27,7 +27,7 @@ export const checkAndExecute = (response, func) =>
     }
     catch (error) 
     {
-        console.error(error.message);
+        console.error(error);
         showAlert("Some Unexpected Browser Error Occured");
     }
 }

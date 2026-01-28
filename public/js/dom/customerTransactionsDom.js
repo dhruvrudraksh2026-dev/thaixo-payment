@@ -28,7 +28,7 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
                 <td>${transaction.earnings ?? ""}</td>
                 <td>${transactionStatusBadge}</td>
                 <td>${transaction.created_at ?? ""}</td>
-                <td><button class="btn btn-warning btn-sm editBtn" data-id="${transaction.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button></td>
+                <td><button class="btn btn-warning btn-sm editBtn" data-id="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button></td>
             </tr>
         `);
     });
@@ -47,17 +47,17 @@ export const addDataTableRow = (dataTable, data) =>
         transactionStatusBadge,
         data.created_at ?? "",
         `
-            <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+            <button class="btn btn-warning btn-sm editBtn" data-id="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
         `
     ]).draw(false).node();
 
-    $(rowNode).attr("data-id", data.id);
+    $(rowNode).attr("data-id", index);
 };
 
 export const editDataTableRow = (dataTable, data) => 
 {
-    const rowSelector = `tr[data-id="${data.customer_id}"]`;
-    const index = dataTable.row(`tr[data-id="${data.id}"]`).data()[0];
+    const index = data.index;
+    const rowSelector = `tr[data-id="${index}"]`;
     const transactionStatusBadge = TRANSACTION_STATUS[data.status]?.badge;
     dataTable.row(rowSelector).data([
         index,
@@ -68,7 +68,7 @@ export const editDataTableRow = (dataTable, data) =>
         transactionStatusBadge,
         data.created_at ?? "",
         `
-            <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+            <button class="btn btn-warning btn-sm editBtn" data-id="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
         `
     ]).draw(false);
 };
@@ -129,16 +129,49 @@ export const renderCoinsValue = (data, container) =>
     );
 }
 
-export const renderTotalAmount = (data, container) =>
+export const renderTotalEarningAmount = (data, container) =>
 {
     container.empty();
     container.html(
         `
-        <div class="card-body">
-            <h6 class="text-muted mb-1">Total Pending Amount</h6>
-            <h2 class="fw-bold text-success mb-0">
-                ₹ <span id="earningsValue">${data.total_amount}</span>
-            </h2>
+        <div class="card-body px-4 py-1">
+            <h6 class="fs-5 fw-semibold mb-1">Lifetime Earnings Amount</h6>
+            <div class="fw-semibold fs-6 text-success mb-0">
+                ₹ <span id="totalEarningsValue">${data.total_earnings || "0.00"}</span>
+            </div>
+        </div>
+        `
+    );
+}
+
+export const renderTotalPaidAmount = (data, container) =>
+{
+    container.empty();
+    container.html(
+        `
+        <div class="card-body px-4 py-1">
+            <h6 class="fs-5 fw-semibold mb-1">Total Paid Amount</h6>
+            <div class="fw-semibold fs-6 text-danger mb-0">
+                ₹ <span id="totalEarningsValue">${data.total_paid || "0.00"}</span>
+            </div>
+        </div>
+        `
+    );
+}
+
+export const renderTotalDateRangeEarnings = (data, container) =>
+{
+    container.empty();
+    container.html(
+        `
+        <div class="card-body px-4 py-1">
+            <h6 class="fs-5 fw-semibold mb-1">Earnings Amount</h6>
+            <div class="fw-semibold fs-6 text-success mb-0">
+                <div id="dateRangeEarningsSpinner" class="d-none d-flex justify-content-start align-items-center my-4">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                </div>
+                <span id="dateRangeEarningsValue">₹ ${data.total_earnings || "0.00"}</span>
+            </div>
         </div>
         `
     );

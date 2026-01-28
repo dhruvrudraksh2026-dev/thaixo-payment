@@ -37,6 +37,46 @@ export const getCustomerTransactionTotalMinutesById = async (id) =>
         });
 };
 
+export const getCustomerEarningsTotalAmountById = async (id) =>
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-transaction/${id}/earnings/total`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        }
+    );
+}
+
+export const getCustomerEarningsPaidAmountById = async (id) =>
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-transaction/${id}/earnings/paid`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        }
+    );
+}
+
+export const getCustomerEarningsTotalAmountByDateRange = async (data) =>
+{
+    return await $.ajax({
+        url: `/api/customer-transaction/${data.id}/earnings?${data.params}`,
+        method: "GET",
+        headers: {
+            Authorization: Cookies.get("token")
+        }
+    });
+
+}
+
 export const addCustomerTransaction = async (formData) =>
 {
     return $.ajax(
@@ -67,16 +107,4 @@ export const editCustomerTransaction = async (formData) =>
             processData: false,
             contentType: false
         });
-}
-
-export const getCustomerTransactionByCustomerIdAndTimestamp = async (data) =>
-{
-    return $.ajax({
-        url: '/api/customer-transaction',
-        method: 'GET',
-        data,
-        processData: false,
-        contentType: false
-    });
-
 }

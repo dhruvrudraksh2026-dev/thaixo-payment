@@ -1,7 +1,7 @@
 import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
-import { addCustomerTransaction, editCustomerTransaction, getCustomerTransactionByCustomerIdAndTimestamp, getCustomerTransactionMinutesById, getCustomerTransactionsTotalAmountById } from "../api/customerTransactionsApi.js";
+import { addCustomerTransaction, editCustomerTransaction, getCustomerEarningsPaidAmountById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById } from "../api/customerTransactionsApi.js";
 import { renderCustomerInfo } from "../dom/customerDom.js";
-import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalAmount, addDataTableRow, editDataTableRow } from "../dom/customerTransactionsDom.js";
+import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, addDataTableRow, editDataTableRow, renderTotalEarningAmount, renderTotalPaidAmount, renderTotalDateRangeEarnings } from "../dom/customerTransactionsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
 let dataTable;
@@ -17,8 +17,11 @@ export const setupTransactionsViewHandler = () =>
 
     $("#addForm").on("submit", handleAddTransactionSubmit);
     $("#editForm").on("submit", handleEditTransactionSubmit);
+    $("#dateRangeForm").on("submit", handleDateRangeSubmit);
 
-    fetchTotalTransactionAmount();
+    // fetchTotalTransactionAmount();
+    fetchCustomerEarningsTotalAmount();
+    // fetchCustomerEarningsPaidAmount();
 }
 
 export const fetchAndViewCustomersTransactions = async () =>
@@ -45,17 +48,62 @@ export const fetchAndViewCustomersTransactions = async () =>
     });
 }
 
-export const fetchTotalTransactionAmount = async () =>
+export const fetchCustomerEarningsTotalAmount = async () =>
 {
     const pathParts = window.location.pathname.split("/");
     const id = pathParts[pathParts.length - 1];
 
-    const response = await getCustomerTransactionsTotalAmountById(id);
+    const response = await getCustomerEarningsTotalAmountById(id);
 
     checkAndExecute(response, () =>
     {
-        renderTotalAmount(response.data, $("#totalEarningsAmount"));
+        renderTotalEarningAmount(response.data, $("#totalEarningsAmount"));
     });
+}
+
+export const fetchCustomerEarningsPaidAmount = async () =>
+{
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    const response = await getCustomerEarningsPaidAmountById(id);
+
+    checkAndExecute(response, () =>
+    {
+        renderTotalPaidAmount(response.data, $("#totalPaidAmount"));
+    });
+}
+
+const handleDateRangeSubmit = async (e) =>
+{
+    e.preventDefault();
+
+    const spinner = $("#dateRangeEarningsSpinner");
+    spinner.removeClass("d-none");
+
+    const formData = new FormData(e.target);
+    const params = new URLSearchParams(formData);
+
+    const startDate = new Date(formData.get("startDate"));
+    const endDate = new Date(formData.get("endDate"));
+    if (new Date(startDate) > new Date(endDate))
+    {
+        alert("Start Date Can't Be Greater Than End Date");
+        $("#dateRangeEarningsValue").addClass("text-danger").text("₹ 0.00");
+        spinner.addClass("d-none");
+        return;
+    }
+
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    const response = await getCustomerEarningsTotalAmountByDateRange({ id, params });
+
+    checkAndExecute(response, () =>
+    {
+        renderTotalDateRangeEarnings(response.data, $("#dateRangeEarningsResult"));
+    })
+    spinner.addClass("d-none");
 }
 
 const handleGenerateOtp = async (e) =>
@@ -116,16 +164,20 @@ const handleEditTransactionClick = async (e) =>
     const response = await getCustomerById(id);
     const index = $row.find('td').eq(0).text().trim();
     const timestampValue = $row.find('td').eq(6).text().trim();
+    const minutes = $row.find('td').eq(2).text().trim();
+    const rate = $row.find('td').eq(3).text().trim();
     const amount = $row.find('td').eq(4).text().trim();
     const status = $row.find('td').eq(5).text().trim();
-
     const data = response.data;
 
     checkAndExecute(response, () =>
     {
+        $("#editIndex").val(`${index}`);
         $("#editCustomerId").val(`${id}`);
         $("#editPackageId").val(`${data.earning_package_id}`);
         $("#editCreatedAt").val(`${timestampValue}`);
+        $("#editRate").val(`${rate}`);
+        $("#editMinutes").val(`${minutes}`);
         $("#editAmount").val(`${amount}`);
         $("#editStatus").val(`${status.toUpperCase()}`);
     });
@@ -151,14 +203,15 @@ const handleEditTransactionSubmit = async (e) =>
 {
     e.preventDefault();
     const formData = new FormData(e.target);
-    formData.append("rate", 0);
-    formData.append("minutes", 0);
+
+    const index = formData.get("index");
 
     const response = await editCustomerTransaction(formData);
-    console.log(response);
+
     checkAndExecute(response, () =>
     {
         $("#editModal").modal("hide");
+        response.data.index = index;
         editDataTableRow(dataTable, response.data);
     });
 }
