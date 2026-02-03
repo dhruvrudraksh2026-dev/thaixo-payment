@@ -19,7 +19,6 @@ export const setupTransactionsViewHandler = () =>
     $("#editForm").on("submit", handleEditTransactionSubmit);
     $("#dateRangeForm").on("submit", handleDateRangeSubmit);
 
-    // fetchTotalTransactionAmount();
     fetchCustomerEarningsTotalAmount();
     // fetchCustomerEarningsPaidAmount();
 }
@@ -196,6 +195,8 @@ const handleAddTransactionSubmit = async (e) =>
     {
         addDataTableRow(dataTable, response.data);
         $("#addModal").modal("hide");
+        $("#addForm")[0].reset();
+        // fetchCustomerEarningsPaidAmount();
     });
 }
 
@@ -213,5 +214,6 @@ const handleEditTransactionSubmit = async (e) =>
         $("#editModal").modal("hide");
         response.data.index = index;
         editDataTableRow(dataTable, response.data);
+        // fetchCustomerEarningsPaidAmount();
     });
 }
