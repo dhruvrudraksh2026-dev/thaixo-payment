@@ -16,7 +16,6 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
     });
 }
 
-
 export const renderCustomerTransactionsFilter = (transactions, dataTable) => 
 {
     const rows = transactions.map((transaction, index) => (

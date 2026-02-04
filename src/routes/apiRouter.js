@@ -21,10 +21,12 @@ router.get("/customer-transactions/total/:id", customerTransactionsController.ge
 
 router.get("/customer-transaction/:id/earnings/total", customerTransactionsController.getCustomerEarningsTotalAmountById);
 router.get("/customer-transaction/:id/earnings/paid", customerTransactionsController.getCustomerEarningsPaidAmountById);
-router.get("/customer-transaction/:id/earnings/total-by-date-range", customerTransactionsController.getCustomerEarningsTotalAmountByDateRange); // Date Range Earnings
+router.get("/customer-transaction/:id/earnings/total-by-date-range", customerTransactionsController.getCustomerEarningsTotalAmountByDateRange); // Total Earnings By Date Range
 router.get("/customer-transactions/:id/earnings", customerTransactionsController.getAllCustomerTransactionsByIdAndDateRange); // Date Range Earnings
 
 router.get("/customers/thai", customerController.getThaiCustomers);
+router.get("/customers/thai/white-listed", customerController.getWhiteListedThaiCustomers);
+router.get("/customers/thai/non-white-listed", customerController.getNonWhiteListedThaiCustomers);
 router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);
 router.patch("/customer/:id/toggle-white-listed", customerController.toggleWhiteListedById);
 router.get("/customer/:id", customerController.getCustomerById);

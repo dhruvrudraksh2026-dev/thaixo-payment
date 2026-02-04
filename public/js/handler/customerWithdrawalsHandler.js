@@ -26,7 +26,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
     });
 }
 
-const handleEditCustomerWithdrawalBtnClick = async (e) =>
+export const handleEditCustomerWithdrawalBtnClick = async (e) =>
 {
     e.preventDefault();
     const id = $(e.target).data("id");
@@ -61,7 +61,7 @@ const handleAddCustomerWithdrawalSubmit = async (e) =>
     });
 }
 
-const handleEditCustomerWithdrawalSubmit = async (e) =>
+export const handleEditCustomerWithdrawalSubmit = async (e, withdrawDataTable = dataTable) =>
 {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -71,7 +71,7 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
     checkAndExecute(response, () =>
     {
         const data = response.data;
-        editDataTableRow(dataTable, data);
+        editDataTableRow(withdrawDataTable, data);
 
         resetForm("#editCustomerWithdrawalForm");
         $("#editModal").modal("hide");

@@ -8,6 +8,18 @@ class customerModel
         return rows;
     }
 
+    static getWhiteListedThaiCustomers = async (transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT * FROM customer WHERE country_code = '+66' AND white_listed = 1");
+        return rows;
+    }
+
+    static getNonWhiteListedThaiCustomers = async (transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT * FROM customer WHERE country_code = '+66' AND white_listed = 0");
+        return rows;
+    }
+
     static getCustomerById = async (id, transaction = db) =>
     {
         const [rows] = await transaction.query(`SELECT c.* FROM customer c WHERE c.id = ?`, [id]);

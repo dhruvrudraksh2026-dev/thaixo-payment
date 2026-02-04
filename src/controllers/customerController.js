@@ -20,6 +20,38 @@ class customerController
         }
     };
 
+    static getWhiteListedThaiCustomers = async (req, res, next) =>
+    {
+        try
+        {
+            const customers = await customerModel.getWhiteListedThaiCustomers();
+            customers.forEach((c) =>
+            {
+                if (c.photos) c.photos = safeJSONParse(c.photos);
+            });
+            return res.json(Response.success("White Listed Thai Customers Fetched Successfully", customers));
+        } catch (error)
+        {
+            next(error);
+        }
+    };
+
+    static getNonWhiteListedThaiCustomers = async (req, res, next) =>
+    {
+        try
+        {
+            const customers = await customerModel.getNonWhiteListedThaiCustomers();
+            customers.forEach((c) =>
+            {
+                if (c.photos) c.photos = safeJSONParse(c.photos);
+            });
+            return res.json(Response.success("Non White Listed Thai Customers Fetched Successfully", customers));
+        } catch (error)
+        {
+            next(error);
+        }
+    };
+
     static getCustomerById = async (req, res, next) =>
     {
         try
@@ -42,29 +74,6 @@ class customerController
             next(error);
         }
     };
-
-    // static doesThaiCustomerExists = async (req, res, next) =>
-    // {
-    //     try
-    //     {
-    //         const id = req.params.id;
-    //         if (!id)
-    //         {
-    //             return res.json(Response.failure("Thai Customer Id Not Found"));
-    //         }
-    //         const isThaiCustomerExists = await customerModel.doesThaiCustomerExists(id);
-    //         if (!isThaiCustomerExists)
-    //         {
-    //             return res.json(Response.failure("Thai Customer Not Found"));
-    //         }
-
-    //         return res.json(Response.success("Thai Customer Exists", isThaiCustomerExists));
-    //     }
-    //     catch (error)
-    //     {
-    //         next(error);
-    //     }
-    // }
 
     static toggleWhiteListedById = async (req, res, next) =>
     {

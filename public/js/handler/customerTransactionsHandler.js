@@ -5,6 +5,7 @@ import { renderCustomerInfo } from "../dom/customerDom.js";
 import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalPaidAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter } from "../dom/customerTransactionsDom.js";
 import { renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
+import { handleEditCustomerWithdrawalBtnClick, handleEditCustomerWithdrawalSubmit } from "./customerWithdrawalsHandler.js";
 
 let dataTable;
 let withdrawalDataTable;
@@ -19,6 +20,13 @@ export const setupTransactionsViewHandler = () =>
 
     $("#dateRangeForm").on("submit", handleDateRangeSubmit);
     $("#dateRangeForm").on("reset", handleDateRangeReset);
+
+    // =======================================================
+    // For Customer Withdrawals
+    // =======================================================
+    $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
+    $("#editModal").on("submit", (e) => handleEditCustomerWithdrawalSubmit(e, withdrawalDataTable));
+    // =======================================================
 
     fetchCustomerEarningsTotalAmount();
     // fetchCustomerEarningsPaidAmount();
@@ -41,7 +49,11 @@ export const fetchAndViewCustomersTransactions = async () =>
     checkAndExecute(data, () =>
     {
         renderCustomerTransactions(data.transactions, $("#customer-transactions-table-body"));
+        // ===========================================================
+        // Rendering Customer Info From Customer Dom For Both White Listed And Non White Listed Customer
+        // ===========================================================
         renderCustomerInfo(data.customer, $(".customer-details"));
+        // ===========================================================
         renderCustomerOtpSection(data.customer, $("#generate-secure-otp"));
         renderToggleWhiteListedSection(data.customer, $("#toggle-white-listed"));
         dataTable = $("#customer-transactions-table").DataTable();
@@ -186,7 +198,6 @@ export const fetchAndViewCustomersWithdrawals = async () =>
 
     checkAndExecute(response, () =>
     {
-        console.log(response.data);
         renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
         withdrawalDataTable = $("#customer-withdrawals-table").DataTable();
     });
