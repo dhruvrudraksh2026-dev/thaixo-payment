@@ -18,6 +18,12 @@ class customerModel
         return false;
     };
 
+    static doesThaiCustomerExists = async (id, transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT * FROM customer WHERE id = ? AND country_code = '+66'", [id]);
+        return rows[0] ? true : false;
+    }
+
     static updateGeneratedOtpById = async (id, otp, transaction = db) =>
     {
         const [result] = await transaction.query(`UPDATE customer SET secure_otp = ? WHERE id = ?`, [otp, id]);

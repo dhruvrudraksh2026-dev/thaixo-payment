@@ -5,6 +5,7 @@ import multer from 'multer';
 import Response from '../helpers/response.js';
 import customerController from '../controllers/customerController.js';
 import customerTransactionsController from '../controllers/customerTransactionsController.js';
+import customerWithdrawalsController from '../controllers/customerWithdrawalsController.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -28,6 +29,12 @@ router.get("/customers/thai", customerController.getThaiCustomers);
 router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);
 router.patch("/customer/:id/toggle-white-listed", customerController.toggleWhiteListedById);
 router.get("/customer/:id", customerController.getCustomerById);
+
+router.get("/customer-withdrawals", customerWithdrawalsController.getAllCustomerWithdrawals);
+router.get("/customer-withdrawal/:id", customerWithdrawalsController.getCustomerWithdrawalByWithdrawalId);
+router.post("/customer-withdrawal", upload.none(), customerWithdrawalsController.addCustomerWithdrawal);
+router.put("/customer-withdrawal", upload.none(), customerWithdrawalsController.editCustomerWithdrawal);
+router.delete("/customer-withdrawal/:id", customerWithdrawalsController.deleteCustomerWithdrawal);
 
 router.use((req, res, next) =>
 {

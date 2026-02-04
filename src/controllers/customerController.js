@@ -43,6 +43,29 @@ class customerController
         }
     };
 
+    // static doesThaiCustomerExists = async (req, res, next) =>
+    // {
+    //     try
+    //     {
+    //         const id = req.params.id;
+    //         if (!id)
+    //         {
+    //             return res.json(Response.failure("Thai Customer Id Not Found"));
+    //         }
+    //         const isThaiCustomerExists = await customerModel.doesThaiCustomerExists(id);
+    //         if (!isThaiCustomerExists)
+    //         {
+    //             return res.json(Response.failure("Thai Customer Not Found"));
+    //         }
+
+    //         return res.json(Response.success("Thai Customer Exists", isThaiCustomerExists));
+    //     }
+    //     catch (error)
+    //     {
+    //         next(error);
+    //     }
+    // }
+
     static toggleWhiteListedById = async (req, res, next) =>
     {
         try
