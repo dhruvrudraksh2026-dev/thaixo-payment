@@ -24,6 +24,45 @@ export const getCustomerWithdrawalsById = async (id) =>
         });
 };
 
+export const getCustomerWithdrawalsByCustomerId = async (id) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/${id}/withdrawals`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
+export const getCustomerWithdrawalsByDateRangeByCustomerId = async (data) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/${data.id}/withdrawals/by-date-range?${data.params}`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
+export const getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId = async (data) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/${data.id}/withdrawals/total-by-date-range?${data.params}`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
 export const addCustomerWithdrawal = async (formData) =>
 {
     return $.ajax(

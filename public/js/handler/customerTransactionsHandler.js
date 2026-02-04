@@ -1,23 +1,24 @@
 import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
-import { addCustomerTransaction, editCustomerTransaction, getCustomerEarningsPaidAmountById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById } from "../api/customerTransactionsApi.js";
+import { getCustomerEarningsPaidAmountById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsApi.js";
+import { getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId } from "../api/customerWithdrawalsApi.js";
 import { renderCustomerInfo } from "../dom/customerDom.js";
-import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, addDataTableRow, editDataTableRow, renderTotalEarningAmount, renderTotalPaidAmount, renderTotalDateRangeEarnings } from "../dom/customerTransactionsDom.js";
+import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalPaidAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter } from "../dom/customerTransactionsDom.js";
+import { renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
 let dataTable;
+let withdrawalDataTable;
 
 export const setupTransactionsViewHandler = () =>
 {
     fetchAndViewCustomersTransactions();
+    fetchAndViewCustomersWithdrawals();
+
     $(document).on("click", "#generate-secure-otp-btn", handleGenerateOtp);
     $(document).on("click", "#toggle-white-listed-btn", handleToggleWhiteListedBtnClick);
 
-    $(document).on("click", "#addTransactionBtn", handleAddTransactionClick);
-    $(document).on("click", ".editBtn", handleEditTransactionClick);
-
-    $("#addForm").on("submit", handleAddTransactionSubmit);
-    $("#editForm").on("submit", handleEditTransactionSubmit);
     $("#dateRangeForm").on("submit", handleDateRangeSubmit);
+    $("#dateRangeForm").on("reset", handleDateRangeReset);
 
     fetchCustomerEarningsTotalAmount();
     // fetchCustomerEarningsPaidAmount();
@@ -96,13 +97,49 @@ const handleDateRangeSubmit = async (e) =>
     const pathParts = window.location.pathname.split("/");
     const id = pathParts[pathParts.length - 1];
 
-    const response = await getCustomerEarningsTotalAmountByDateRange({ id, params });
+    // =======================================================
+    // For Customer Transactions
+    // =======================================================
+    let response = await getCustomerTransactionsByIdAndDateRange({ id, params });
+
+    checkAndExecute(response, () =>
+    {
+        renderCustomerTransactionsFilter(response.data, dataTable);
+    });
+
+    response = await getCustomerEarningsTotalAmountByDateRange({ id, params });
 
     checkAndExecute(response, () =>
     {
         renderTotalDateRangeEarnings(response.data, $("#dateRangeEarningsResult"));
-    })
+    });
+    // =======================================================
+
+    // =======================================================
+    // For Customer Withdrawals
+    // =======================================================
+    response = await getCustomerWithdrawalsByDateRangeByCustomerId({ id, params });
+
+    checkAndExecute(response, () =>
+    {
+        renderCustomerWithdrawalsFilter(response.data, withdrawalDataTable);
+    });
+
+    response = await getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId({ id, params });
+
+    checkAndExecute(response, () =>
+    {
+        renderTotalDateRangeWithdrawals(response.data, $("#dateRangeWithdrawalResult"));
+    });
+    // =======================================================
+
     spinner.addClass("d-none");
+}
+
+const handleDateRangeReset = () =>
+{
+    // Jugaad For Right Now
+    location.reload();
 }
 
 const handleGenerateOtp = async (e) =>
@@ -140,80 +177,17 @@ const handleToggleWhiteListedBtnClick = async (e) =>
     }));
 }
 
-const handleAddTransactionClick = async (e) =>
+export const fetchAndViewCustomersWithdrawals = async () =>
 {
     const pathParts = window.location.pathname.split("/");
     const id = pathParts[pathParts.length - 1];
-    const response = await getCustomerById(id);
-    const data = response.data;
+
+    const response = await getCustomerWithdrawalsByCustomerId(id);
 
     checkAndExecute(response, () =>
     {
-        $("#addCustomerId").val(`${data.id}`);
-        $("#addPackageId").val(`${data.earning_package_id}`);
-    });
-}
-
-const handleEditTransactionClick = async (e) =>
-{
-    const pathParts = window.location.pathname.split("/");
-    const id = pathParts[pathParts.length - 1];
-    const $row = $(e.target).closest('tr');
-
-    const response = await getCustomerById(id);
-    const index = $row.find('td').eq(0).text().trim();
-    const timestampValue = $row.find('td').eq(6).text().trim();
-    const minutes = $row.find('td').eq(2).text().trim();
-    const rate = $row.find('td').eq(3).text().trim();
-    const amount = $row.find('td').eq(4).text().trim();
-    const status = $row.find('td').eq(5).text().trim();
-    const data = response.data;
-
-    checkAndExecute(response, () =>
-    {
-        $("#editIndex").val(`${index}`);
-        $("#editCustomerId").val(`${id}`);
-        $("#editPackageId").val(`${data.earning_package_id}`);
-        $("#editCreatedAt").val(`${timestampValue}`);
-        $("#editRate").val(`${rate}`);
-        $("#editMinutes").val(`${minutes}`);
-        $("#editAmount").val(`${amount}`);
-        $("#editStatus").val(`${status.toUpperCase()}`);
-    });
-}
-
-const handleAddTransactionSubmit = async (e) =>
-{
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.append("rate", 0);
-    formData.append("minutes", 0);
-
-    const response = await addCustomerTransaction(formData);
-
-    checkAndExecute(response, () =>
-    {
-        addDataTableRow(dataTable, response.data);
-        $("#addModal").modal("hide");
-        $("#addForm")[0].reset();
-        // fetchCustomerEarningsPaidAmount();
-    });
-}
-
-const handleEditTransactionSubmit = async (e) =>
-{
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    const index = formData.get("index");
-
-    const response = await editCustomerTransaction(formData);
-
-    checkAndExecute(response, () =>
-    {
-        $("#editModal").modal("hide");
-        response.data.index = index;
-        editDataTableRow(dataTable, response.data);
-        // fetchCustomerEarningsPaidAmount();
+        console.log(response.data);
+        renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
+        withdrawalDataTable = $("#customer-withdrawals-table").DataTable();
     });
 }

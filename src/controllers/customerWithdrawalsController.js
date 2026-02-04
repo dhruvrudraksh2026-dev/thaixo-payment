@@ -48,6 +48,126 @@ class customerWithdrawalsController
         }
     }
 
+    static getAllCustomerWithdrawalsByCustomerId = async (req, res, next) =>
+    {
+        try
+        {
+            const id = req.params.customerId;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            const isCustomerExists = await customerModel.doesThaiCustomerExists(id);
+            if (!isCustomerExists)
+            {
+                return res.json(Response.failure("Thai Customer Not Found With This Id"));
+            }
+
+            const withdrawals = await customerWithdrawalsModel.getCustomerWithdrawalsByCustomerId(id);
+            if (!withdrawals)
+            {
+                return res.json(Response.failure("Withdrawals By Customer Id Not Found"));
+            }
+
+            return res.json(Response.success("Withdrawals By Customer Id Fetched Successfully", withdrawals));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
+    static getCustomerWithdrawalsByDateRangeByCustomerId = async (req, res, next) =>
+    {
+        try
+        {
+            const id = req.params.customerId;
+            const data = req.query;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            if (!data.startDate)
+            {
+                return res.json(Response.failure("Start Date Not Found"));
+            }
+
+            if (!data.endDate)
+            {
+                return res.json(Response.failure("End Date Not Found"));
+            }
+
+            const startDate = new Date(data.startDate);
+            const endDate = new Date(data.endDate);
+
+            if (startDate > endDate)
+            {
+                return res.json(Response.failure("Start Date Can't Be Greater Than End Date"));
+            }
+
+            data.customerId = id;
+
+            const withdrawals = await customerWithdrawalsModel.getCustomerWithdrawalsByDateRangeByCustomerId(data);
+            if (!withdrawals)
+            {
+                return res.json(Response.failure("Withdrawals By Date Range Not Found"));
+            }
+
+            return res.json(Response.success(`Withdrawals Between ${data.startDate} To ${data.endDate} Fetched Successfully`, withdrawals));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
+    static getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId = async (req, res, next) =>
+    {
+        try
+        {
+            const id = req.params.customerId;
+            const data = req.query;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            if (!data.startDate)
+            {
+                return res.json(Response.failure("Start Date Not Found"));
+            }
+
+            if (!data.endDate)
+            {
+                return res.json(Response.failure("End Date Not Found"));
+            }
+
+            const startDate = new Date(data.startDate);
+            const endDate = new Date(data.endDate);
+
+            if (startDate > endDate)
+            {
+                return res.json(Response.failure("Start Date Can't Be Greater Than End Date"));
+            }
+
+            data.customerId = id;
+
+            const withdrawal = await customerWithdrawalsModel.getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId(data);
+            if (!withdrawal)
+            {
+                return res.json(Response.failure("Withdrawal Not Found"));
+            }
+
+            return res.json(Response.success(`Withdrawal Between ${data.startDate} To ${data.endDate} Fetched Successfully`, withdrawal));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
     static addCustomerWithdrawal = async (req, res, next) =>
     {
         try

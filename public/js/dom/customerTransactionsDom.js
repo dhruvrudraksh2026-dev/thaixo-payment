@@ -1,24 +1,8 @@
-const TRANSACTION_STATUS = {
-    PENDING: {
-        label: "Pending",
-        badge: `<span class="badge bg-warning text-dark">Pending</span>`
-    },
-    DONE: {
-        label: "Done",
-        badge: `<span class="badge bg-success">Done</span>`
-    },
-    CANCELLED: {
-        label: "Cancelled",
-        badge: `<span class="badge bg-danger">Cancelled</span>`
-    }
-};
-
 export const renderCustomerTransactions = (transactions, tableBody) =>
 {
     tableBody.empty();
     transactions.forEach((transaction, index) => 
     {
-        const transactionStatusBadge = TRANSACTION_STATUS[transaction.status]?.badge;
         tableBody.append(`
             <tr data-id=${index}>
                 <td>${index ?? ""}</td>
@@ -26,52 +10,29 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
                 <td>${transaction.minutes ?? ""}</td>
                 <td>${transaction.rate_per_minute ?? ""}</td>
                 <td>${transaction.earnings ?? ""}</td>
-                <td>${transactionStatusBadge}</td>
                 <td>${transaction.created_at ?? ""}</td>
-                <td><button class="btn btn-warning btn-sm editBtn" data-id="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button></td>
             </tr>
         `);
     });
 }
 
-export const addDataTableRow = (dataTable, data) => 
-{
-    const index = dataTable.rows().count();
-    const transactionStatusBadge = TRANSACTION_STATUS[data.status]?.badge;
-    const rowNode = dataTable.row.add([
-        index,
-        data.package_name ?? "",
-        data.minutes ?? "",
-        data.rate_per_minute ?? "",
-        data.earnings ?? "",
-        transactionStatusBadge,
-        data.created_at ?? "",
-        `
-            <button class="btn btn-warning btn-sm editBtn" data-id="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-        `
-    ]).draw(false).node();
 
-    $(rowNode).attr("data-id", index);
-};
-
-export const editDataTableRow = (dataTable, data) => 
+export const renderCustomerTransactionsFilter = (transactions, dataTable) => 
 {
-    const index = data.index;
-    const rowSelector = `tr[data-id="${index}"]`;
-    const transactionStatusBadge = TRANSACTION_STATUS[data.status]?.badge;
-    dataTable.row(rowSelector).data([
-        index,
-        data.package_name ?? "",
-        data.minutes ?? "",
-        data.rate_per_minute ?? "",
-        data.earnings ?? "",
-        transactionStatusBadge,
-        data.created_at ?? "",
-        `
-            <button class="btn btn-warning btn-sm editBtn" data-id="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-        `
-    ]).draw(false);
-};
+    const rows = transactions.map((transaction, index) => (
+        [
+            index,
+            transaction.package_name ?? '',
+            transaction.minutes ?? '',
+            transaction.rate_per_minute ?? '',
+            transaction.earnings ?? '',
+            transaction.created_at ?? '',
+        ]));
+
+    dataTable.clear();
+    dataTable.rows.add(rows);
+    dataTable.draw();
+}
 
 export const renderCustomerOtpSection = (data, division) =>
 {
@@ -165,7 +126,7 @@ export const renderTotalDateRangeEarnings = (data, container) =>
     container.html(
         `
         <div class="card-body px-4 py-1">
-            <h6 class="fs-5 fw-semibold mb-1">Earnings Amount</h6>
+            <h6 class="fs-5 fw-semibold mb-1">Total Earnings Amount <small class="text-muted fw-normal">(Date Range)</small></h6>
             <div class="fw-semibold fs-6 text-success mb-0">
                 <div id="dateRangeEarningsSpinner" class="d-none d-flex justify-content-start align-items-center my-4">
                     <div class="spinner-border spinner-border-sm text-primary" role="status"></div>

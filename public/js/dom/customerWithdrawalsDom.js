@@ -83,6 +83,54 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
     });
 }
 
+export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) => 
+{
+    const rows = withdrawals.map((withdrawal, index) => 
+    {
+        const formattedPayoutDetails =
+            isJSONParsable(withdrawal.payout_details)
+                ? renderPayoutDetails(safeJSONParse(withdrawal.payout_details))
+                : (typeof withdrawal.payout_details === "object")
+                    ? renderPayoutDetails(withdrawal.payout_details)
+                    : withdrawal.payout_details || "NA";
+        return (
+            [
+                `# ${withdrawal.id ?? "NA"}`,
+                `# ${withdrawal.customer_id ?? "NA"}`,
+                withdrawal.withdrawal_method ?? '',
+                withdrawal.withdrawal_amount ?? '',
+                formattedPayoutDetails,
+                WITHDRAWAL_STATUS[withdrawal.status]?.badge ?? '',
+                withdrawal.created_at ?? '',
+                `
+                <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+            `
+            ]);
+    });
+
+    dataTable.clear();
+    dataTable.rows.add(rows);
+    dataTable.draw();
+}
+
+export const renderTotalDateRangeWithdrawals = (data, container) =>
+{
+    container.empty();
+    container.html(
+        `
+        <div class="card-body px-4 py-1">
+            <h6 class="fs-5 fw-semibold mb-1">Total Withdrawals Amount <small class="text-muted fw-normal">(Date Range)</small></h6>
+            <div class="fw-semibold fs-6 text-success mb-0">
+                <div id="dateRangeWithdrawalSpinner" class="d-none d-flex justify-content-start align-items-center my-4">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                </div>
+                <span id="dateRangeWithdrawalValue">₹ ${data.withdrawal_amount || "0.00"}</span>
+            </div>
+        </div>
+        `
+    );
+}
+
 export const addDataTableRow = (dataTable, data) =>
 {
     const formattedPayoutDetails =

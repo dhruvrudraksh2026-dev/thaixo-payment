@@ -68,43 +68,21 @@ export const getCustomerEarningsPaidAmountById = async (id) =>
 export const getCustomerEarningsTotalAmountByDateRange = async (data) =>
 {
     return await $.ajax({
-        url: `/api/customer-transaction/${data.id}/earnings?${data.params}`,
+        url: `/api/customer-transaction/${data.id}/earnings/total-by-date-range?${data.params}`,
         method: "GET",
         headers: {
             Authorization: Cookies.get("token")
         }
     });
-
 }
 
-export const addCustomerTransaction = async (formData) =>
+export const getCustomerTransactionsByIdAndDateRange = async (data) =>
 {
-    return $.ajax(
-        {
-            url: "/api/customer-transaction",
-            method: "POST",
-            headers:
-            {
-                Authorization: Cookies.get("token")
-            },
-            data: formData,
-            processData: false,
-            contentType: false
-        });
-}
-
-export const editCustomerTransaction = async (formData) =>
-{
-    return $.ajax(
-        {
-            url: "/api/customer-transaction",
-            method: "PUT",
-            headers:
-            {
-                Authorization: Cookies.get("token")
-            },
-            data: formData,
-            processData: false,
-            contentType: false
-        });
+    return await $.ajax({
+        url: `/api/customer-transactions/${data.id}/earnings?${data.params}`,
+        method: "GET",
+        headers: {
+            Authorization: Cookies.get("token")
+        }
+    });
 }

@@ -85,20 +85,59 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Customer Transactions Info -->
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="card">
                                                 <div
                                                     class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center">
-                                                    <h4>Transactions Info</h4>
-                                                    <div class="addButtonDiv">
-                                                        <button class="btn btn-primary fs-6 fw-semibold"
-                                                            data-bs-toggle="modal" data-bs-target="#addModal"
-                                                            type="button" id="addTransactionBtn">Add
-                                                            Transaction</button>
-                                                    </div>
+                                                    <h4>Customer Earnings Info</h4>
                                                 </div>
+
                                                 <div class="card-body p-0">
+                                                    <div id="totalEarningsByDateRage"
+                                                        class="card text-center shadow-sm p-2 m-2">
+                                                        <!-- <div
+                                                            class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center mb-4">
+                                                            <h4>Total Earnings By Date Range</h4>
+                                                        </div> -->
+                                                        <div class="card-body">
+                                                            <form id="dateRangeForm" class="row g-3 align-items-end">
+                                                                <div class="col-md-3">
+                                                                    <label for="startDate" class="form-label">Start
+                                                                        Date</label>
+                                                                    <input type="date" class="form-control"
+                                                                        id="startDate" name="startDate" required>
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label for="endDate" class="form-label">End
+                                                                        Date</label>
+                                                                    <input type="date" class="form-control" id="endDate"
+                                                                        name="endDate" required>
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary fs-6 fw-semibold w-100 d-flex align-items-center justify-content-center">
+                                                                        <i class="ti ti-adjustments fs-5 me-2"></i>
+                                                                        <span>Apply Filter</span>
+                                                                    </button>
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <button type="reset"
+                                                                        class="btn btn-warning fs-6 fw-semibold w-100 d-flex align-items-center justify-content-center"
+                                                                        id="resetFilterBtn">
+                                                                        <i class="ti ti-reload fs-5 me-2"></i>
+                                                                        <span>Reset Filter</span>
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <hr class="divider" />
                                                     <div class="app-datatable-default overflow-auto">
                                                         <table class="display app-data-table default-data-table table"
                                                             id="customer-transactions-table">
@@ -109,47 +148,51 @@
                                                                     <th>Minutes</th>
                                                                     <th>Rate Per Minute</th>
                                                                     <th>Earnings</th>
-                                                                    <th>Status</th>
                                                                     <th>Time</th>
-                                                                    <th>Action</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="customer-transactions-table-body"></tbody>
                                                         </table>
                                                     </div>
                                                     <hr class="divider" />
-                                                    <div id="totalEarningsByDateRage"
-                                                        class="card text-center shadow-sm p-2 m-2">
-                                                        <div
-                                                            class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center mb-4">
-                                                            <h4>Total Earnings By Date Range</h4>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <form id="dateRangeForm" class="row g-3 align-items-end">
-                                                                <div class="col-md-4">
-                                                                    <label for="startDate" class="form-label">Start
-                                                                        Date</label>
-                                                                    <input type="date" class="form-control"
-                                                                        id="startDate" name="startDate" required>
-                                                                </div>
+                                                    <div class="text-start p-2 m-2">
+                                                        <div id="dateRangeEarningsResult"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                                                <div class="col-md-4">
-                                                                    <label for="endDate" class="form-label">End
-                                                                        Date</label>
-                                                                    <input type="date" class="form-control" id="endDate"
-                                                                        name="endDate" required>
-                                                                </div>
-
-                                                                <div class="col-md-4">
-                                                                    <button type="submit" class="btn btn-primary w-100">
-                                                                        Apply Filter
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="card-footer text-start p-2 m-2">
-                                                            <div id="dateRangeEarningsResult"></div>
-                                                        </div>
+                                    <!-- Customer Withdrawal Info -->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div
+                                                    class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center mb-4">
+                                                    <h4>Customer Withdrawal Info</h4>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <div class="app-datatable-default overflow-auto">
+                                                        <table class="display app-data-table default-data-table table"
+                                                            id="customer-withdrawals-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Withdrawal Id</th>
+                                                                    <th>Customer Id</th>
+                                                                    <th>Withdrawal Method</th>
+                                                                    <th>Withdrawal Amount</th>
+                                                                    <th>Payout Details</th>
+                                                                    <th>Status</th>
+                                                                    <th>Created At</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="customer-withdrawals-table-body"></tbody>
+                                                        </table>
+                                                    </div>
+                                                    <hr class="divider" />
+                                                    <div class="text-start p-2 m-2">
+                                                        <div id="dateRangeWithdrawalResult"></div>
                                                     </div>
                                                 </div>
                                             </div>

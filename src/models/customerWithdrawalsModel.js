@@ -15,6 +15,24 @@ class customerWithdrawalsModel
         return rows[0] || 0;
     }
 
+    static getCustomerWithdrawalsByCustomerId = async (id, transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw WHERE cw.customer_id = ?", [id]);
+        return rows;
+    }
+
+    static getCustomerWithdrawalsByDateRangeByCustomerId = async (data, transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw WHERE cw.customer_id = ? AND cw.created_at BETWEEN ? AND ?", [data.customerId, data.startDate, data.endDate]);
+        return rows;
+    }
+
+    static getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId = async (data, transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT SUM(withdrawal_amount) as withdrawal_amount FROM customer_withdrawals WHERE customer_id = ? AND created_at BETWEEN ? AND ?", [data.customerId, data.startDate, data.endDate]);
+        return rows[0] || {};
+    }
+
     static getCustomerWithdrawalByWithdrawalId = async (id, transaction = db) =>
     {
         const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw WHERE cw.id = ?", [id]);

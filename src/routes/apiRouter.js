@@ -18,12 +18,11 @@ router.get("check", (req, res) => res.json(Response.success("API Is Working Fine
 
 router.get("/customer-transactions/:id", customerTransactionsController.getAllCustomerTransactionsById);
 router.get("/customer-transactions/total/:id", customerTransactionsController.getCustomerTransactionsTotalAmountById);
-router.post("/customer-transaction", upload.none(), customerTransactionsController.addCustomerTransaction);
-router.put("/customer-transaction", upload.none(), customerTransactionsController.editCustomerTransaction);
 
 router.get("/customer-transaction/:id/earnings/total", customerTransactionsController.getCustomerEarningsTotalAmountById);
 router.get("/customer-transaction/:id/earnings/paid", customerTransactionsController.getCustomerEarningsPaidAmountById);
-router.get("/customer-transaction/:id/earnings", customerTransactionsController.getCustomerEarningsTotalAmountByDateRange); // Date Range Earnings
+router.get("/customer-transaction/:id/earnings/total-by-date-range", customerTransactionsController.getCustomerEarningsTotalAmountByDateRange); // Date Range Earnings
+router.get("/customer-transactions/:id/earnings", customerTransactionsController.getAllCustomerTransactionsByIdAndDateRange); // Date Range Earnings
 
 router.get("/customers/thai", customerController.getThaiCustomers);
 router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);
@@ -35,6 +34,10 @@ router.get("/customer-withdrawal/:id", customerWithdrawalsController.getCustomer
 router.post("/customer-withdrawal", upload.none(), customerWithdrawalsController.addCustomerWithdrawal);
 router.put("/customer-withdrawal", upload.none(), customerWithdrawalsController.editCustomerWithdrawal);
 router.delete("/customer-withdrawal/:id", customerWithdrawalsController.deleteCustomerWithdrawal);
+
+router.get("/customer-withdrawals/:customerId/withdrawals", customerWithdrawalsController.getAllCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
+router.get("/customer-withdrawals/:customerId/withdrawals/by-date-range", customerWithdrawalsController.getCustomerWithdrawalsByDateRangeByCustomerId); // Withdrawals By Date Range
+router.get("/customer-withdrawals/:customerId/withdrawals/total-by-date-range", customerWithdrawalsController.getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId); // Withdrawals Total Amount By Date Range
 
 router.use((req, res, next) =>
 {
