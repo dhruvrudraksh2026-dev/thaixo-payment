@@ -33,6 +33,12 @@ class customerWithdrawalsModel
         return rows;
     }
 
+    static getCustomerWithdrawalTotalPendingAmount = async (transaction = db) =>
+    {
+        const [rows] = await transaction.query(`SELECT SUM(withdrawal_amount) as total_pending FROM customer_withdrawals WHERE status = "PENDING"`);
+        return rows[0] || 0;
+    }
+
     static getCustomerWithdrawalsByDateRangeByCustomerId = async (data, transaction = db) =>
     {
         const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw WHERE cw.customer_id = ? AND cw.created_at BETWEEN ? AND ?", [data.customerId, data.startDate, data.endDate]);

@@ -131,6 +131,21 @@ export const renderTotalDateRangeWithdrawals = (data, container) =>
     );
 }
 
+export const renderTotalPendingWithdrawalsAmount = (data, container) =>
+{
+    container.empty();
+    container.html(
+        `
+        <div class="card-body px-4 py-1">
+            <h6 class="fs-5 fw-semibold mb-1">Total Pending Withdrawals Amount</h6>
+            <div class="fw-semibold fs-6 text-success mb-0">
+                ₹ <span id="totalPendingWithdrawalsValue">${data.total_pending || "0.00"}</span>
+            </div>
+        </div>
+        `
+    );
+}
+
 export const addDataTableRow = (dataTable, data) =>
 {
     const formattedPayoutDetails =

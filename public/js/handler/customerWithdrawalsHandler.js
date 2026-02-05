@@ -1,5 +1,5 @@
-import { addCustomerWithdrawal, editCustomerWithdrawal, getAllCustomerWithdrawals, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById } from "../api/customerWithdrawalsApi.js";
-import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, resetForm } from "../dom/customerWithdrawalsDom.js";
+import { addCustomerWithdrawal, editCustomerWithdrawal, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount } from "../api/customerWithdrawalsApi.js";
+import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderTotalPendingWithdrawalsAmount, resetForm } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
 let dataTable;
@@ -7,6 +7,7 @@ let dataTable;
 export const setUpCustomerWithdrawalsHandler = async () =>
 {
     fetchAndViewCustomersWithdrawals();
+    fetchCustomerWithdrawalsTotalPendingAmount();
 
     $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
 
@@ -23,6 +24,16 @@ export const fetchAndViewCustomersWithdrawals = async () =>
         const data = response.data;
         renderCustomerWithdrawals(data, $("#customer-withdrawals-table-body"));
         dataTable = $("#customer-withdrawals-table").DataTable({ "order": [[0, "desc"]] });
+    });
+}
+
+export const fetchCustomerWithdrawalsTotalPendingAmount = async () =>
+{
+    const response = await getTotalPendingWithdrawalsAmount();
+
+    checkAndExecute(response, () =>
+    {
+        renderTotalPendingWithdrawalsAmount(response.data, $("#totalPendingWithdrawalsAmount"));
     });
 }
 
@@ -58,6 +69,11 @@ const handleAddCustomerWithdrawalSubmit = async (e) =>
 
         resetForm("#addCustomerWithdrawalForm");
         $("#addModal").modal("hide");
+
+        // Fetching The Total Pending Withdrawals Amount Again For Updating The UI
+        //====================================================
+        fetchCustomerWithdrawalsTotalPendingAmount();
+        //====================================================
     });
 }
 
@@ -75,5 +91,10 @@ export const handleEditCustomerWithdrawalSubmit = async (e, withdrawDataTable = 
 
         resetForm("#editCustomerWithdrawalForm");
         $("#editModal").modal("hide");
+
+        // Fetching The Total Pending Withdrawals Amount Again For Updating The UI
+        //====================================================
+        fetchCustomerWithdrawalsTotalPendingAmount();
+        //====================================================
     });
 }

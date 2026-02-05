@@ -103,6 +103,24 @@ class customerWithdrawalsController
         }
     }
 
+    static getCustomerWithdrawalTotalPendingAmount = async (req, res, next) =>
+    {
+        try
+        {
+            const totalPendingWithdrawal = await customerWithdrawalsModel.getCustomerWithdrawalTotalPendingAmount();
+            if (!totalPendingWithdrawal)
+            {
+                return res.json(Response.failure("Total Pending Withdrawal Not Found"));
+            }
+
+            return res.json(Response.success("Total Pending Withdrawal Fetched Successfully", totalPendingWithdrawal));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
     static getCustomerWithdrawalByWithdrawalId = async (req, res, next) =>
     {
         try

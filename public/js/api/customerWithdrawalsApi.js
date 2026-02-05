@@ -50,6 +50,19 @@ export const getTotalPendingCustomerWithdrawalsByCustomerId = async (id) =>
         });
 };
 
+export const getTotalPendingWithdrawalsAmount = async () => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/total-pending`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
 export const getCustomerWithdrawalsById = async (id) => 
 {
     return await $.ajax(
