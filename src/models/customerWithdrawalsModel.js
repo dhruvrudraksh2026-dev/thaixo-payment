@@ -15,9 +15,15 @@ class customerWithdrawalsModel
         return rows;
     }
 
-    static getCustomerWithdrawalsTotalAmountById = async (id, transaction = db) =>
+    static getCustomerWithdrawalsPaidAmountByCustomerId = async (customerId, transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT SUM(withdrawal_amount) as total_amount FROM customer_withdrawals WHERE customer_id = ?", [id]);
+        const [rows] = await transaction.query(`SELECT SUM(withdrawal_amount) as total_paid FROM customer_withdrawals WHERE customer_id = ? AND status = "DONE"`, [customerId]);
+        return rows[0] || 0;
+    }
+
+    static getCustomerWithdrawalsPendingAmountByCustomerId = async (customerId, transaction = db) =>
+    {
+        const [rows] = await transaction.query(`SELECT SUM(withdrawal_amount) as total_pending FROM customer_withdrawals WHERE customer_id = ? AND status = "PENDING"`, [customerId]);
         return rows[0] || 0;
     }
 

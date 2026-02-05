@@ -1,8 +1,8 @@
 import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
-import { getCustomerEarningsPaidAmountById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsApi.js";
-import { getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId } from "../api/customerWithdrawalsApi.js";
+import { getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsApi.js";
+import { getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
 import { renderCustomerBreadcrumbs, renderCustomerInfo } from "../dom/customerDom.js";
-import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalPaidAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter } from "../dom/customerTransactionsDom.js";
+import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals } from "../dom/customerTransactionsDom.js";
 import { renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 import { handleEditCustomerWithdrawalBtnClick, handleEditCustomerWithdrawalSubmit } from "./customerWithdrawalsHandler.js";
@@ -29,7 +29,8 @@ export const setupTransactionsViewHandler = () =>
     // =======================================================
 
     fetchCustomerEarningsTotalAmount();
-    // fetchCustomerEarningsPaidAmount();
+    fetchCustomerWithdrawalsTotalPaidAmount();
+    fetchCustomerWithdrawalsTotalPendingAmount();
 }
 
 export const fetchAndViewCustomersTransactions = async () =>
@@ -74,16 +75,29 @@ export const fetchCustomerEarningsTotalAmount = async () =>
     });
 }
 
-export const fetchCustomerEarningsPaidAmount = async () =>
+export const fetchCustomerWithdrawalsTotalPaidAmount = async () =>
 {
     const pathParts = window.location.pathname.split("/");
     const id = pathParts[pathParts.length - 1];
 
-    const response = await getCustomerEarningsPaidAmountById(id);
+    const response = await getTotalPaidCustomerWithdrawalsByCustomerId(id);
 
     checkAndExecute(response, () =>
     {
-        renderTotalPaidAmount(response.data, $("#totalPaidAmount"));
+        renderTotalPaidWithdrawals(response.data, $("#totalPaidAmount"));
+    });
+}
+
+export const fetchCustomerWithdrawalsTotalPendingAmount = async () =>
+{
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    const response = await getTotalPendingCustomerWithdrawalsByCustomerId(id);
+
+    checkAndExecute(response, () =>
+    {
+        renderTotalPendingWithdrawals(response.data, $("#totalPendingAmount"));
     });
 }
 

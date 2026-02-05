@@ -24,6 +24,32 @@ export const getAllPendingCustomerWithdrawals = async () =>
         });
 };
 
+export const getTotalPaidCustomerWithdrawalsByCustomerId = async (id) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/${id}/withdrawals/paid`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
+export const getTotalPendingCustomerWithdrawalsByCustomerId = async (id) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/${id}/withdrawals/pending`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
 export const getCustomerWithdrawalsById = async (id) => 
 {
     return await $.ajax(

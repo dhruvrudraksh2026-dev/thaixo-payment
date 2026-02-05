@@ -20,7 +20,6 @@ router.get("/customer-transactions/:id", customerTransactionsController.getAllCu
 router.get("/customer-transactions/total/:id", customerTransactionsController.getCustomerTransactionsTotalAmountById);
 
 router.get("/customer-transaction/:id/earnings/total", customerTransactionsController.getCustomerEarningsTotalAmountById);
-router.get("/customer-transaction/:id/earnings/paid", customerTransactionsController.getCustomerEarningsPaidAmountById);
 router.get("/customer-transaction/:id/earnings/total-by-date-range", customerTransactionsController.getCustomerEarningsTotalAmountByDateRange); // Total Earnings By Date Range
 router.get("/customer-transactions/:id/earnings", customerTransactionsController.getAllCustomerTransactionsByIdAndDateRange); // Date Range Earnings
 
@@ -38,6 +37,8 @@ router.post("/customer-withdrawal", upload.none(), customerWithdrawalsController
 router.put("/customer-withdrawal", upload.none(), customerWithdrawalsController.editCustomerWithdrawal);
 router.delete("/customer-withdrawal/:id", customerWithdrawalsController.deleteCustomerWithdrawal);
 
+router.get("/customer-withdrawals/:customerId/withdrawals/paid", customerWithdrawalsController.getTotalPaidCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
+router.get("/customer-withdrawals/:customerId/withdrawals/pending", customerWithdrawalsController.getTotalPendingCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals", customerWithdrawalsController.getAllCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals/by-date-range", customerWithdrawalsController.getCustomerWithdrawalsByDateRangeByCustomerId); // Withdrawals By Date Range
 router.get("/customer-withdrawals/:customerId/withdrawals/total-by-date-range", customerWithdrawalsController.getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId); // Withdrawals Total Amount By Date Range

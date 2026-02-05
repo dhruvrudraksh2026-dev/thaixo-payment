@@ -51,20 +51,6 @@ export const getCustomerEarningsTotalAmountById = async (id) =>
     );
 }
 
-export const getCustomerEarningsPaidAmountById = async (id) =>
-{
-    return await $.ajax(
-        {
-            url: `/api/customer-transaction/${id}/earnings/paid`,
-            method: "GET",
-            headers:
-            {
-                Authorization: Cookies.get("token")
-            }
-        }
-    );
-}
-
 export const getCustomerEarningsTotalAmountByDateRange = async (data) =>
 {
     return await $.ajax({

@@ -33,12 +33,6 @@ class customerTransactionsModel
         return rows[0] || {};
     }
 
-    static getCustomerEarningsPaidAmountById = async (id, transaction = db) =>
-    {
-        const [rows] = await transaction.query(`SELECT SUM(earnings) as total_paid FROM customer_transactions WHERE rate_per_minute = 0 AND minutes = 0 AND status = "DONE" AND customer_id = ?`, [id]);
-        return rows[0] || {};
-    }
-
     static getCustomerEarningsTotalAmountByDateRange = async (data, transaction = db) =>
     {
         const [rows] = await transaction.query(`SELECT SUM(earnings) as total_earnings FROM customer_transactions WHERE rate_per_minute != 0 AND minutes != 0 AND (created_at BETWEEN ? AND ?) AND customer_id = ?;`, [data.startDate, data.endDate, data.id]);

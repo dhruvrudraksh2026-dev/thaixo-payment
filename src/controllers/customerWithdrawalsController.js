@@ -25,6 +25,66 @@ class customerWithdrawalsController
         }
     }
 
+    static getTotalPaidCustomerWithdrawalsByCustomerId = async (req, res, next) =>
+    {
+        try
+        {
+            const id = req.params.customerId;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            const isCustomerExists = await customerModel.doesThaiCustomerExists(id);
+            if (!isCustomerExists)
+            {
+                return res.json(Response.failure("Thai Customer Not Found With This Id"));
+            }
+
+            const totalPaidWithdrawal = await customerWithdrawalsModel.getCustomerWithdrawalsPaidAmountByCustomerId(id);
+            if (!totalPaidWithdrawal)
+            {
+                return res.json(Response.failure("Paid Withdrawals By Customer Id Not Found"));
+            }
+
+            return res.json(Response.success("Paid Withdrawals By Customer Id Fetched Successfully", totalPaidWithdrawal));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
+    static getTotalPendingCustomerWithdrawalsByCustomerId = async (req, res, next) =>
+    {
+        try
+        {
+            const id = req.params.customerId;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            const isCustomerExists = await customerModel.doesThaiCustomerExists(id);
+            if (!isCustomerExists)
+            {
+                return res.json(Response.failure("Thai Customer Not Found With This Id"));
+            }
+
+            const totalPendingWithdrawal = await customerWithdrawalsModel.getCustomerWithdrawalsPendingAmountByCustomerId(id);
+            if (!totalPendingWithdrawal)
+            {
+                return res.json(Response.failure("Pending Withdrawals By Customer Id Not Found"));
+            }
+
+            return res.json(Response.success("Pending Withdrawals By Customer Id Fetched Successfully", totalPendingWithdrawal));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
     static getAllPendingCustomerWithdrawals = async (req, res, next) =>
     {
         try
