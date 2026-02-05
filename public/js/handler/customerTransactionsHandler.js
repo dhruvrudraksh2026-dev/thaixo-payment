@@ -1,7 +1,7 @@
 import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
 import { getCustomerEarningsPaidAmountById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsApi.js";
 import { getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId } from "../api/customerWithdrawalsApi.js";
-import { renderCustomerInfo } from "../dom/customerDom.js";
+import { renderCustomerBreadcrumbs, renderCustomerInfo } from "../dom/customerDom.js";
 import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalPaidAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter } from "../dom/customerTransactionsDom.js";
 import { renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
@@ -56,6 +56,7 @@ export const fetchAndViewCustomersTransactions = async () =>
         // ===========================================================
         renderCustomerOtpSection(data.customer, $("#generate-secure-otp"));
         renderToggleWhiteListedSection(data.customer, $("#toggle-white-listed"));
+        renderCustomerBreadcrumbs(data.customer.white_listed, $("#breadcrumbs-section")); // For Breadcrumbs
         dataTable = $("#customer-transactions-table").DataTable();
     });
 }

@@ -1,4 +1,4 @@
-import { addCustomerWithdrawal, editCustomerWithdrawal, getAllCustomerWithdrawals, getCustomerWithdrawalsById } from "../api/customerWithdrawalsApi.js";
+import { addCustomerWithdrawal, editCustomerWithdrawal, getAllCustomerWithdrawals, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById } from "../api/customerWithdrawalsApi.js";
 import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, resetForm } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
@@ -16,7 +16,7 @@ export const setUpCustomerWithdrawalsHandler = async () =>
 
 export const fetchAndViewCustomersWithdrawals = async () =>
 {
-    const response = await getAllCustomerWithdrawals();
+    const response = await getAllPendingCustomerWithdrawals();
 
     checkAndExecute(response, () =>
     {

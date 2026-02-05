@@ -89,3 +89,18 @@ export const renderCustomerInfo = (data, container) =>
 
     container.append(cardHTML);
 };
+
+export const renderCustomerBreadcrumbs = (isWhiteListed, container) =>
+{
+    container.empty();
+    const breadcrumb = isWhiteListed ? "White Listed Thai Customers" : "Non White Listed Thai Customers";
+    container.append(`
+        <div class="col">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/thai-customers/${isWhiteListed ? "white-listed" : "non-white-listed"}">${breadcrumb}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Customer Transactions</li>
+            </ol>
+        </div>
+    `);
+};

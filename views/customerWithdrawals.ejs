@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- DROP TABLE IF EXISTS customer_withdrawals;
-CREATE TABLE customer_withdrawals
-(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT NOT NULL,
-    withdrawal_method VARCHAR(50) NOT NULL,
-    withdrawal_amount DECIMAL(10,2) NOT NULL,
-    payout_details JSON NOT NULL,
-    status ENUM("PENDING", "DONE", "CANCELLED") DEFAULT "PENDING",
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id) REFERENCES customer(id) ON DELETE CASCADE
-) AUTO_INCREMENT = 100; -->
-
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -57,7 +44,7 @@ CREATE TABLE customer_withdrawals
                                     <div class="container-fluid">
                                         <div class="row page-title">
                                             <div class="col-sm-6">
-                                                <h3>Customer Withdrawals</h3>
+                                                <h3>Pending Customer Withdrawals</h3>
                                             </div>
                                             <!-- <div class="col-sm-6">
                                                 <nav>
@@ -250,22 +237,8 @@ CREATE TABLE customer_withdrawals
 
     <%- include('partials/modals') %>
 
-        <script src="/assets/js/jquery-3.6.3.min.js"></script>
-
-        <script src="/assets/vendor/simplebar/simplebar.js"></script>
-
-        <script src="/assets/vendor/phosphor/phosphor.js"></script>
-
-        <script src="/assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
-
-        <script src="/assets/vendor/prism/prism.min.js"></script>
-        <script src="/assets/vendor/datatable/jquery.dataTables.min.js"></script>
-
-        <script src="/assets/js/script.js"></script>
-
-        <script src="/js/init/customerWithdrawalsInit.js" type="module"></script>
-        <script src="/js/utils/jsCookie.js"></script>
-        <script src="/js/utils/helper.js" type="module"></script>
+        <%- include('partials/jsFooter') %>
+            <script src="/js/init/customerWithdrawalsInit.js" type="module"></script>
 </body>
 
 </html>

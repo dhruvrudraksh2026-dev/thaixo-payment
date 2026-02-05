@@ -1,0 +1,28 @@
+<script src="/assets/js/jquery-3.6.3.min.js"></script>
+
+<script src="/assets/vendor/simplebar/simplebar.js"></script>
+
+<script src="/assets/vendor/phosphor/phosphor.js"></script>
+
+<script src="/assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+<script src="/assets/vendor/prism/prism.min.js"></script>
+<script src="/assets/vendor/datatable/jquery.dataTables.min.js"></script>
+
+<script src="/assets/js/script.js"></script>
+
+<script src="/js/utils/jsCookie.js"></script>
+<script src="/js/utils/helper.js" type="module"></script>
+
+<script>
+    const currentPath = window.location.pathname;
+
+    document.querySelectorAll(".sidebar-nav-link").forEach(link =>
+    {
+        if (link.getAttribute("href") === currentPath)
+        {
+            link.classList.add("bg-primary");
+            link.classList.add("text-white");
+        }
+    });
+</script>

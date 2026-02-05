@@ -11,6 +11,19 @@ export const getAllCustomerWithdrawals = async () =>
         });
 };
 
+export const getAllPendingCustomerWithdrawals = async () => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/pending`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
 export const getCustomerWithdrawalsById = async (id) => 
 {
     return await $.ajax(

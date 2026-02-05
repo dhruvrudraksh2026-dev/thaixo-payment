@@ -32,6 +32,7 @@ router.patch("/customer/:id/toggle-white-listed", customerController.toggleWhite
 router.get("/customer/:id", customerController.getCustomerById);
 
 router.get("/customer-withdrawals", customerWithdrawalsController.getAllCustomerWithdrawals);
+router.get("/customer-withdrawals/pending", customerWithdrawalsController.getAllPendingCustomerWithdrawals);
 router.get("/customer-withdrawal/:id", customerWithdrawalsController.getCustomerWithdrawalByWithdrawalId);
 router.post("/customer-withdrawal", upload.none(), customerWithdrawalsController.addCustomerWithdrawal);
 router.put("/customer-withdrawal", upload.none(), customerWithdrawalsController.editCustomerWithdrawal);

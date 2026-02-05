@@ -25,6 +25,24 @@ class customerWithdrawalsController
         }
     }
 
+    static getAllPendingCustomerWithdrawals = async (req, res, next) =>
+    {
+        try
+        {
+            const pendingWithdrawals = await customerWithdrawalsModel.getAllPendingCustomerWithdrawals();
+            if (!pendingWithdrawals)
+            {
+                return res.json(Response.failure("Pending Withdrawals Not Found"));
+            }
+
+            return res.json(Response.success("Pending Withdrawals Fetched Successfully", pendingWithdrawals));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
     static getCustomerWithdrawalByWithdrawalId = async (req, res, next) =>
     {
         try
