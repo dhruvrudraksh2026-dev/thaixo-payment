@@ -1,4 +1,5 @@
-import { setupWhiteListedThaiCustomersHandlers } from "../handler/whiteListedThaiCustomersHandler.js";
+import { setupWhiteListedThaiCustomersHandlers } from "../handler/customerHandler.js";
+
 $(() =>
 {
     setupWhiteListedThaiCustomersHandlers();
