@@ -36,13 +36,13 @@ export const setupNonWhiteListedThaiCustomersHandlers = () =>
 {
     fetchAndRenderNonWhiteListedThaiCustomers();
 
-    // document.addEventListener("visibilitychange", () =>
-    // {
-    //     if (!document.hidden)
-    //     {
-    //         fetchAndRenderNonWhiteListedThaiCustomers();
-    //     }
-    // });
+    $(window).on("pageshow", function (event)
+    {
+        if (event.originalEvent.persisted)
+        {
+            window.location.reload();
+        }
+    });
 };
 
 // --------------------------
@@ -62,11 +62,11 @@ export const setupWhiteListedThaiCustomersHandlers = () =>
 {
     fetchAndRenderWhiteListedThaiCustomers();
 
-    // document.addEventListener("visibilitychange", () =>
-    // {
-    //     if (!document.hidden)
-    //     {
-    //         fetchAndRenderWhiteListedThaiCustomers();
-    //     }
-    // });
+    $(window).on("pageshow", function (event)
+    {
+        if (event.originalEvent.persisted)
+        {
+            window.location.reload();
+        }
+    });
 };
