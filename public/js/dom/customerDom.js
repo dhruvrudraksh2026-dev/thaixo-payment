@@ -104,3 +104,11 @@ export const renderCustomerBreadcrumbs = (isWhiteListed, container) =>
         </div>
     `);
 };
+
+export const renderCustomerWithdrawalInfoAddBtn = (container) =>
+{
+    container.empty();
+    container.append(`
+        <button class="btn btn-primary addBtn" data-bs-toggle="modal" data-bs-target="#addModal">Add Withdrawal</button>
+    `);
+};

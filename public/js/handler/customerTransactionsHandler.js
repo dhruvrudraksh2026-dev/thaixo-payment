@@ -1,11 +1,10 @@
 import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
 import { getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsApi.js";
-import { getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
+import { addCustomerWithdrawal, editCustomerWithdrawal, getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsById, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
 import { renderCustomerBreadcrumbs, renderCustomerInfo } from "../dom/customerDom.js";
 import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals } from "../dom/customerTransactionsDom.js";
-import { renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
+import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals, resetForm } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
-import { handleEditCustomerWithdrawalBtnClick, handleEditCustomerWithdrawalSubmit } from "./customerWithdrawalsHandler.js";
 
 let dataTable;
 let withdrawalDataTable;
@@ -25,7 +24,9 @@ export const setupTransactionsViewHandler = () =>
     // For Customer Withdrawals
     // =======================================================
     $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
-    $("#editModal").on("submit", (e) => handleEditCustomerWithdrawalSubmit(e, withdrawalDataTable));
+    $(document).on("click", ".addBtn", handleAddCustomerWithdrawalBtnClick);
+    $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
+    $("#addModal").on("submit", handleAddCustomerWithdrawalSubmit);
     // =======================================================
 
     fetchCustomerEarningsTotalAmount();
@@ -217,3 +218,160 @@ export const fetchAndViewCustomersWithdrawals = async () =>
         withdrawalDataTable = $("#customer-withdrawals-table").DataTable();
     });
 }
+
+
+// ======================================================
+// For Withdrawals
+// ======================================================
+// For Adding Withdrawals
+const handleAddCustomerWithdrawalBtnClick = () =>
+{
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    $("#addCustomerId").val(id);
+}
+
+const handleAddCustomerWithdrawalSubmit = async (e) =>
+{
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    let withdrawalDetails = {};
+
+    const keys = formData.getAll("keys[]");
+    const values = formData.getAll("values[]");
+
+    keys.forEach((key, index) =>
+    {
+        if (key && key.trim() !== "")
+        {
+            withdrawalDetails[key.trim()] = values[index];
+        }
+    });
+
+    formData.append("payoutDetails", JSON.stringify(withdrawalDetails));
+
+    const response = await addCustomerWithdrawal(formData);
+
+    checkAndExecute(response, () =>
+    {
+        const data = response.data;
+        addDataTableRow(withdrawalDataTable, data);
+
+        resetForm("#addCustomerWithdrawalForm");
+        $("#addModal").modal("hide");
+
+        // Fetching The Total Pending Withdrawals Amount Again For Updating The UI
+        //====================================================
+        fetchCustomerWithdrawalsTotalPendingAmount();
+        //====================================================
+    });
+}
+
+// For Editing Withdrawals
+const handleEditCustomerWithdrawalBtnClick = async (e) =>
+{
+    e.preventDefault();
+
+    const id = $(e.target).data("id");
+    const response = await getCustomerWithdrawalsById(id);
+
+    checkAndExecute(response, () =>
+    {
+        const data = response.data;
+
+        // 1️⃣ Fill normal fields
+        $("#editId").val(data.id);
+        $("#editCustomerId").val(data.customer_id);
+        $("#editWithdrawalMethod").val(data.withdrawal_method);
+        $("#editWithdrawalAmount").val(data.withdrawal_amount);
+        $("#editStatus").val(data.status);
+
+        // 2️⃣ Clear old KV rows
+        const $container = $("#kv-edit-container");
+        $container.empty();
+
+        // 3️⃣ Populate payout_details
+        if (Array.isArray(data.payout_details))
+        {
+            data.payout_details.forEach(obj =>
+            {
+                Object.entries(obj).forEach(([key, value]) =>
+                {
+                    $container.append(createKVRow(key, value));
+                });
+            });
+        }
+        else if (typeof data.payout_details === "object")
+        {
+            Object.entries(data.payout_details).forEach(([key, value]) =>
+            {
+                $container.append(createKVRow(key, value));
+            });
+        }
+
+        // 4️⃣ If empty, add one blank row
+        if ($container.children().length === 0)
+        {
+            $container.append(createKVRow());
+        }
+
+        // 5️⃣ Show modal
+        $("#editModal").modal("show");
+    });
+};
+
+function createKVRow(key = "", value = "")
+{
+    return `
+      <div class="row g-2 align-items-center kv-row mb-2">
+        <div class="col-md-5">
+          <input type="text" name="keys[]" class="form-control" value="${key}" required>
+        </div>
+        <div class="col-md-5">
+          <input type="text" name="values[]" class="form-control" value="${value}" required>
+        </div>
+        <div class="col-md-2 text-end">
+          <button type="button" class="btn btn-danger btn-sm remove-row">✖</button>
+        </div>
+      </div>
+    `;
+}
+
+const handleEditCustomerWithdrawalSubmit = async (e) =>
+{
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const payoutDetails = {};
+
+    // 2️⃣ Merge dynamic key–value pairs
+    const keys = formData.getAll("keys[]");
+    const values = formData.getAll("values[]");
+
+    keys.forEach((key, i) =>
+    {
+        if (key && key.trim())
+        {
+            payoutDetails[key.trim()] = values[i];
+        }
+    });
+
+    formData.append("payoutDetails", JSON.stringify(payoutDetails));
+
+    // 3️⃣ Send JSON to API
+    const response = await editCustomerWithdrawal(formData);
+
+    checkAndExecute(response, () =>
+    {
+        const data = response.data;
+
+        editDataTableRow(withdrawalDataTable, data);
+
+        resetForm("#editCustomerWithdrawalForm");
+        $("#editModal").modal("hide");
+
+        fetchCustomerWithdrawalsTotalPendingAmount();
+    });
+};
