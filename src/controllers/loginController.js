@@ -5,6 +5,9 @@ import db from "../../config/db.js";
 import bcrypt from 'bcrypt'
 class LoginController 
 {
+    static validEmail = "admin@gmail.com";
+    static validPassword = "$2a$05$l1PjOpxZL7B3I2d6RVKGo.z57PTunx8SGIpbK/DQmkcxlvIYPTtS2";
+
     static login = async (req, res, next) =>
     {
         const data = req.body;
@@ -16,41 +19,26 @@ class LoginController
         {
             return res.json(Response.failure('Please Enter Password'));
         }
-        const [rows] = await db.query(
-            `SELECT u.id, u.name, u.email, u.password, u.userroleid, u.status, ur.permissions
-                FROM user u 
-                LEFT JOIN userrole ur ON u.userroleid = ur.id
-                WHERE u.email = ?`,
-            [data.email]
-        );
-        const user = rows[0];
+
+        const user = {
+            name: "Super Admin",
+            email: this.validEmail,
+            password: this.validPassword
+        }
 
         if (!user)
         {
             return res.json(Response.failure("Account Does Not Exists"));
         }
 
-        if (user.status == 0)
-        {
-            return res.json(Response.failure("You Are Not An Active User"));
-        }
         if (!bcrypt.compareSync(data.password, user.password))
         {
             return res.json(Response.failure("Invalid Credentials"));
         }
 
-
-        if (typeof user.permissions == "string")
-        {
-            user.permissions = JSON.parse(user.permissions);
-        }
-
         const payload = {
-            id: user.id,
             email: user.email,
             name: user.name,
-            roleId: user.userroleid,
-            permissions: user.permissions,
             account: user.name
         };
 
