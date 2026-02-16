@@ -24,33 +24,6 @@ export const getCustomerById = async (id) =>
         });
 };
 
-export const toggleWhiteListedById = async (id) =>
-{
-    return await $.ajax(
-        {
-            url: `/api/customer/${id}/toggle-white-listed`,
-            method: "PATCH",
-            headers:
-            {
-                Authorization: Cookies.get("token")
-            }
-        });
-}
-
-export const updateGeneratedOtpById = async (id) =>
-{
-    return await $.ajax(
-        {
-            url: `/api/customer/${id}/generate-otp`,
-            method: "POST",
-            headers:
-            {
-                Authorization: Cookies.get("token")
-            }
-        }
-    );
-}
-
 // For White Listed And Non White Listed Customers
 // --------------------------
 // For Non White Listed

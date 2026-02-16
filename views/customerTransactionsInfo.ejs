@@ -163,12 +163,9 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="card">
-                                                <div
+                                                <div id="customer-withdrawals-table-header"
                                                     class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center mb-4">
-                                                    <h4>Customer Withdrawal Info</h4>
-                                                    <button class="btn btn-primary addBtn" data-bs-toggle="modal"
-                                                        data-bs-target="#addModal">Add
-                                                        Withdrawal</button>
+
                                                 </div>
                                                 <div class="card-body p-0">
                                                     <div class="app-datatable-default overflow-auto">
@@ -209,7 +206,7 @@
             </div>
     </div>
 
-    <!-- Edit Modal -->
+    <!-- Edit Withdrawal Modal -->
     <div class="modal fade bd-example-modal-lg" id="editModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -222,8 +219,8 @@
                 <div class="modal-body dark-modal">
 
                     <form id="editCustomerWithdrawalForm" class="row g-3 custom-input">
-                        <input type="hidden" id="editId" name="id">
-                        <input type="hidden" id="editCustomerId" name="customerId">
+                        <input type="hidden" id="editWithdrawalId" name="id">
+                        <input type="hidden" id="editWithdrawalCustomerId" name="customerId">
 
                         <div class="col-12">
                             <label class="form-label">Withdrawal Method *</label>
@@ -240,35 +237,20 @@
                         <div class="col-12">
                             <label for="kv-edit-container" class="form-label">Withdrawal Details *</label>
                             <div id="kv-edit-container">
-                                <div class="row g-2 align-items-center kv-row mb-2">
-                                    <div class="col-md-5">
-                                        <input type="text" name="keys[]" class="form-control" placeholder="Key"
-                                            required>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <input type="text" name="values[]" class="form-control" placeholder="Value"
-                                            required>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-danger btn-sm remove-row">
-                                            ✖
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
 
-                            <button type="button" id="addEditRow" class="btn btn-outline-primary btn-sm"
+                            <button type="button" id="addEditRow" class="btn btn-outline-primary btn-sm py-1"
                                 data-target="#kv-edit-container">
-                                ➕ Add Key
+                                <i class="ti ti-plus fs-5"></i>
                             </button>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label fw-semibold" for="editStatus">
+                            <label class="form-label fw-semibold" for="editWithdrawalStatus">
                                 Status <span class="text-danger">*</span>
                             </label>
 
-                            <select class="form-select shadow-sm" name="status" id="editStatus" required>
+                            <select class="form-select shadow-sm" name="status" id="editWithdrawalStatus" required>
                                 <option selected disabled>Select Payment Status</option>
                                 <option value="PENDING">🟡 Pending</option>
                                 <option value="DONE">🟢 Done</option>
@@ -325,26 +307,26 @@
                                         <input type="text" name="values[]" class="form-control" placeholder="Value"
                                             required>
                                     </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-danger btn-sm remove-row">
-                                            ✖
+                                    <div class="col-md-2 text-center">
+                                        <button type="button" class="btn btn-danger btn-sm py-1 remove-row">
+                                            <i class="ti ti-trash fs-5"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
-                            <button type="button" id="addRow" class="btn btn-outline-primary btn-sm"
+                            <button type="button" id="addRow" class="btn btn-outline-primary btn-sm py-1"
                                 data-target="#kv-container">
-                                ➕ Add Key
+                                <i class="ti ti-plus fs-5"></i>
                             </button>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label fw-semibold" for="addStatus">
+                            <label class="form-label fw-semibold" for="addWithdrawalStatus">
                                 Status <span class="text-danger">*</span>
                             </label>
 
-                            <select class="form-select shadow-sm" name="status" id="addStatus" required>
+                            <select class="form-select shadow-sm" name="status" id="addWithdrawalStatus" required>
                                 <option selected disabled>Select Payment Status</option>
                                 <option value="PENDING">🟡 Pending</option>
                                 <option value="DONE">🟢 Done</option>
@@ -364,7 +346,6 @@
     </div>
 
     <%- include('partials/modals') %>
-
         <%- include('partials/jsFooter') %>
             <script>
                 $(document).ready(function ()
@@ -378,8 +359,10 @@
                             <div class="col-md-5">
                                 <input type="text" name="values[]" class="form-control" placeholder="Value" required>
                             </div>
-                            <div class="col-md-2 text-end">
-                                <button type="button" class="btn btn-danger btn-sm remove-row">✖</button>
+                            <div class="col-md-2 text-center">
+                                <button type="button" class="btn btn-danger btn-sm py-1 remove-row">
+                                    <i class="ti ti-trash fs-5"></i>
+                                </button>
                             </div>
                         </div>
                     `;

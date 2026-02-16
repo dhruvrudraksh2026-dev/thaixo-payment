@@ -1,39 +1,48 @@
-import { getCustomerById, toggleWhiteListedById, updateGeneratedOtpById } from "../api/customerApi.js";
-import { getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsApi.js";
+import { getCustomerById } from "../api/customerApi.js";
+import { renderCustomerInfo } from "../dom/customerDom.js";
+
+import { toggleWhiteListedById, updateGeneratedOtpById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsInfoAPI.js";
+import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals, renderCustomerBreadcrumbs, renderCustomerWithdrawalsTableHeader, resetForm, createKVRow } from "../dom/customerTransactionsInfoDom.js";
+
 import { addCustomerWithdrawal, editCustomerWithdrawal, getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsById, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
-import { renderCustomerBreadcrumbs, renderCustomerInfo } from "../dom/customerDom.js";
-import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals } from "../dom/customerTransactionsDom.js";
-import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals, resetForm } from "../dom/customerWithdrawalsDom.js";
+import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
+
 import { checkAndExecute } from "../utils/helper.js";
 
-let dataTable;
-let withdrawalDataTable;
+// ==========================================================================================
+// Customer Transactions Info
+// ==========================================================================================
+
+let dataTable; // Transactions Table
+let withdrawalDataTable; // Withdrawals Table
 
 export const setupTransactionsViewHandler = () =>
 {
+    // (1.) Fetching and Rendering Customers Transactions & Withdrawals
     fetchAndViewCustomersTransactions();
     fetchAndViewCustomersWithdrawals();
 
+    // (2.) OTP Generationg And Toggling White Listed
     $(document).on("click", "#generate-secure-otp-btn", handleGenerateOtp);
     $(document).on("click", "#toggle-white-listed-btn", handleToggleWhiteListedBtnClick);
 
+    // (3.) For Date Range
     $("#dateRangeForm").on("submit", handleDateRangeSubmit);
     $("#dateRangeForm").on("reset", handleDateRangeReset);
 
-    // =======================================================
-    // For Customer Withdrawals
-    // =======================================================
+    // (4.) For Customer Withdrawals
     $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
     $(document).on("click", ".addBtn", handleAddCustomerWithdrawalBtnClick);
     $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
     $("#addModal").on("submit", handleAddCustomerWithdrawalSubmit);
-    // =======================================================
 
+    // (5.) For Stats
     fetchCustomerEarningsTotalAmount();
     fetchCustomerWithdrawalsTotalPaidAmount();
     fetchCustomerWithdrawalsTotalPendingAmount();
 }
 
+// (1.) For Customer Transactions And Withdrawals
 export const fetchAndViewCustomersTransactions = async () =>
 {
     const pathParts = window.location.pathname.split("/");
@@ -63,6 +72,23 @@ export const fetchAndViewCustomersTransactions = async () =>
     });
 }
 
+export const fetchAndViewCustomersWithdrawals = async () =>
+{
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    const response = await getCustomerWithdrawalsByCustomerId(id);
+    const customerInfo = await getCustomerById(id);
+
+    checkAndExecute(response, () =>
+    {
+        renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
+        renderCustomerWithdrawalsTableHeader(customerInfo.data.white_listed, $("#customer-withdrawals-table-header"));
+        withdrawalDataTable = $("#customer-withdrawals-table").DataTable();
+    });
+}
+
+// (5.) For Stats
 export const fetchCustomerEarningsTotalAmount = async () =>
 {
     const pathParts = window.location.pathname.split("/");
@@ -102,6 +128,7 @@ export const fetchCustomerWithdrawalsTotalPendingAmount = async () =>
     });
 }
 
+// (3.) For Date Range
 const handleDateRangeSubmit = async (e) =>
 {
     e.preventDefault();
@@ -170,6 +197,7 @@ const handleDateRangeReset = () =>
     location.reload();
 }
 
+// (2.) For OTP Generation And Toggling White Listed
 const handleGenerateOtp = async (e) =>
 {
     const btn = $(e.currentTarget);
@@ -205,24 +233,7 @@ const handleToggleWhiteListedBtnClick = async (e) =>
     }));
 }
 
-export const fetchAndViewCustomersWithdrawals = async () =>
-{
-    const pathParts = window.location.pathname.split("/");
-    const id = pathParts[pathParts.length - 1];
-
-    const response = await getCustomerWithdrawalsByCustomerId(id);
-
-    checkAndExecute(response, () =>
-    {
-        renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
-        withdrawalDataTable = $("#customer-withdrawals-table").DataTable();
-    });
-}
-
-
-// ======================================================
-// For Withdrawals
-// ======================================================
+// (4.) For Withdrawals
 // For Adding Withdrawals
 const handleAddCustomerWithdrawalBtnClick = () =>
 {
@@ -281,18 +292,20 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
     {
         const data = response.data;
 
-        // 1️⃣ Fill normal fields
-        $("#editId").val(data.id);
-        $("#editCustomerId").val(data.customer_id);
+        // Filling normal fields
+        $("#editWithdrawalId").val(data.id);
+        $("#editWithdrawalCustomerId").val(data.customer_id);
         $("#editWithdrawalMethod").val(data.withdrawal_method);
         $("#editWithdrawalAmount").val(data.withdrawal_amount);
-        $("#editStatus").val(data.status);
+        $("#editWithdrawalStatus").val(data.status);
 
-        // 2️⃣ Clear old KV rows
+        // Clearing old KV rows
         const $container = $("#kv-edit-container");
         $container.empty();
 
-        // 3️⃣ Populate payout_details
+        console.log(data.payout_details);
+
+        // Populating payout_details
         if (Array.isArray(data.payout_details))
         {
             data.payout_details.forEach(obj =>
@@ -311,33 +324,10 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
             });
         }
 
-        // 4️⃣ If empty, add one blank row
-        if ($container.children().length === 0)
-        {
-            $container.append(createKVRow());
-        }
-
-        // 5️⃣ Show modal
+        // Showing modal
         $("#editModal").modal("show");
     });
 };
-
-function createKVRow(key = "", value = "")
-{
-    return `
-      <div class="row g-2 align-items-center kv-row mb-2">
-        <div class="col-md-5">
-          <input type="text" name="keys[]" class="form-control" value="${key}" required>
-        </div>
-        <div class="col-md-5">
-          <input type="text" name="values[]" class="form-control" value="${value}" required>
-        </div>
-        <div class="col-md-2 text-end">
-          <button type="button" class="btn btn-danger btn-sm remove-row">✖</button>
-        </div>
-      </div>
-    `;
-}
 
 const handleEditCustomerWithdrawalSubmit = async (e) =>
 {
@@ -346,7 +336,7 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
     const formData = new FormData(e.target);
     const payoutDetails = {};
 
-    // 2️⃣ Merge dynamic key–value pairs
+    // Merging dynamic key-value pairs
     const keys = formData.getAll("keys[]");
     const values = formData.getAll("values[]");
 
@@ -360,7 +350,6 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
 
     formData.append("payoutDetails", JSON.stringify(payoutDetails));
 
-    // 3️⃣ Send JSON to API
     const response = await editCustomerWithdrawal(formData);
 
     checkAndExecute(response, () =>
@@ -375,3 +364,4 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
         fetchCustomerWithdrawalsTotalPendingAmount();
     });
 };
+// ==========================================================================================

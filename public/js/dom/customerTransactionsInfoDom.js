@@ -1,3 +1,5 @@
+// (1.) For Customer Transactions
+// ====================================================================
 export const renderCustomerTransactions = (transactions, tableBody) =>
 {
     tableBody.empty();
@@ -16,6 +18,7 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
     });
 }
 
+// Rendering The Customer's Transactions Data After Applying The Date Range Filter
 export const renderCustomerTransactionsFilter = (transactions, dataTable) => 
 {
     const rows = transactions.map((transaction, index) => (
@@ -33,6 +36,8 @@ export const renderCustomerTransactionsFilter = (transactions, dataTable) =>
     dataTable.draw();
 }
 
+// (2.) For OTP And Toggle White Listed
+// ====================================================================
 export const renderCustomerOtpSection = (data, division) =>
 {
     division.html
@@ -84,26 +89,14 @@ export const renderCoinsValue = (data, container) =>
     container.empty();
     container.html(
         `
-        ${data.coins}
-        `
+            ${data.coins}
+            `
     );
 }
+// ================================================================
 
-export const renderTotalEarningAmount = (data, container) =>
-{
-    container.empty();
-    container.html(
-        `
-        <div class="card-body px-4 py-1">
-            <h6 class="fs-5 fw-semibold mb-1">Lifetime Earnings Amount</h6>
-            <div class="fw-semibold fs-6 text-success mb-0">
-                ₹ <span id="totalEarningsValue">${data.total_earnings || "0.00"}</span>
-            </div>
-        </div>
-        `
-    );
-}
-
+// (3.) For Date Range
+// ====================================================================
 export const renderTotalDateRangeEarnings = (data, container) =>
 {
     container.empty();
@@ -116,6 +109,24 @@ export const renderTotalDateRangeEarnings = (data, container) =>
                     <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
                 </div>
                 <span id="dateRangeEarningsValue">₹ ${data.total_earnings || "0.00"}</span>
+            </div>
+        </div>
+        `
+    );
+}
+// ====================================================================
+
+// (5.) For Stats
+// ====================================================================
+export const renderTotalEarningAmount = (data, container) =>
+{
+    container.empty();
+    container.html(
+        `
+        <div class="card-body px-4 py-1">
+            <h6 class="fs-5 fw-semibold mb-1">Lifetime Earnings Amount</h6>
+            <div class="fw-semibold fs-6 text-success mb-0">
+                ₹ <span id="totalEarningsValue">${data.total_earnings || "0.00"}</span>
             </div>
         </div>
         `
@@ -150,4 +161,54 @@ export const renderTotalPendingWithdrawals = (data, container) =>
         </div>
         `
     );
+}
+// ====================================================================
+
+// Miscellaneous - According to the white listed status
+export const renderCustomerBreadcrumbs = (isWhiteListed, container) =>
+{
+    container.empty();
+    const breadcrumb = isWhiteListed ? "White Listed Thai Customers" : "Non White Listed Thai Customers";
+    container.append(`
+        <div class="col">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/thai-customers/${isWhiteListed ? "white-listed" : "non-white-listed"}">${breadcrumb}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Customer Transactions</li>
+            </ol>
+        </div>
+    `);
+};
+
+export const renderCustomerWithdrawalsTableHeader = (isWhiteListed, container) =>
+{
+    container.empty();
+    container.append(`
+        <h4>Customer Withdrawal Info</h4>
+        ${isWhiteListed ? `<button class="btn btn-primary addBtn" data-bs-toggle="modal" data-bs-target="#addModal">Add Withdrawal</button>` : ""}
+    `);
+};
+
+export const createKVRow = (key = "", value = "") =>
+{
+    return `
+      <div class="row g-2 align-items-center kv-row mb-2">
+        <div class="col-md-5">
+          <input type="text" name="keys[]" class="form-control" value="${key}" required>
+        </div>
+        <div class="col-md-5">
+          <input type="text" name="values[]" class="form-control" value="${value}" required>
+        </div>
+        <div class="col-md-2 text-center">
+            <button type="button" class="btn btn-danger btn-sm py-1 remove-row">
+                <i class="ti ti-trash fs-5"></i>
+            </button>
+        </div>
+      </div>
+    `;
+}
+
+export const resetForm = (form) =>
+{
+    $(form)[0].reset();
 }

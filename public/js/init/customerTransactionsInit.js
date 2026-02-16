@@ -1,4 +1,4 @@
-import { setupTransactionsViewHandler } from "../handler/customerTransactionsHandler.js";
+import { setupTransactionsViewHandler } from "../handler/customerTransactionsInfoHandler.js";
 
 $(() =>
 {
