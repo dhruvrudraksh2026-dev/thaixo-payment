@@ -1,7 +1,6 @@
 import { validateEmail } from "../helpers/Validations.js";
 import Response from "../helpers/response.js";
 import jwt from 'jsonwebtoken';
-import db from "../../config/db.js";
 import bcrypt from 'bcrypt'
 class LoginController 
 {
@@ -15,9 +14,15 @@ class LoginController
         {
             return res.json(Response.failure('Please Enter Email Correctly'));
         }
+
         if (!data.password)
         {
             return res.json(Response.failure('Please Enter Password'));
+        }
+
+        if (data.email != this.validEmail)
+        {
+            return res.json(Response.failure('Invalid Credentials'));
         }
 
         const user = {
