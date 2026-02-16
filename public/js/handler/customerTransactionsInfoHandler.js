@@ -282,6 +282,7 @@ const handleAddCustomerWithdrawalSubmit = async (e) =>
         // Fetching The Total Pending Withdrawals Amount Again For Updating The UI
         //====================================================
         fetchCustomerWithdrawalsTotalPendingAmount();
+        fetchCustomerWithdrawalsTotalPaidAmount();
         //====================================================
     });
 }
@@ -368,6 +369,7 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
         $("#editModal").modal("hide");
 
         fetchCustomerWithdrawalsTotalPendingAmount();
+        fetchCustomerWithdrawalsTotalPaidAmount();
     });
 };
 
