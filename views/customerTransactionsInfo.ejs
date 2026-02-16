@@ -347,41 +347,7 @@
 
     <%- include('partials/modals') %>
         <%- include('partials/jsFooter') %>
-            <script>
-                $(document).ready(function ()
-                {
-                    // Reusable row template
-                    const getRowTemplate = () => `
-                        <div class="row g-2 align-items-center kv-row mb-2">
-                            <div class="col-md-5">
-                                <input type="text" name="keys[]" class="form-control" placeholder="Key" required>
-                            </div>
-                            <div class="col-md-5">
-                                <input type="text" name="values[]" class="form-control" placeholder="Value" required>
-                            </div>
-                            <div class="col-md-2 text-center">
-                                <button type="button" class="btn btn-danger btn-sm py-1 remove-row">
-                                    <i class="ti ti-trash fs-5"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-
-                    // ADD row (works for add & edit)
-                    $(document).on("click", "#addRow, #addEditRow", function ()
-                    {
-                        const target = $(this).data("target");
-                        $(target).append(getRowTemplate());
-                    });
-
-                    // REMOVE row (works everywhere)
-                    $(document).on("click", ".remove-row", function ()
-                    {
-                        $(this).closest(".kv-row").remove();
-                    });
-                });
-            </script>
-            <script src="/js/init/customerTransactionsInit.js" type="module"></script>
+            <script src="/js/init/customerTransactionsInfoInit.js" type="module"></script>
 </body>
 
 </html>

@@ -36,6 +36,12 @@ export const setupTransactionsViewHandler = () =>
     $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
     $("#addModal").on("submit", handleAddCustomerWithdrawalSubmit);
 
+    // ADD row (works for add & edit)
+    $(document).on("click", "#addRow, #addEditRow", handleAddRow);
+
+    // REMOVE row (works everywhere)
+    $(document).on("click", ".remove-row", handleRemoveRow);
+
     // (5.) For Stats
     fetchCustomerEarningsTotalAmount();
     fetchCustomerWithdrawalsTotalPaidAmount();
@@ -364,4 +370,18 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
         fetchCustomerWithdrawalsTotalPendingAmount();
     });
 };
+
+// For Adding And Removing Key-Value Pair Rows
+const handleAddRow = (e) =>
+{
+    const btn = $(e.currentTarget);
+    const target = btn.data("target");
+    $(target).append(createKVRow("", ""));
+}
+
+const handleRemoveRow = (e) =>
+{
+    const btn = $(e.currentTarget);
+    btn.closest(".kv-row").remove();
+}
 // ==========================================================================================

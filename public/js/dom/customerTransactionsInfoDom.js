@@ -194,10 +194,10 @@ export const createKVRow = (key = "", value = "") =>
     return `
       <div class="row g-2 align-items-center kv-row mb-2">
         <div class="col-md-5">
-          <input type="text" name="keys[]" class="form-control" value="${key}" required>
+          <input type="text" name="keys[]" class="form-control" placeholder="Key" value="${key}" required>
         </div>
         <div class="col-md-5">
-          <input type="text" name="values[]" class="form-control" value="${value}" required>
+          <input type="text" name="values[]" class="form-control" placeholder="Value" value="${value}" required>
         </div>
         <div class="col-md-2 text-center">
             <button type="button" class="btn btn-danger btn-sm py-1 remove-row">
