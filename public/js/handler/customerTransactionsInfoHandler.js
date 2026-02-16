@@ -90,7 +90,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
     {
         renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
         renderCustomerWithdrawalsTableHeader(customerInfo.data.white_listed, $("#customer-withdrawals-table-header"));
-        withdrawalDataTable = $("#customer-withdrawals-table").DataTable();
+        withdrawalDataTable = $("#customer-withdrawals-table").DataTable({ "order": [[0, "desc"]] });
     });
 }
 

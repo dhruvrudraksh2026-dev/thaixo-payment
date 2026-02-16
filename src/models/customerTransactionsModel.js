@@ -5,7 +5,7 @@ class customerTransactionsModel
     static getAllCustomerTransactionsById = async (id, transaction = db) =>
     {
         // Fetching Transactions With Package Details
-        const [rows] = await transaction.query("SELECT ct.*, DATE_FORMAT(ct.created_at, '%d %b %Y, %h:%i:%s %p') as created_at, gp.package_name FROM customer_transactions ct JOIN girls_package gp ON ct.package_id = gp.id WHERE ct.customer_id=? order by ct.created_at", [id]);
+        const [rows] = await transaction.query("SELECT ct.*, DATE_FORMAT(ct.created_at, '%d %b %Y, %h:%i:%s %p') as created_at, gp.package_name FROM customer_transactions ct JOIN girls_package gp ON ct.package_id = gp.id WHERE ct.customer_id=? order by ct.created_at DESC", [id]);
         return rows;
     }
 
