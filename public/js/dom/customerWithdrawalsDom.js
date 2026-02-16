@@ -42,16 +42,46 @@ export const resetForm = (form) =>
     $(form)[0].reset();
 }
 
-export const renderPayoutDetails = (payoutDetails) =>
+export const renderObjectDetails = (obj) =>
 {
-    return Object.entries(payoutDetails)
+    return Object.entries(obj)
         .map(([key, value]) => `
             <div class="mt-1">
-                <span class="fw-semibold">${key}:</span> 
-                <span>${value}</span>
+                <span class="fw-semibold">${key}:</span>
+                <span>${value ?? "NA"}</span>
             </div>
-        `).join('');
-}
+        `)
+        .join('');
+};
+
+export const renderPayoutDetails = (payoutDetails) =>
+{
+    if (Array.isArray(payoutDetails))
+    {
+        if (payoutDetails.length === 1)
+        {
+            return renderObjectDetails(payoutDetails[0]);
+        }
+
+        return payoutDetails
+            .map((item, index) => `
+                <div class="mb-2">
+                    <div class="fw-bold text-primary">
+                        Entry ${index + 1}
+                    </div>
+                    ${renderObjectDetails(item)}
+                </div>
+            `)
+            .join('');
+    }
+
+    if (typeof payoutDetails === "object" && payoutDetails !== null)
+    {
+        return renderObjectDetails(payoutDetails);
+    }
+
+    return "NA";
+};
 
 export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
 {

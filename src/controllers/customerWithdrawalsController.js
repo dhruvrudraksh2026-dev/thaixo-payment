@@ -296,7 +296,7 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Payout Details Not Found"));
             }
 
-            if (!this.isJSONParsable(data.payoutDetails))
+            if (!this.isJSONArrayOfObjects(data.payoutDetails))
             {
                 return res.json(Response.failure("Payout Details Having Invalid JSON Data"));
             }
@@ -364,7 +364,7 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Payout Details Not Found"));
             }
 
-            if (!this.isJSONParsable(data.payoutDetails))
+            if (!this.isJSONArrayOfObjects(data.payoutDetails))
             {
                 return res.json(Response.failure("Payout Details Having Invalid JSON Data"));
             }
@@ -419,23 +419,30 @@ class customerWithdrawalsController
         }
     }
 
-    static isJSONParsable = (data) =>
+    static isJSONArrayOfObjects = (data) =>
     {
-        if (!data)
-        {
-            return false;
-        }
-
-        if (typeof data !== 'string')
+        if (!data || typeof data !== 'string')
         {
             return false;
         }
 
         try
         {
-            JSON.parse(data);
-            return true;
-        } catch (e)
+            const parsed = JSON.parse(data);
+
+            if (!Array.isArray(parsed))
+            {
+                return false;
+            }
+
+            return parsed.every(
+                item =>
+                    typeof item === 'object' &&
+                    item !== null &&
+                    !Array.isArray(item)
+            );
+        }
+        catch (e)
         {
             return false;
         }

@@ -267,7 +267,7 @@ const handleAddCustomerWithdrawalSubmit = async (e) =>
         }
     });
 
-    formData.append("payoutDetails", JSON.stringify(withdrawalDetails));
+    formData.append("payoutDetails", JSON.stringify([withdrawalDetails]));
 
     const response = await addCustomerWithdrawal(formData);
 
@@ -354,7 +354,7 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
         }
     });
 
-    formData.append("payoutDetails", JSON.stringify(payoutDetails));
+    formData.append("payoutDetails", JSON.stringify([payoutDetails]));
 
     const response = await editCustomerWithdrawal(formData);
 
