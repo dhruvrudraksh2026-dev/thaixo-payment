@@ -26,3 +26,62 @@
         }
     });
 </script>
+
+<!-- Sidebar Payments Panel Text Changes -->
+<script>
+    // On page load: check if sidebar is already collapsed
+    $(function ()
+    {
+        if ($("nav").hasClass("semi-nav"))
+        {
+            $(".app-logo .logo span").text("Pay");
+        }
+    });
+
+    $(document).on('click', '.header-toggle', function ()
+    {
+        if ($("nav").hasClass("semi-nav"))
+        {
+            $(".app-logo .logo span").text("Pay");
+        } else
+        {
+            $(".app-logo .logo span").text("Payments Panel");
+        }
+    });
+
+    // On hover: show full text when collapsed sidebar expands
+    $("nav").on("mouseenter", function ()
+    {
+        if ($(this).hasClass("semi-nav"))
+        {
+            $(".app-logo .logo span").addClass("text-nowrap");
+            $(".app-logo .logo span").text("Payments Panel");
+        }
+    });
+
+    $("nav").on("mouseleave", function ()
+    {
+        if ($(this).hasClass("semi-nav"))
+        {
+            $(".app-logo .logo span").removeClass("text-nowrap");
+            $(".app-logo .logo span").text("Pay");
+        }
+    });
+
+    // For Mobile Width Screens
+    $(document).on('click', '.header-toggle', function ()
+    {
+        if ($(window).width() < 768)
+        {
+            $(".app-logo .logo span").text("Payments Panel");
+            return;
+        }
+        if ($("nav").hasClass("semi-nav"))
+        {
+            $(".app-logo .logo span").text("Pay");
+        } else
+        {
+            $(".app-logo .logo span").text("Payments Panel");
+        }
+    });
+</script>
