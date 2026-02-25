@@ -20784,7 +20784,7 @@ input[type=range]::-webkit-slider-thumb {
   opacity: 0.5;
   font-size: 12px;
   color: rgba(var(--dark), 0.4);
-  right: 20px;
+  right: 5px;
 }
 .app-datatable-default .dataTables_wrapper table thead th.sorting.sorting_asc_disabled, .app-datatable-default .dataTables_wrapper table thead th.sorting.sorting_desc_disabled, .app-datatable-default .dataTables_wrapper table thead th.sorting.sorting_asc, .app-datatable-default .dataTables_wrapper table thead th.sorting.sorting_desc {
   padding-right: 1.5rem !important;
