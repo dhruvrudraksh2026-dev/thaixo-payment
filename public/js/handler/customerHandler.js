@@ -1,4 +1,4 @@
-import { getNonWhiteListedThaiCustomers, getThaiCustomers, getWhiteListedThaiCustomers } from "../api/customerApi.js";
+import { getNonCreatorThaiCustomers, getThaiCustomers, getCreatorThaiCustomers } from "../api/customerApi.js";
 import { renderCustomers } from "../dom/customerDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 let dataTable;
@@ -18,13 +18,13 @@ export const setupThaiHandlers = () =>
     fetchAndRenderThaiCustomers();
 };
 
-// For White Listed And Non White Listed Customers
+// For Creator And Non Creator Customers
 // --------------------------
-// For Non White Listed
+// For Non Creator
 // --------------------------
-const fetchAndRenderNonWhiteListedThaiCustomers = () => 
+const fetchAndRenderNonCreatorThaiCustomers = () => 
 {
-    getNonWhiteListedThaiCustomers().then(response => checkAndExecute(response, () => 
+    getNonCreatorThaiCustomers().then(response => checkAndExecute(response, () => 
     {
         renderCustomers(response.data, $("#customer-table-body"));
         dataTable = $("#customer-table").DataTable();
@@ -32,9 +32,9 @@ const fetchAndRenderNonWhiteListedThaiCustomers = () =>
     );
 };
 
-export const setupNonWhiteListedThaiCustomersHandlers = () => 
+export const setupNonCreatorThaiCustomersHandlers = () => 
 {
-    fetchAndRenderNonWhiteListedThaiCustomers();
+    fetchAndRenderNonCreatorThaiCustomers();
 
     $(window).on("pageshow", function (event)
     {
@@ -46,11 +46,11 @@ export const setupNonWhiteListedThaiCustomersHandlers = () =>
 };
 
 // --------------------------
-// For White Listed
+// For Creator
 // --------------------------
-const fetchAndRenderWhiteListedThaiCustomers = () => 
+const fetchAndRenderCreatorThaiCustomers = () => 
 {
-    getWhiteListedThaiCustomers().then(response => checkAndExecute(response, () => 
+    getCreatorThaiCustomers().then(response => checkAndExecute(response, () => 
     {
         renderCustomers(response.data, $("#customer-table-body"));
         dataTable = $("#customer-table").DataTable();
@@ -58,9 +58,9 @@ const fetchAndRenderWhiteListedThaiCustomers = () =>
     );
 };
 
-export const setupWhiteListedThaiCustomersHandlers = () => 
+export const setupCreatorThaiCustomersHandlers = () => 
 {
-    fetchAndRenderWhiteListedThaiCustomers();
+    fetchAndRenderCreatorThaiCustomers();
 
     $(window).on("pageshow", function (event)
     {

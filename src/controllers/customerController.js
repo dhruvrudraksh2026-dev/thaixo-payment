@@ -20,32 +20,32 @@ class customerController
         }
     };
 
-    static getWhiteListedThaiCustomers = async (req, res, next) =>
+    static getCreatorThaiCustomers = async (req, res, next) =>
     {
         try
         {
-            const customers = await customerModel.getWhiteListedThaiCustomers();
+            const customers = await customerModel.getCreatorThaiCustomers();
             customers.forEach((c) =>
             {
                 if (c.photos) c.photos = safeJSONParse(c.photos);
             });
-            return res.json(Response.success("White Listed Thai Customers Fetched Successfully", customers));
+            return res.json(Response.success("Creator Thai Customers Fetched Successfully", customers));
         } catch (error)
         {
             next(error);
         }
     };
 
-    static getNonWhiteListedThaiCustomers = async (req, res, next) =>
+    static getNonCreatorThaiCustomers = async (req, res, next) =>
     {
         try
         {
-            const customers = await customerModel.getNonWhiteListedThaiCustomers();
+            const customers = await customerModel.getNonCreatorThaiCustomers();
             customers.forEach((c) =>
             {
                 if (c.photos) c.photos = safeJSONParse(c.photos);
             });
-            return res.json(Response.success("Non White Listed Thai Customers Fetched Successfully", customers));
+            return res.json(Response.success("Non Creator Thai Customers Fetched Successfully", customers));
         } catch (error)
         {
             next(error);
@@ -75,7 +75,7 @@ class customerController
         }
     };
 
-    static toggleWhiteListedById = async (req, res, next) =>
+    static toggleCreatorById = async (req, res, next) =>
     {
         try
         {
@@ -91,13 +91,13 @@ class customerController
                 return res.json(Response.failure("Customer Not Found"));
             }
 
-            const updatedCustomer = await customerModel.toggleWhiteListedById(id);
+            const updatedCustomer = await customerModel.toggleCreatorById(id);
             if (!updatedCustomer)
             {
-                return res.json(Response.failure("Failed To Toggle White List"));
+                return res.json(Response.failure("Failed To Toggle Creator"));
             }
 
-            return res.json(Response.success("White List Toggled Successfully", updatedCustomer));
+            return res.json(Response.success("Creator Toggled Successfully", updatedCustomer));
         } catch (error)
         {
             next(error);

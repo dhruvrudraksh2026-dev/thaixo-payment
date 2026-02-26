@@ -1,8 +1,8 @@
 import { getCustomerById } from "../api/customerApi.js";
 import { renderCustomerInfo } from "../dom/customerDom.js";
 
-import { toggleWhiteListedById, updateGeneratedOtpById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsInfoAPI.js";
-import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleWhiteListedSection, renderWhiteListedBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals, renderCustomerBreadcrumbs, renderCustomerWithdrawalsTableHeader, resetForm, createKVRow } from "../dom/customerTransactionsInfoDom.js";
+import { toggleCreatorById, updateGeneratedOtpById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsInfoAPI.js";
+import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleCreatorSection, renderCreatorBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals, renderCustomerBreadcrumbs, renderCustomerWithdrawalsTableHeader, resetForm, createKVRow } from "../dom/customerTransactionsInfoDom.js";
 
 import { addCustomerWithdrawal, editCustomerWithdrawal, getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsById, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
 import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
@@ -22,9 +22,9 @@ export const setupTransactionsViewHandler = () =>
     fetchAndViewCustomersTransactions();
     fetchAndViewCustomersWithdrawals();
 
-    // (2.) OTP Generationg And Toggling White Listed
+    // (2.) OTP Generationg And Toggling Creator
     $(document).on("click", "#generate-secure-otp-btn", handleGenerateOtp);
-    $(document).on("click", "#toggle-white-listed-btn", handleToggleWhiteListedBtnClick);
+    $(document).on("click", "#toggle-creator-btn", handleToggleCreatorBtnClick);
 
     // (3.) For Date Range
     $("#dateRangeForm").on("submit", handleDateRangeSubmit);
@@ -67,13 +67,13 @@ export const fetchAndViewCustomersTransactions = async () =>
     {
         renderCustomerTransactions(data.transactions, $("#customer-transactions-table-body"));
         // ===========================================================
-        // Rendering Customer Info From Customer Dom For Both White Listed And Non White Listed Customer
+        // Rendering Customer Info From Customer Dom For Both Creator And Non Creator Customer
         // ===========================================================
         renderCustomerInfo(data.customer, $(".customer-details"));
         // ===========================================================
         renderCustomerOtpSection(data.customer, $("#generate-secure-otp"));
-        renderToggleWhiteListedSection(data.customer, $("#toggle-white-listed"));
-        renderCustomerBreadcrumbs(data.customer.white_listed, $("#breadcrumbs-section")); // For Breadcrumbs
+        renderToggleCreatorSection(data.customer, $("#toggle-creator"));
+        renderCustomerBreadcrumbs(data.customer.is_creator, $("#breadcrumbs-section")); // For Breadcrumbs
         dataTable = $("#customer-transactions-table").DataTable();
     });
 }
@@ -89,7 +89,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
     checkAndExecute(response, () =>
     {
         renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
-        renderCustomerWithdrawalsTableHeader(customerInfo.data.white_listed, $("#customer-withdrawals-table-header"));
+        renderCustomerWithdrawalsTableHeader(customerInfo.data.is_creator, $("#customer-withdrawals-table-header"));
         withdrawalDataTable = $("#customer-withdrawals-table").DataTable({ "order": [[0, "desc"]] });
     });
 }
@@ -203,7 +203,7 @@ const handleDateRangeReset = () =>
     location.reload();
 }
 
-// (2.) For OTP Generation And Toggling White Listed
+// (2.) For OTP Generation And Toggling Creator
 const handleGenerateOtp = async (e) =>
 {
     const btn = $(e.currentTarget);
@@ -215,7 +215,7 @@ const handleGenerateOtp = async (e) =>
     }));
 }
 
-const handleToggleWhiteListedBtnClick = async (e) =>
+const handleToggleCreatorBtnClick = async (e) =>
 {
     const btn = $(e.currentTarget);
     btn.attr("disabled", true);
@@ -230,10 +230,10 @@ const handleToggleWhiteListedBtnClick = async (e) =>
         return;
     }
 
-    toggleWhiteListedById(id).then(response => checkAndExecute(response, () =>
+    toggleCreatorById(id).then(response => checkAndExecute(response, () =>
     {
-        renderWhiteListedBadge(response.data, $("#white-listed-badge"));
-        renderToggleWhiteListedSection(response.data, $("#toggle-white-listed"));
+        renderCreatorBadge(response.data, $("#creator-badge"));
+        renderToggleCreatorSection(response.data, $("#toggle-creator"));
         renderCoinsValue(response.data, $("#coinsText"));
         btn.removeAttr("disabled");
     }));

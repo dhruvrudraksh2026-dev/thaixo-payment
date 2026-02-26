@@ -24,15 +24,15 @@ export const getCustomerById = async (id) =>
         });
 };
 
-// For White Listed And Non White Listed Customers
+// For Creator And Non Creator Customers
 // --------------------------
-// For Non White Listed
+// For Non Creator
 // --------------------------
-export const getNonWhiteListedThaiCustomers = async () => 
+export const getNonCreatorThaiCustomers = async () => 
 {
     return await $.ajax(
         {
-            url: "/api/customers/thai/non-white-listed",
+            url: "/api/customers/thai/non-creator",
             method: "GET",
             headers:
             {
@@ -42,13 +42,13 @@ export const getNonWhiteListedThaiCustomers = async () =>
 };
 
 // --------------------------
-// For White Listed
+// For Creator
 // --------------------------
-export const getWhiteListedThaiCustomers = async () => 
+export const getCreatorThaiCustomers = async () => 
 {
     return await $.ajax(
         {
-            url: "/api/customers/thai/white-listed",
+            url: "/api/customers/thai/creator",
             method: "GET",
             headers:
             {

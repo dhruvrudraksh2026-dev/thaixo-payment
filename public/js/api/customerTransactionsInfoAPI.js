@@ -1,8 +1,8 @@
-export const toggleWhiteListedById = async (id) =>
+export const toggleCreatorById = async (id) =>
 {
     return await $.ajax(
         {
-            url: `/api/customer/${id}/toggle-white-listed`,
+            url: `/api/customer/${id}/toggle-creator`,
             method: "PATCH",
             headers:
             {

@@ -36,7 +36,7 @@ export const renderCustomerTransactionsFilter = (transactions, dataTable) =>
     dataTable.draw();
 }
 
-// (2.) For OTP And Toggle White Listed
+// (2.) For OTP And Toggle Creator
 // ====================================================================
 export const renderCustomerOtpSection = (data, division) =>
 {
@@ -63,23 +63,23 @@ export const renderCustomerOtp = (data, division) =>
         );
 }
 
-export const renderToggleWhiteListedSection = (data, division) =>
+export const renderToggleCreatorSection = (data, division) =>
 {
     division.html
         (
             `
-                <button type="button" data-id="${data.id}" class="btn btn-warning py-1" style="width: 100px;" id="toggle-white-listed-btn">${data.white_listed ? "Unlist" : "List"}</button>
+                <button type="button" data-id="${data.id}" class="btn btn-warning py-1 fw-semibold" style="width: 120px;" id="toggle-creator-btn">${data.is_creator ? "Remove" : "Add"}</button>
             `
         );
 }
 
-export const renderWhiteListedBadge = (data, division) =>
+export const renderCreatorBadge = (data, division) =>
 {
-    const whiteListedBadge = data.white_listed === 1 ? `<span class="badge bg-success px-4 py-1">Yes</span>` : `<span class="badge bg-danger px-4 py-1">No</span>`;
+    const creatorBadge = data.is_creator === 1 ? `<span class="badge bg-success px-4 py-1">Yes</span>` : `<span class="badge bg-danger px-4 py-1">No</span>`;
     division.html
         (
             `
-                ${whiteListedBadge}
+                ${creatorBadge}
             `
         );
 }
@@ -164,15 +164,15 @@ export const renderTotalPendingWithdrawals = (data, container) =>
 }
 // ====================================================================
 
-// Miscellaneous - According to the white listed status
-export const renderCustomerBreadcrumbs = (isWhiteListed, container) =>
+// Miscellaneous - According to the creator status
+export const renderCustomerBreadcrumbs = (isCreator, container) =>
 {
     container.empty();
-    const breadcrumb = isWhiteListed ? "White Listed Thai Customers" : "Non White Listed Thai Customers";
+    const breadcrumb = isCreator ? "Creator Thai Customers" : "Non Creator Thai Customers";
     container.append(`
         <div class="col">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/thai-customers/${isWhiteListed ? "white-listed" : "non-white-listed"}">${breadcrumb}</a>
+                <li class="breadcrumb-item"><a href="/thai-customers/${isCreator ? "creators" : "non-creators"}">${breadcrumb}</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Customer Transactions</li>
             </ol>
@@ -180,12 +180,12 @@ export const renderCustomerBreadcrumbs = (isWhiteListed, container) =>
     `);
 };
 
-export const renderCustomerWithdrawalsTableHeader = (isWhiteListed, container) =>
+export const renderCustomerWithdrawalsTableHeader = (isCreator, container) =>
 {
     container.empty();
     container.append(`
         <h4>Customer Withdrawal Info</h4>
-        ${isWhiteListed ? `<button class="btn btn-primary addBtn" data-bs-toggle="modal" data-bs-target="#addModal">Add Withdrawal</button>` : ""}
+        ${isCreator ? `<button class="btn btn-primary addBtn" data-bs-toggle="modal" data-bs-target="#addModal">Add Withdrawal</button>` : ""}
     `);
 };
 
