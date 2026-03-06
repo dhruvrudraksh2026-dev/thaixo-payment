@@ -8,7 +8,7 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
         tableBody.append(`
             <tr data-id=${index}>
                 <td>${index ?? ""}</td>
-                <td>${transaction.package_name ?? ""}</td>
+                <td>${(transaction.package_name == (undefined || null)) ? "New Creator Bonus" : transaction.package_name}</td>
                 <td>${transaction.minutes ?? ""}</td>
                 <td>${transaction.rate_per_minute ?? ""}</td>
                 <td>${transaction.earnings ?? ""}</td>
@@ -24,7 +24,7 @@ export const renderCustomerTransactionsFilter = (transactions, dataTable) =>
     const rows = transactions.map((transaction, index) => (
         [
             index,
-            transaction.package_name ?? '',
+            (transaction.package_name == (undefined || null)) ? "New Creator Bonus" : transaction.package_name ?? '',
             transaction.minutes ?? '',
             transaction.rate_per_minute ?? '',
             transaction.earnings ?? '',
