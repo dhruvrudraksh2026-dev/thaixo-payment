@@ -120,6 +120,15 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
     });
 }
 
+export const removeDataTableRow = (dataTable, ids) =>
+{
+    ids.forEach((id) =>
+    {
+        const row = $(`tr[data-id="${id}"]`);
+        dataTable.row(row).remove().draw(false);
+    });
+};
+
 export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) => 
 {
     const rows = withdrawals.map((withdrawal, index) => 

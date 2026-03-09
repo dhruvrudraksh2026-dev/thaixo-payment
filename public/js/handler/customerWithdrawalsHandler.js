@@ -1,5 +1,5 @@
 import { addCustomerWithdrawal, editCustomerWithdrawal, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
-import { addDataTableRow, createKVRow, editDataTableRow, renderCustomerWithdrawals, renderTotalPendingWithdrawalsAmount, resetForm } from "../dom/customerWithdrawalsDom.js";
+import { addDataTableRow, createKVRow, editDataTableRow, removeDataTableRow, renderCustomerWithdrawals, renderTotalPendingWithdrawalsAmount, resetForm } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
 let dataTable;
@@ -235,10 +235,10 @@ const handleUpdateStatusSubmit = async (e) =>
     checkAndExecute(response, () =>
     {
         const data = response.data;
-        // deleteDataTableRow(dataTable, data.ids);
+        removeDataTableRow(dataTable, ids);
         $("#editWithdrawalsStatusModal").modal("hide");
         resetForm("#updateStatusForm");
 
-        // fetchCustomerWithdrawalsTotalPendingAmount();
+        fetchCustomerWithdrawalsTotalPendingAmount();
     });
 }
