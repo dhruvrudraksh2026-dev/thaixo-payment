@@ -40,10 +40,13 @@ export const fetchAndViewCustomersWithdrawals = async () =>
         }
 
         dataTable = $("#customer-withdrawals-table").DataTable({
-            order: [[0, "desc"]],
+            order: [[1, "desc"]],
             dom: '<"top"Blf>rt<"bottom"ip><"clear">',
             pageLength: 10,
             paging: true,
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
             buttons: [
                 {
                     extend: 'csv',
@@ -219,15 +222,23 @@ const handleRemoveRow = (e) =>
 }
 
 // For Checkboxes
+const toggleEditWithdrawalsBtn = () =>
+{
+    const anyChecked = $(".row-checkbox:checked").length > 0;
+    $("#edit-withdrawals").prop("disabled", !anyChecked);
+}
+
 const handleSelectAllCheckboxChange = (e) =>
 {
     $(".row-checkbox").prop("checked", $(e.currentTarget).prop("checked"));
+    toggleEditWithdrawalsBtn();
 }
 
 const handleSelectIndividualCheckboxChange = (e) =>
 {
     const allChecked = $(".row-checkbox").length === $(".row-checkbox:checked").length;
     $("#select-all").prop("checked", allChecked);
+    toggleEditWithdrawalsBtn();
 }
 
 const handleEditWithdrawalsBtnClick = (e) =>
@@ -279,4 +290,6 @@ const handleUpdateStatusSubmit = async (e) =>
 
         fetchCustomerWithdrawalsTotalPendingAmount();
     });
+
+    toggleEditWithdrawalsBtn();
 }
