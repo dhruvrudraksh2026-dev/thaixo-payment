@@ -218,6 +218,7 @@ export const addDataTableRow = (dataTable, data) =>
 
 export const editDataTableRow = (dataTable, data) =>
 {
+    const path = window.location.pathname;
     const rowSelector = `tr[data-id="${data.id}"]`;
     const withdrawalStatusBadge = WITHDRAWAL_STATUS[data.status]?.badge;
 
@@ -228,7 +229,7 @@ export const editDataTableRow = (dataTable, data) =>
                 ? renderPayoutDetails(data.payout_details)
                 : data.payout_details || "NA";
 
-    dataTable.row(rowSelector).data([
+    const dataToRender = [
         `# ${data.id ?? "NA"}`,
         `# ${data.customer_id ?? "NA"}`,
         data.withdrawal_method ?? "NA",
@@ -239,7 +240,11 @@ export const editDataTableRow = (dataTable, data) =>
         `
         <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
         `
-    ]).draw(false);
+    ];
+
+    (path === "/customer-withdrawals") ? dataToRender.unshift(`<input type="checkbox" class="row-checkbox cursor-pointer" value="${data.id}">`) : null;
+
+    dataTable.row(rowSelector).data(dataToRender).draw(false);
 };
 
 export const createKVRow = (key = "", value = "") =>
