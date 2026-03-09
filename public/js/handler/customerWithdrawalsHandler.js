@@ -41,33 +41,69 @@ export const fetchAndViewCustomersWithdrawals = async () =>
 
         dataTable = $("#customer-withdrawals-table").DataTable({
             order: [[0, "desc"]],
-            // dom: 'Bfrtip',
+            dom: '<"top"Blf>rt<"bottom"ip><"clear">',
             pageLength: 10,
             paging: true,
             buttons: [
                 {
                     extend: 'csv',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
-                    },
-                    format: {
-                        body: function (data, row, column)
-                        {
-                            return data.replace(/\s+/g, ' ').trim();
+                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function (data, row, column)
+                            {
+                                // Parse the HTML string
+                                var $temp = $('<div>').html(data);
+
+                                if ($temp.find('div.mt-1').length > 0)
+                                {
+                                    var lines = [];
+                                    $temp.find('div.mt-1').each(function ()
+                                    {
+                                        var label = $(this).find('span.fw-semibold').text().trim();
+                                        var value = $(this).find('span:not(.fw-semibold)').text().trim();
+                                        if (label || value)
+                                        {
+                                            lines.push(label + " " + value);
+                                        }
+                                    });
+                                    return lines.join("\n");
+                                }
+
+                                return $temp.text().trim() || data.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim();
+                            }
                         }
                     }
                 },
                 {
                     extend: 'excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
-                    },
-                    format: {
-                        body: function (data, row, column)
-                        {
-                            return data.replace(/\s+/g, ' ').trim();
+                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function (data, row, column)
+                            {
+                                // Parse the HTML string
+                                var $temp = $('<div>').html(data);
+
+                                if ($temp.find('div.mt-1').length > 0)
+                                {
+                                    var lines = [];
+                                    $temp.find('div.mt-1').each(function ()
+                                    {
+                                        var label = $(this).find('span.fw-semibold').text().trim();
+                                        var value = $(this).find('span:not(.fw-semibold)').text().trim();
+                                        if (label || value)
+                                        {
+                                            lines.push(label + " " + value);
+                                        }
+                                    });
+                                    return lines.join("\r\n");
+                                }
+
+                                return $temp.text().trim() || data.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim();
+                            }
                         }
-                    }
+                    },
                 }
             ]
         });
@@ -234,8 +270,10 @@ const handleUpdateStatusSubmit = async (e) =>
 
     checkAndExecute(response, () =>
     {
-        const data = response.data;
-        removeDataTableRow(dataTable, ids);
+        if (status !== "PENDING")
+        {
+            removeDataTableRow(dataTable, ids);
+        }
         $("#editWithdrawalsStatusModal").modal("hide");
         resetForm("#updateStatusForm");
 

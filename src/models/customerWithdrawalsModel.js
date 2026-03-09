@@ -11,7 +11,7 @@ class customerWithdrawalsModel
 
     static getAllPendingCustomerWithdrawals = async (transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw WHERE cw.status = 'PENDING' order by cw.created_at DESC");
+        const [rows] = await transaction.query("SELECT cw.*,c.name as customer_name, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw LEFT JOIN customer c ON cw.customer_id = c.id WHERE cw.status = 'PENDING' order by cw.created_at DESC");
         return rows;
     }
 

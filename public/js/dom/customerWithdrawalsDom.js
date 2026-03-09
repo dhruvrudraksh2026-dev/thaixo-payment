@@ -86,7 +86,6 @@ export const renderPayoutDetails = (payoutDetails) =>
 export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
 {
     const path = window.location.pathname;
-
     tableBody.empty();
     withdrawals.forEach((withdrawal) => 
     {
@@ -108,7 +107,7 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
                     </td>`
                 : ""}
                 <td># ${withdrawal.id ?? "NA"}</td>
-                <td># ${withdrawal.customer_id ?? "NA"}</td>
+                <td># ${`${withdrawal.customer_id} - ${withdrawal.customer_name}` ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_method ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_amount ?? "NA"}</td>
                 <td>${formattedPayoutDetails}</td>
