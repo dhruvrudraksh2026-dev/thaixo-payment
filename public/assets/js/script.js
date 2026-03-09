@@ -186,6 +186,7 @@ $('.loader-wrapper').fadeOut('slow', function () {
 // >>-- 08 tap on top --<<
 let calcScrollValue = () => {
     const $scrollProgress = document.getElementsByClassName("go-top")[0];
+    if (!$scrollProgress) return;
     const $progressValue = document.getElementsByClassName("progress-value")[0];
     const docElement = document.documentElement;
 

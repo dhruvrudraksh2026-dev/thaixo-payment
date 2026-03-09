@@ -419,6 +419,37 @@ class customerWithdrawalsController
         }
     }
 
+    static updateSelectedCustomerWithdrawalStatus = async (req, res, next) =>
+    {
+        try
+        {
+            const data = req.body;
+            const ids = safeJSONParse(data?.ids, []);
+            const status = data?.status;
+            if (!ids.length)
+            {
+                return res.json(Response.failure("Withdrawal Ids Not Found"));
+            }
+
+            if (!this.WITHDRAWAL_STATUS.includes(status))
+            {
+                return res.json(Response.failure("Invalid Status"));
+            }
+
+            const withdrawal = await customerWithdrawalsModel.updateSelectedCustomerWithdrawalStatus(ids, status);
+            if (!withdrawal)
+            {
+                return res.json(Response.failure("Withdrawals Not Updated"));
+            }
+
+            return res.json(Response.success("Withdrawals Updated Successfully", withdrawal));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
     static isJSONArrayOfObjects = (data) =>
     {
         if (!data || typeof data !== 'string')

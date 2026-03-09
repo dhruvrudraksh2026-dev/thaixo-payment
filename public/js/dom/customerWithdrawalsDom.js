@@ -85,6 +85,8 @@ export const renderPayoutDetails = (payoutDetails) =>
 
 export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
 {
+    const path = window.location.pathname;
+
     tableBody.empty();
     withdrawals.forEach((withdrawal) => 
     {
@@ -100,6 +102,11 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
         tableBody.append(
             `
             <tr data-id=${withdrawal.id}>
+                ${path === "/customer-withdrawals"
+                ? `<td class="p-2">
+                        <input type="checkbox" class="row-checkbox cursor-pointer" value="${withdrawal.id}">
+                    </td>`
+                : ""}
                 <td># ${withdrawal.id ?? "NA"}</td>
                 <td># ${withdrawal.customer_id ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_method ?? "NA"}</td>

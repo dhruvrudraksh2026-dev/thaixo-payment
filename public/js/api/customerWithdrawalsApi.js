@@ -159,3 +159,21 @@ export const deleteCustomerWithdrawal = async (id) =>
             }
         });
 }
+
+// data={ids:[], status}
+export const updateSelectedCustomerWithdrawalStatus = async (formData) =>
+{
+    return $.ajax(
+        {
+            url: `/api/customer-withdrawals/update-status`,
+            method: "PATCH",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            },
+            data: formData,
+            processData: false,
+            contentType: false
+        });
+}
+

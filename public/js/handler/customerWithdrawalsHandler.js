@@ -1,4 +1,4 @@
-import { addCustomerWithdrawal, editCustomerWithdrawal, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount } from "../api/customerWithdrawalsApi.js";
+import { addCustomerWithdrawal, editCustomerWithdrawal, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
 import { addDataTableRow, createKVRow, editDataTableRow, renderCustomerWithdrawals, renderTotalPendingWithdrawalsAmount, resetForm } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
@@ -14,6 +14,15 @@ export const setUpCustomerWithdrawalsHandler = async () =>
     $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
     $(document).on("click", "#addEditRow", handleAddRow);
     $(document).on("click", ".remove-row", handleRemoveRow);
+
+    // Checkbox Logic
+    $(document).on("change", "#select-all", handleSelectAllCheckboxChange);
+    $(document).on("change", ".row-checkbox", handleSelectIndividualCheckboxChange);
+
+    // Edit Withdrawals Button
+    $(document).on("click", "#edit-withdrawals", handleEditWithdrawalsBtnClick);
+    $(document).on("submit", "#updateStatusForm", handleUpdateStatusSubmit);
+
 }
 
 export const fetchAndViewCustomersWithdrawals = async () =>
@@ -24,7 +33,44 @@ export const fetchAndViewCustomersWithdrawals = async () =>
     {
         const data = response.data;
         renderCustomerWithdrawals(data, $("#customer-withdrawals-table-body"));
-        dataTable = $("#customer-withdrawals-table").DataTable({ "order": [[0, "desc"]] });
+
+        if ($.fn.DataTable.isDataTable('#customer-withdrawals-table'))
+        {
+            $('#customer-withdrawals-table').DataTable().destroy();
+        }
+
+        dataTable = $("#customer-withdrawals-table").DataTable({
+            order: [[0, "desc"]],
+            // dom: 'Bfrtip',
+            pageLength: 10,
+            paging: true,
+            buttons: [
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    },
+                    format: {
+                        body: function (data, row, column)
+                        {
+                            return data.replace(/\s+/g, ' ').trim();
+                        }
+                    }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    },
+                    format: {
+                        body: function (data, row, column)
+                        {
+                            return data.replace(/\s+/g, ' ').trim();
+                        }
+                    }
+                }
+            ]
+        });
     });
 }
 
@@ -134,4 +180,65 @@ const handleRemoveRow = (e) =>
 {
     const btn = $(e.currentTarget);
     btn.closest(".kv-row").remove();
+}
+
+// For Checkboxes
+const handleSelectAllCheckboxChange = (e) =>
+{
+    $(".row-checkbox").prop("checked", $(e.currentTarget).prop("checked"));
+}
+
+const handleSelectIndividualCheckboxChange = (e) =>
+{
+    const allChecked = $(".row-checkbox").length === $(".row-checkbox:checked").length;
+    $("#select-all").prop("checked", allChecked);
+}
+
+const handleEditWithdrawalsBtnClick = (e) =>
+{
+    e.preventDefault();
+    const selectedRows = $(".row-checkbox:checked");
+
+    if (selectedRows.length === 0)
+    {
+        alert("Please select at least one row");
+        $("#editWithdrawalsStatusModal").modal("hide");
+        return;
+    }
+}
+
+const handleUpdateStatusSubmit = async (e) =>
+{
+    e.preventDefault();
+    const selectedRows = $(".row-checkbox:checked");
+
+    if (selectedRows.length === 0)
+    {
+        alert("Please select at least one row");
+        $("#editWithdrawalsStatusModal").modal("hide");
+        return;
+    }
+
+    const ids = selectedRows.map(function ()
+    {
+        return $(this).val();
+    }).get();
+
+    const status = $("#editWithdrawalsStatus").val();
+
+    const formData = new FormData();
+    formData.append("ids", JSON.stringify(ids));
+    formData.append("status", status);
+
+    const response = await updateSelectedCustomerWithdrawalStatus(formData);
+
+    checkAndExecute(response, () =>
+    {
+        const data = response.data;
+        // deleteDataTableRow(dataTable, data.ids);
+        $("#editWithdrawalsStatusModal").modal("hide");
+        resetForm("#updateStatusForm");
+
+        // fetchCustomerWithdrawalsTotalPendingAmount();
+    });
 }

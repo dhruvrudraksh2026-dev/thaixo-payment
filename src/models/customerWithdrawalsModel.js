@@ -82,6 +82,18 @@ class customerWithdrawalsModel
         const [result] = await transaction.query("DELETE FROM customer_withdrawals WHERE id = ?", [id]);
         return result.affectedRows > 0;
     }
+
+    static updateCustomerWithdrawalStatus = async (id, status, transaction = db) =>
+    {
+        const [result] = await transaction.query("UPDATE customer_withdrawals SET status = ? where id = ?", [status, id]);
+        return result.affectedRows > 0;
+    }
+
+    static updateSelectedCustomerWithdrawalStatus = async (ids, status, transaction = db) =>
+    {
+        const [result] = await transaction.query("UPDATE customer_withdrawals SET status = ? WHERE id IN ( ? )", [status, ids]);
+        return result.affectedRows > 0;
+    }
 }
 
 export default customerWithdrawalsModel;

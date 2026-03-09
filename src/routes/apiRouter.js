@@ -44,6 +44,8 @@ router.get("/customer-withdrawals/:customerId/withdrawals", customerWithdrawalsC
 router.get("/customer-withdrawals/:customerId/withdrawals/by-date-range", customerWithdrawalsController.getCustomerWithdrawalsByDateRangeByCustomerId); // Withdrawals By Date Range
 router.get("/customer-withdrawals/:customerId/withdrawals/total-by-date-range", customerWithdrawalsController.getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId); // Withdrawals Total Amount By Date Range
 
+router.patch("/customer-withdrawals/update-status", upload.none(), customerWithdrawalsController.updateSelectedCustomerWithdrawalStatus);
+
 router.use((req, res, next) =>
 {
     return res.json(Response.failure('API not found'));
