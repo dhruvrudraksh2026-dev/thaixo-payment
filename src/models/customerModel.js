@@ -1,6 +1,6 @@
 import db from "../../config/db.js";
 
-class customerModel 
+class customerModel
 {
     static getThaiCustomers = async (transaction = db) =>
     {

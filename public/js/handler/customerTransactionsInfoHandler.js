@@ -46,6 +46,39 @@ export const setupTransactionsViewHandler = () =>
     fetchCustomerEarningsTotalAmount();
     fetchCustomerWithdrawalsTotalPaidAmount();
     fetchCustomerWithdrawalsTotalPendingAmount();
+
+    // Cancel Note Logic
+    $(document).on("change", "#addWithdrawalStatus", function ()
+    {
+        if ($(this).val() === "CANCELLED")
+        {
+            $("#addCancelNoteContainer").removeClass("d-none");
+            $("#addCancelNote").prop("required", true);
+        } else
+        {
+            $("#addCancelNoteContainer").addClass("d-none");
+            $("#addCancelNote").prop("required", false);
+        }
+    });
+
+    $(document).on("change", "#editWithdrawalStatus", function ()
+    {
+        if ($(this).val() === "CANCELLED")
+        {
+            $("#editCancelNoteContainer").removeClass("d-none");
+            $("#editCancelNote").prop("required", true);
+        } else
+        {
+            $("#editCancelNoteContainer").addClass("d-none");
+            $("#editCancelNote").prop("required", false);
+        }
+    });
+
+    $("#addModal, #editModal").on("hidden.bs.modal", function ()
+    {
+        $("#addCancelNoteContainer, #editCancelNoteContainer").addClass("d-none");
+        $("#addCancelNote, #editCancelNote").prop("required", false);
+    });
 }
 
 // (1.) For Customer Transactions And Withdrawals
@@ -302,15 +335,14 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         // Filling normal fields
         $("#editWithdrawalId").val(data.id);
         $("#editWithdrawalCustomerId").val(data.customer_id);
-        $("#editWithdrawalMethod").val(data.withdrawal_method);
+        $("#editMethod").val(data.method);
         $("#editWithdrawalAmount").val(data.withdrawal_amount);
-        $("#editWithdrawalStatus").val(data.status);
+        $("#editWithdrawalStatus").val(data.status).trigger("change");
+        $("#editCancelNote").val(data.note || "");
 
         // Clearing old KV rows
         const $container = $("#kv-edit-container");
         $container.empty();
-
-        console.log(data.payout_details);
 
         // Populating payout_details
         if (Array.isArray(data.payout_details))

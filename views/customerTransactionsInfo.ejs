@@ -223,9 +223,12 @@
                         <input type="hidden" id="editWithdrawalCustomerId" name="customerId">
 
                         <div class="col-12">
-                            <label class="form-label">Withdrawal Method *</label>
-                            <input type="text" id="editWithdrawalMethod" name="withdrawalMethod" class="form-control"
-                                required>
+                            <label class="form-label" for="editMethod">Withdrawal Method *</label>
+                            <select id="editMethod" name="method" class="form-select" required>
+                                <option value="" disabled selected>Select Withdrawal Method</option>
+                                <option value="Bank">Bank</option>
+                                <option value="Via Agency">Via Agency</option>
+                            </select>
                         </div>
 
                         <div class="col-12">
@@ -258,6 +261,14 @@
                             </select>
                         </div>
 
+                        <div class="col-12 d-none" id="editCancelNoteContainer">
+                            <label class="form-label fw-semibold" for="editCancelNote">
+                                Cancel Note <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control shadow-sm" name="note" id="editCancelNote" rows="3"
+                                placeholder="Enter reason for cancellation..."></textarea>
+                        </div>
+
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Edit</button>
                         </div>
@@ -282,10 +293,13 @@
                             placeholder="Customer Id" required hidden>
 
                         <div class="col-6">
-                            <label class="form-label" for="addWithdrawalMethod">Withdrawal Method
+                            <label class="form-label" for="addMethod">Withdrawal Method
                                 *</label>
-                            <input type="text" id="addWithdrawalMethod" name="withdrawalMethod" class="form-control"
-                                placeholder="Withdrawal Method" required>
+                            <select id="addMethod" name="method" class="form-select" required>
+                                <option value="" disabled selected>Select Withdrawal Method</option>
+                                <option value="Bank">Bank</option>
+                                <option value="Via Agency">Via Agency</option>
+                            </select>
                         </div>
 
                         <div class="col-6">
@@ -332,6 +346,14 @@
                                 <option value="DONE">🟢 Done</option>
                                 <option value="CANCELLED">🔴 Cancelled</option>
                             </select>
+                        </div>
+
+                        <div class="col-12 d-none" id="addCancelNoteContainer">
+                            <label class="form-label fw-semibold" for="addCancelNote">
+                                Cancel Note <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control shadow-sm" name="note" id="addCancelNote" rows="3"
+                                placeholder="Enter reason for cancellation..."></textarea>
                         </div>
 
                         <div class="col-12">

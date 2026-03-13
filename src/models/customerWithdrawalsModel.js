@@ -59,7 +59,7 @@ class customerWithdrawalsModel
 
     static addCustomerWithdrawal = async (data, transaction = db) =>
     {
-        const [result] = await transaction.query("INSERT INTO customer_withdrawals(customer_id, withdrawal_method, withdrawal_amount, payout_details, status) VALUES (?, ?, ?, ?, ?)", [data.customerId, data.withdrawalMethod, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status]);
+        const [result] = await transaction.query("INSERT INTO customer_withdrawals(customer_id, method, withdrawal_amount, payout_details, status , note) VALUES (?, ? , ?, ?, ? , ?)", [data.customerId, data.method, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status, data.note]);
         if (result.affectedRows > 0)
         {
             return this.getCustomerWithdrawalByWithdrawalId(result.insertId);
@@ -69,7 +69,7 @@ class customerWithdrawalsModel
 
     static editCustomerWithdrawal = async (data, transaction = db) =>
     {
-        const [result] = await transaction.query("UPDATE customer_withdrawals SET customer_id = ?, withdrawal_method = ?, withdrawal_amount = ?, payout_details = ?, status = ? where id = ?", [data.customerId, data.withdrawalMethod, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status, data.id]);
+        const [result] = await transaction.query("UPDATE customer_withdrawals SET customer_id = ?, method = ?, withdrawal_amount = ?, payout_details = ?, status = ?, note = ? where id = ?", [data.customerId, data.method, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status, data.note, data.id]);
         if (result.affectedRows > 0)
         {
             return this.getCustomerWithdrawalByWithdrawalId(data.id);

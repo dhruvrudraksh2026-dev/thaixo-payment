@@ -195,8 +195,11 @@
 
                                             <div class="col-12">
                                                 <label class="form-label">Withdrawal Method *</label>
-                                                <input type="text" id="editWithdrawalMethod" name="withdrawalMethod"
-                                                    class="form-control" required>
+                                                <select id="editMethod" name="method" class="form-select" required>
+                                                    <option value="" disabled selected>Select Withdrawal Method</option>
+                                                    <option value="Bank">Bank</option>
+                                                    <option value="Via Agency">Via Agency</option>
+                                                </select>
                                             </div>
 
                                             <div class="col-12">
@@ -230,6 +233,14 @@
                                                     <option value="DONE">🟢 Done</option>
                                                     <option value="CANCELLED">🔴 Cancelled</option>
                                                 </select>
+                                            </div>
+
+                                            <div class="col-12 d-none" id="editCancelNoteContainer">
+                                                <label class="form-label fw-semibold" for="editCancelNote">
+                                                    Cancel Note <span class="text-danger">*</span>
+                                                </label>
+                                                <textarea class="form-control shadow-sm" name="note" id="editCancelNote"
+                                                    rows="3" placeholder="Enter reason for cancellation..."></textarea>
                                             </div>
 
                                             <div class="col-12">
@@ -270,6 +281,16 @@
                                                     <option value="DONE">🟢 Done</option>
                                                     <option value="CANCELLED">🔴 Cancelled</option>
                                                 </select>
+                                            </div>
+
+                                            <div class="mb-4 d-none" id="editBulkCancelNoteContainer">
+                                                <label class="form-label fs-6 text-dark mb-2" for="editBulkCancelNote">
+                                                    Cancel Note <span class="text-danger">*</span>
+                                                </label>
+                                                <textarea
+                                                    class="form-control form-control-lg shadow-sm border-primary-subtle"
+                                                    name="note" id="editBulkCancelNote" rows="3"
+                                                    placeholder="Enter reason for cancellation..."></textarea>
                                             </div>
 
                                             <div class="d-grid">

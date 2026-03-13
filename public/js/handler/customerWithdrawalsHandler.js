@@ -23,6 +23,39 @@ export const setUpCustomerWithdrawalsHandler = async () =>
     $(document).on("click", "#edit-withdrawals", handleEditWithdrawalsBtnClick);
     $(document).on("submit", "#updateStatusForm", handleUpdateStatusSubmit);
 
+    // Cancel Note Logic
+    $(document).on("change", "#editWithdrawalStatus", function ()
+    {
+        if ($(this).val() === "CANCELLED")
+        {
+            $("#editCancelNoteContainer").removeClass("d-none");
+            $("#editCancelNote").prop("required", true);
+        } else
+        {
+            $("#editCancelNoteContainer").addClass("d-none");
+            $("#editCancelNote").prop("required", false);
+        }
+    });
+
+    $(document).on("change", "#editWithdrawalsStatus", function ()
+    {
+        if ($(this).val() === "CANCELLED")
+        {
+            $("#editBulkCancelNoteContainer").removeClass("d-none");
+            $("#editBulkCancelNote").prop("required", true);
+        } else
+        {
+            $("#editBulkCancelNoteContainer").addClass("d-none");
+            $("#editBulkCancelNote").prop("required", false);
+        }
+    });
+
+    $("#editModal, #editWithdrawalsStatusModal").on("hidden.bs.modal", function ()
+    {
+        $("#editCancelNoteContainer, #editBulkCancelNoteContainer").addClass("d-none");
+        $("#editCancelNote, #editBulkCancelNote").prop("required", false);
+    });
+
 }
 
 export const fetchAndViewCustomersWithdrawals = async () =>
@@ -138,9 +171,10 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         // Filling normal fields
         $("#editWithdrawalId").val(data.id);
         $("#editWithdrawalCustomerId").val(data.customer_id);
-        $("#editWithdrawalMethod").val(data.withdrawal_method);
+        $("#editMethod").val(data.method);
         $("#editWithdrawalAmount").val(data.withdrawal_amount);
-        $("#editWithdrawalStatus").val(data.status);
+        $("#editWithdrawalStatus").val(data.status).trigger("change");
+        $("#editCancelNote").val(data.note || "");
 
         // Clearing old KV rows
         const $container = $("#kv-edit-container");
@@ -276,6 +310,17 @@ const handleUpdateStatusSubmit = async (e) =>
     const formData = new FormData();
     formData.append("ids", JSON.stringify(ids));
     formData.append("status", status);
+
+    if (status === "CANCELLED")
+    {
+        formData.append("note", $("#editBulkCancelNote").val());
+    } else if (status === "DONE")
+    {
+        formData.append("note", "Customer Withdrawal Done");
+    } else
+    {
+        formData.append("note", "Customer Withdrawal Pending");
+    }
 
     const response = await updateSelectedCustomerWithdrawalStatus(formData);
 

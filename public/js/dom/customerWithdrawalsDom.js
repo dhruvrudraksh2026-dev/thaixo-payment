@@ -108,7 +108,7 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
                 : ""}
                 <td># ${withdrawal.id ?? "NA"}</td>
                 <td># ${`${withdrawal.customer_id} - ${withdrawal.customer_name}` ?? "NA"}</td>
-                <td>${withdrawal.withdrawal_method ?? "NA"}</td>
+                <td>${withdrawal.method ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_amount ?? "NA"}</td>
                 <td>${formattedPayoutDetails}</td>
                 <td>${withdrawalStatusBadge}</td>
@@ -203,7 +203,7 @@ export const addDataTableRow = (dataTable, data) =>
     const rowNode = dataTable.row.add([
         `# ${data.id ?? "NA"}`,
         `# ${data.customer_id ?? "NA"}`,
-        data.withdrawal_method ?? "NA",
+        data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
         formattedPayoutDetails,
         WITHDRAWAL_STATUS[data.status]?.badge ?? "NA",
@@ -232,7 +232,7 @@ export const editDataTableRow = (dataTable, data) =>
     const dataToRender = [
         `# ${data.id ?? "NA"}`,
         `# ${data.customer_id ?? "NA"}`,
-        data.withdrawal_method ?? "NA",
+        data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
         formattedPayoutDetails,
         withdrawalStatusBadge,

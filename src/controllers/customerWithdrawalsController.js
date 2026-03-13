@@ -281,7 +281,7 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Thai Customer Not Found With This Id"));
             }
 
-            if (!data.withdrawalMethod)
+            if (!data.method)
             {
                 return res.json(Response.failure("Withdrawal Method Not Found"));
             }
@@ -305,6 +305,19 @@ class customerWithdrawalsController
             if (!data.status)
             {
                 return res.json(Response.failure("Status Not Found"));
+            }
+
+            if (data.status === "PENDING")
+            {
+                data.note = "Withdrawal is in process";
+            } else if (data.status === "DONE")
+            {
+                data.note = "Withdrawal is completed";
+            }
+
+            if (!data.note)
+            {
+                return res.json(Response.failure("Note Not Found"));
             }
 
             if (!this.WITHDRAWAL_STATUS.includes(data.status))
@@ -349,7 +362,7 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Thai Customer Not Found With This Id"));
             }
 
-            if (!data.withdrawalMethod)
+            if (!data.method)
             {
                 return res.json(Response.failure("Withdrawal Method Not Found"));
             }
@@ -375,9 +388,22 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Status Not Found"));
             }
 
+            if (data.status === "PENDING")
+            {
+                data.note = "Withdrawal is in process";
+            } else if (data.status === "DONE")
+            {
+                data.note = "Withdrawal is completed";
+            }
+
             if (!this.WITHDRAWAL_STATUS.includes(data.status))
             {
                 return res.json(Response.failure("Invalid Status"));
+            }
+
+            if (!data.note)
+            {
+                return res.json(Response.failure("Note Not Found"));
             }
 
             const withdrawal = await customerWithdrawalsModel.editCustomerWithdrawal(data);
