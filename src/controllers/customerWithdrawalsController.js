@@ -462,7 +462,20 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Invalid Status"));
             }
 
-            const withdrawal = await customerWithdrawalsModel.updateSelectedCustomerWithdrawalStatus(ids, status);
+            if (data.status === "PENDING")
+            {
+                data.note = "Withdrawal is in process";
+            } else if (data.status === "DONE")
+            {
+                data.note = "Withdrawal is completed";
+            }
+
+            if (!data.note)
+            {
+                return res.json(Response.failure("Note Not Found"));
+            }
+
+            const withdrawal = await customerWithdrawalsModel.updateSelectedCustomerWithdrawalStatus({ ids, status, note: data.note });
             if (!withdrawal)
             {
                 return res.json(Response.failure("Withdrawals Not Updated"));

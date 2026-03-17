@@ -121,6 +121,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
 
     checkAndExecute(response, () =>
     {
+        console.log(response.data);
         renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
         renderCustomerWithdrawalsTableHeader(customerInfo.data.is_creator, $("#customer-withdrawals-table-header"));
         withdrawalDataTable = $("#customer-withdrawals-table").DataTable({ "order": [[0, "desc"]] });
@@ -183,7 +184,7 @@ const handleDateRangeSubmit = async (e) =>
     if (new Date(startDate) > new Date(endDate))
     {
         alert("Start Date Can't Be Greater Than End Date");
-        $("#dateRangeEarningsValue").addClass("text-danger").text("₹ 0.00");
+        $("#dateRangeEarningsValue").addClass("text-danger").text("฿ 0.00");
         spinner.addClass("d-none");
         return;
     }

@@ -169,7 +169,7 @@ export const renderTotalDateRangeWithdrawals = (data, container) =>
                 <div id="dateRangeWithdrawalSpinner" class="d-none d-flex justify-content-start align-items-center my-4">
                     <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
                 </div>
-                <span id="dateRangeWithdrawalValue">₹ ${data.withdrawal_amount || "0.00"}</span>
+                <span id="dateRangeWithdrawalValue">฿ ${data.withdrawal_amount || "0.00"}</span>
             </div>
         </div>
         `
@@ -184,7 +184,7 @@ export const renderTotalPendingWithdrawalsAmount = (data, container) =>
         <div class="card-body px-4 py-1">
             <h6 class="fs-5 fw-semibold mb-1">Total Pending Withdrawals Amount</h6>
             <div class="fw-semibold fs-6 text-success mb-0">
-                ₹ <span id="totalPendingWithdrawalsValue">${data.total_pending || "0.00"}</span>
+                ฿ <span id="totalPendingWithdrawalsValue">${data.total_pending || "0.00"}</span>
             </div>
         </div>
         `

@@ -44,6 +44,21 @@ class customerTransactionsModel
         const [rows] = await transaction.query("SELECT SUM(earnings) AS total_amount FROM customer_transactions WHERE customer_id = ?", [id]);
         return rows[0] || 0;
     }
+
+    static generateLastMonthTransactions = async (transaction = db) =>
+    {
+        const [rows] = await transaction.query(`
+            SELECT 
+                customer_id,
+                SUM(earnings) as total_earnings
+            FROM customer_transactions ct
+            JOIN customer c ON c.id = ct.customer_id
+            WHERE ct.created_at >= DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+            AND ct.created_at < DATE_FORMAT(CURDATE(), '%Y-%m-01') AND c.is_creator=1 AND c.is_verified=1 AND c.suspended=0
+            GROUP BY customer_id; 
+        `);
+        return rows;
+    }
 }
 
 export default customerTransactionsModel;

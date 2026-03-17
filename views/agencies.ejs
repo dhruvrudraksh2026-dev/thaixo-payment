@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Multipurpose, super flexible, powerful, clean modern responsive bootstrap 5 admin template"
+        name="description">
+    <meta
+        content="admin template, ki-admin admin template, dashboard template, flat admin template, responsive admin template, web app"
+        name="keywords">
+    <meta content="la-themes" name="author">
+
+    <title>Agencies</title>
+
+    <%- include('partials/cssHeader') %>
+
+</head>
+
+<body>
+    <div class="app-wrapper">
+
+        <div class="loader-wrapper">
+            <div class="loader_24"></div>
+        </div>
+
+        <%- include('partials/sidebar') %>
+
+            <div class="app-content">
+                <div class="">
+                    <%- include('partials/header') %>
+
+
+                        <main>
+                            <div class="page-body">
+                                <div class="container-fluid">
+                                    <div class="row page-title">
+                                        <div class="col-sm-6">
+                                            <h3>Agencies List</h3>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="card-header pb-0 card-no-border">
+                                                    <h4></h4>
+                                                    <button class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#addModal" type="button">Add</button>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <div class="app-datatable-default overflow-auto">
+                                                        <table class="display app-data-table default-data-table table"
+                                                            id="agency-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Name</th>
+                                                                    <th>Owner Name</th>
+                                                                    <th>Agency Legal Details</th>
+                                                                    <th>Status</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="agency-table-body"></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                        <div class="go-top">
+                            <span class="progress-value">
+                                <i class="ti ti-arrow-up"></i>
+                            </span>
+                        </div>
+                </div>
+            </div>
+    </div>
+
+    <%- include('partials/modals') %>
+
+        <%- include('partials/jsFooter') %>
+            <script src="/js/init/agencyInit.js" type="module"></script>
+</body>
+
+</html>

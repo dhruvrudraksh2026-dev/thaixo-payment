@@ -108,7 +108,7 @@ export const renderTotalDateRangeEarnings = (data, container) =>
                 <div id="dateRangeEarningsSpinner" class="d-none d-flex justify-content-start align-items-center my-4">
                     <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
                 </div>
-                <span id="dateRangeEarningsValue">₹ ${data.total_earnings || "0.00"}</span>
+                <span id="dateRangeEarningsValue">฿ ${data.total_earnings || "0.00"}</span>
             </div>
         </div>
         `
@@ -126,7 +126,7 @@ export const renderTotalEarningAmount = (data, container) =>
         <div class="card-body px-4 py-1">
             <h6 class="fs-5 fw-semibold mb-1">Lifetime Earnings Amount</h6>
             <div class="fw-semibold fs-6 text-success mb-0">
-                ₹ <span id="totalEarningsValue">${data.total_earnings || "0.00"}</span>
+                ฿ <span id="totalEarningsValue">${data.total_earnings || "0.00"}</span>
             </div>
         </div>
         `
@@ -141,7 +141,7 @@ export const renderTotalPaidWithdrawals = (data, container) =>
         <div class="card-body px-4 py-1">
             <h6 class="fs-5 fw-semibold mb-1">Total Paid Withdrawal</h6>
             <div class="fw-semibold fs-6 text-danger mb-0">
-                ₹ <span id="totalPaidWithdrawalsValue">${data.total_paid || "0.00"}</span>
+                ฿ <span id="totalPaidWithdrawalsValue">${data.total_paid || "0.00"}</span>
             </div>
         </div>
         `
@@ -156,7 +156,7 @@ export const renderTotalPendingWithdrawals = (data, container) =>
         <div class="card-body px-4 py-1">
             <h6 class="fs-5 fw-semibold mb-1">Total Pending Withdrawal <small class="text-muted fw-normal">(Requested)</small></h6>
             <div class="fw-semibold fs-6 text-info mb-0">
-                ₹ <span id="totalEarningsValue">${data.total_pending || "0.00"}</span>
+                ฿ <span id="totalEarningsValue">${data.total_pending || "0.00"}</span>
             </div>
         </div>
         `

@@ -89,10 +89,47 @@ class customerWithdrawalsModel
         return result.affectedRows > 0;
     }
 
-    static updateSelectedCustomerWithdrawalStatus = async (ids, status, transaction = db) =>
+    static updateSelectedCustomerWithdrawalStatus = async (data, transaction = db) =>
     {
-        const [result] = await transaction.query("UPDATE customer_withdrawals SET status = ? WHERE id IN ( ? )", [status, ids]);
+        const [result] = await transaction.query("UPDATE customer_withdrawals SET status = ? , note = ? WHERE id IN ( ? )", [data.status, data.note, data.ids]);
         return result.affectedRows > 0;
+    }
+
+    static insertLastMonthsWithdrawals = async (transaction = db) =>
+    {
+        const [rows] = await transaction.query(`
+            INSERT INTO customer_withdrawals
+            (customer_id, method, withdrawal_amount, payout_details, status, created_at)
+
+            SELECT 
+                ct.customer_id,
+                'BANK',
+                SUM(ct.earnings),
+                c.customer_legal_details,
+                'PENDING',
+                DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+
+            FROM customer_transactions ct
+            JOIN customer c ON c.id = ct.customer_id
+
+            WHERE 
+                ct.created_at >= DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+                AND ct.created_at < DATE_FORMAT(CURDATE(), '%Y-%m-01')
+
+                AND c.suspended = 0
+                AND c.is_creator = 1
+                AND c.is_verified = 1
+
+                AND NOT EXISTS (
+                    SELECT 1 
+                    FROM customer_withdrawals cw
+                    WHERE cw.customer_id = ct.customer_id
+                    AND cw.created_at = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+                )
+
+            GROUP BY ct.customer_id;
+        `);
+        return rows;
     }
 }
 

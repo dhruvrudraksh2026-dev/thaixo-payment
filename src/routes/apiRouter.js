@@ -6,6 +6,7 @@ import Response from '../helpers/response.js';
 import customerController from '../controllers/customerController.js';
 import customerTransactionsController from '../controllers/customerTransactionsController.js';
 import customerWithdrawalsController from '../controllers/customerWithdrawalsController.js';
+import agencyController from '../controllers/agencyController.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -45,6 +46,13 @@ router.get("/customer-withdrawals/:customerId/withdrawals/by-date-range", custom
 router.get("/customer-withdrawals/:customerId/withdrawals/total-by-date-range", customerWithdrawalsController.getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId); // Withdrawals Total Amount By Date Range
 
 router.patch("/customer-withdrawals/update-status", upload.none(), customerWithdrawalsController.updateSelectedCustomerWithdrawalStatus);
+
+// For Agency
+router.get("/agencies", agencyController.getAllAgency);
+router.get("/agency/:id", agencyController.getAgencyById);
+router.post("/agency", upload.none(), agencyController.addAgency);
+router.put("/agency", upload.none(), agencyController.updateAgencyById);
+router.delete("/agency/:id", upload.none(), agencyController.deleteAgencyById);
 
 router.use((req, res, next) =>
 {
