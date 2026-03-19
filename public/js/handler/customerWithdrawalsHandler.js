@@ -84,6 +84,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
             buttons: [
                 {
                     extend: 'csv',
+                    footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         format: {
@@ -114,6 +115,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                 },
                 {
                     extend: 'excel',
+                    footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         format: {
@@ -142,7 +144,30 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                         }
                     },
                 }
-            ]
+            ],
+            footerCallback: function (row, data, start, end, display)
+            {
+                var api = this.api();
+                var intVal = function (i)
+                {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ? i : 0;
+                };
+
+                // Total over all pages
+                var total = api
+                    .column(4)
+                    .data()
+                    .reduce(function (a, b)
+                    {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(4).footer()).html(
+                    total.toLocaleString('en-US', { minimumFractionDigits: 2 })
+                );
+            }
         });
     });
 }
@@ -446,6 +471,7 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
             buttons: [
                 {
                     extend: 'csv',
+                    footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         format: {
@@ -476,6 +502,7 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                 },
                 {
                     extend: 'excel',
+                    footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         format: {
@@ -504,7 +531,30 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                         }
                     },
                 }
-            ]
+            ],
+            footerCallback: function (row, data, start, end, display)
+            {
+                var api = this.api();
+                var intVal = function (i)
+                {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ? i : 0;
+                };
+
+                // Total over all pages
+                var total = api
+                    .column(4)
+                    .data()
+                    .reduce(function (a, b)
+                    {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(4).footer()).html(
+                    total.toLocaleString('en-US', { minimumFractionDigits: 2 })
+                );
+            }
         });
     });
 }
