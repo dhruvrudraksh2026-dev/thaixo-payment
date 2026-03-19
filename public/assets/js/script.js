@@ -26,6 +26,14 @@
 
 
 // >>-- 01 Horizontal Nav Js --<<
+function getLocalStorageItem(key, defaultValue = null) {
+    return localStorage.getItem(key) || defaultValue;
+}
+
+function setLocalStorageItem(key, value) {
+    localStorage.setItem(key, value);
+}
+
 let navBar = $(".main-nav");
 let size = "150px";
 let leftsideLimit = -100;

@@ -1,20 +1,10 @@
 import db from "../../config/db.js";
 
-// +----------------------+--------------+------+-----+-------------------+-------------------+
-// | Field                | Type         | Null | Key | Default           | Extra             |
-// +----------------------+--------------+------+-----+-------------------+-------------------+
-// | id                   | varchar(255) | NO   | PRI | NULL              |                   |
-// | name                 | varchar(255) | NO   |     | NULL              |                   |
-// | status               | tinyint(1)   | YES  |     | 1                 |                   |
-// | agency_legal_details | json         | YES  |     | _utf8mb4\'{}\'    | DEFAULT_GENERATED |
-// | created_at           | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-// +----------------------+--------------+------+-----+-------------------+-------------------+
-
 class agencyModel
 {
     static getAllAgency = async (transaction = db) =>
     {
-        const [rows] = await transaction.query(`SELECT * FROM agency;`, [id]);
+        const [rows] = await transaction.query(`SELECT * FROM agency;`);
         if (rows.length > 0)
         {
             return rows;

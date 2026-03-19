@@ -105,7 +105,7 @@
                                     <div class="container-fluid">
                                         <div class="row page-title">
                                             <div class="col-sm-6">
-                                                <h3>Pending Customer Withdrawals</h3>
+                                                <h3>All Customer Withdrawals</h3>
                                             </div>
                                         </div>
                                     </div>
@@ -116,8 +116,8 @@
                                                 <div id="customer-earning-details"
                                                     class="customer-earning-details card text-start shadow-sm d-flex justify-content-between align-items-center flex-row"
                                                     style="padding: 10px;">
-                                                    <div class="totalPendingWithdrawalsBlock">
-                                                        <div id="totalPendingWithdrawalsAmount"></div>
+                                                    <div class="totalAllWithdrawalsBlock">
+                                                        <div id="totalAllWithdrawalsAmount"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -125,7 +125,42 @@
 
                                         <div class="row">
                                             <div class="col-sm-12">
+                                                <div class="card" id="date-range-card">
+                                                    <div class="card-body">
+                                                        <form id="dateRangeForm" class="row g-3 align-items-end">
+                                                            <div class="col-md-3">
+                                                                <label for="startDate" class="form-label">Start
+                                                                    Date</label>
+                                                                <input type="date" class="form-control" id="startDate"
+                                                                    name="startDate" required>
+                                                            </div>
 
+                                                            <div class="col-md-3">
+                                                                <label for="endDate" class="form-label">End
+                                                                    Date</label>
+                                                                <input type="date" class="form-control" id="endDate"
+                                                                    name="endDate" required>
+                                                            </div>
+
+                                                            <div class="col-md-3">
+                                                                <button type="submit"
+                                                                    class="btn btn-primary fs-6 fw-semibold w-100 d-flex align-items-center justify-content-center">
+                                                                    <i class="ti ti-adjustments fs-5 me-2"></i>
+                                                                    <span>Apply Filter</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="col-md-3">
+                                                                <button type="reset"
+                                                                    class="btn btn-warning fs-6 fw-semibold w-100 d-flex align-items-center justify-content-center"
+                                                                    id="resetFilterBtn">
+                                                                    <i class="ti ti-reload fs-5 me-2"></i>
+                                                                    <span>Reset Filter</span>
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                                 <div class="card">
                                                     <div
                                                         class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center">
@@ -196,7 +231,7 @@
                                             <div class="col-12">
                                                 <label class="form-label">Withdrawal Method *</label>
                                                 <select id="editMethod" name="method" class="form-select" required>
-                                                    <option value="" disabled selected>Select Withdrawal Method</option>
+                                                    <option disabled selected>Select Withdrawal Method</option>
                                                     <option value="Bank">Bank</option>
                                                     <option value="Via Agency">Via Agency</option>
                                                 </select>

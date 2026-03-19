@@ -15,8 +15,6 @@ router.post('/login', upload.none(), LoginController.login);
 
 router.use(ApiAuthentication);
 
-router.get("check", (req, res) => res.json(Response.success("API Is Working Fine")));
-
 router.get("/customer-transactions/:id", customerTransactionsController.getAllCustomerTransactionsById);
 router.get("/customer-transactions/total/:id", customerTransactionsController.getCustomerTransactionsTotalAmountById);
 
@@ -31,21 +29,39 @@ router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpB
 router.patch("/customer/:id/toggle-creator", customerController.toggleCreatorById);
 router.get("/customer/:id", customerController.getCustomerById);
 
+// =============================================================================================================================
+// =============================================================================================================================
+// Customer Withdrawals APIs
+// =============================================================================================================================
 router.get("/customer-withdrawals", customerWithdrawalsController.getAllCustomerWithdrawals);
+router.get("/customer-withdrawals/by-date-range", customerWithdrawalsController.getAllCustomerWithdrawalsByDateRange);
+router.get("/customer-withdrawals/total-by-date-range", customerWithdrawalsController.getAllCustomerWithdrawalsTotalAmountByDateRange);
+// =============================================================================================================================
+// Pending Customer Withdrawals
+// =============================================================================================================================
 router.get("/customer-withdrawals/pending", customerWithdrawalsController.getAllPendingCustomerWithdrawals);
 router.get("/customer-withdrawals/total-pending", customerWithdrawalsController.getCustomerWithdrawalTotalPendingAmount);
+// =============================================================================================================================
+// Customer Withdrawal CRUD For Customer
+// =============================================================================================================================
 router.get("/customer-withdrawal/:id", customerWithdrawalsController.getCustomerWithdrawalByWithdrawalId);
 router.post("/customer-withdrawal", upload.none(), customerWithdrawalsController.addCustomerWithdrawal);
 router.put("/customer-withdrawal", upload.none(), customerWithdrawalsController.editCustomerWithdrawal);
 router.delete("/customer-withdrawal/:id", customerWithdrawalsController.deleteCustomerWithdrawal);
-
+// =============================================================================================================================
+// Customer Related Withdrawals
+// =============================================================================================================================
 router.get("/customer-withdrawals/:customerId/withdrawals/paid", customerWithdrawalsController.getTotalPaidCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals/pending", customerWithdrawalsController.getTotalPendingCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals", customerWithdrawalsController.getAllCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals/by-date-range", customerWithdrawalsController.getCustomerWithdrawalsByDateRangeByCustomerId); // Withdrawals By Date Range
 router.get("/customer-withdrawals/:customerId/withdrawals/total-by-date-range", customerWithdrawalsController.getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId); // Withdrawals Total Amount By Date Range
-
+// =============================================================================================================================
+// Update Customer Withdrawal Status
+// =============================================================================================================================
 router.patch("/customer-withdrawals/update-status", upload.none(), customerWithdrawalsController.updateSelectedCustomerWithdrawalStatus);
+// =============================================================================================================================
+// =============================================================================================================================
 
 // For Agency
 router.get("/agencies", agencyController.getAllAgency);

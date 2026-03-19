@@ -177,3 +177,28 @@ export const updateSelectedCustomerWithdrawalStatus = async (formData) =>
         });
 }
 
+export const getAllCustomerWithdrawalsTotalAmountByDateRange = async (data) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/total-by-date-range?${data.params}`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+}
+
+export const getAllCustomerWithdrawalsByDateRange = async (data) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/by-date-range?${data.params}`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+}

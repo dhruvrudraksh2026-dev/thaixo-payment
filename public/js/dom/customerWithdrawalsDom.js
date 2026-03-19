@@ -101,13 +101,13 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
         tableBody.append(
             `
             <tr data-id=${withdrawal.id}>
-                ${path === "/customer-withdrawals"
+                ${path === "/customer-withdrawals" || path === "/pending-customer-withdrawals"
                 ? `<td class="p-2">
                         <input type="checkbox" class="row-checkbox cursor-pointer" value="${withdrawal.id}">
                     </td>`
                 : ""}
                 <td># ${withdrawal.id ?? "NA"}</td>
-                <td># ${`${withdrawal.customer_id} - ${withdrawal.customer_name}` ?? "NA"}</td>
+                <td>${`${withdrawal.customer_id} - ${withdrawal.customer_name}` ?? "NA"}</td>
                 <td>${withdrawal.method ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_amount ?? "NA"}</td>
                 <td>${formattedPayoutDetails}</td>
@@ -130,6 +130,7 @@ export const removeDataTableRow = (dataTable, ids) =>
 
 export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) => 
 {
+    const path = window.location.pathname;
     const rows = withdrawals.map((withdrawal, index) => 
     {
         const formattedPayoutDetails =
@@ -138,11 +139,30 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                 : (typeof withdrawal.payout_details === "object")
                     ? renderPayoutDetails(withdrawal.payout_details)
                     : withdrawal.payout_details || "NA";
+
+        if (path === "/customer-withdrawals")
+        {
+            return (
+                [
+                    `<input type="checkbox" class="row-checkbox cursor-pointer" value="${withdrawal.id}">`,
+                    `# ${withdrawal.id ?? "NA"}`,
+                    `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
+                    withdrawal.method ?? '',
+                    withdrawal.withdrawal_amount ?? '',
+                    formattedPayoutDetails,
+                    WITHDRAWAL_STATUS[withdrawal.status]?.badge ?? '',
+                    withdrawal.created_at ?? '',
+                    `
+                <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+            `
+                ]);
+        }
+
         return (
             [
                 `# ${withdrawal.id ?? "NA"}`,
-                `# ${withdrawal.customer_id ?? "NA"}`,
-                withdrawal.withdrawal_method ?? '',
+                `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
+                withdrawal.method ?? '',
                 withdrawal.withdrawal_amount ?? '',
                 formattedPayoutDetails,
                 WITHDRAWAL_STATUS[withdrawal.status]?.badge ?? '',
@@ -154,8 +174,14 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
     });
 
     dataTable.clear();
-    dataTable.rows.add(rows);
+    const addedRows = dataTable.rows.add(rows);
     dataTable.draw();
+
+    const nodes = addedRows.nodes();
+    for (let i = 0; i < nodes.length; i++)
+    {
+        $(nodes[i]).attr("data-id", withdrawals[i].id);
+    }
 }
 
 export const renderTotalDateRangeWithdrawals = (data, container) =>
@@ -202,7 +228,7 @@ export const addDataTableRow = (dataTable, data) =>
 
     const rowNode = dataTable.row.add([
         `# ${data.id ?? "NA"}`,
-        `# ${data.customer_id ?? "NA"}`,
+        `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
         formattedPayoutDetails,
@@ -218,6 +244,7 @@ export const addDataTableRow = (dataTable, data) =>
 
 export const editDataTableRow = (dataTable, data) =>
 {
+    console.log(data);
     const path = window.location.pathname;
     const rowSelector = `tr[data-id="${data.id}"]`;
     const withdrawalStatusBadge = WITHDRAWAL_STATUS[data.status]?.badge;
@@ -231,7 +258,7 @@ export const editDataTableRow = (dataTable, data) =>
 
     const dataToRender = [
         `# ${data.id ?? "NA"}`,
-        `# ${data.customer_id ?? "NA"}`,
+        `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
         formattedPayoutDetails,
@@ -242,10 +269,20 @@ export const editDataTableRow = (dataTable, data) =>
         `
     ];
 
-    (path === "/customer-withdrawals") ? dataToRender.unshift(`<input type="checkbox" class="row-checkbox cursor-pointer" value="${data.id}">`) : null;
+    (path === "/customer-withdrawals" || path === "/pending-customer-withdrawals") ? dataToRender.unshift(`<input type="checkbox" class="row-checkbox cursor-pointer" value="${data.id}">`) : null;
 
     dataTable.row(rowSelector).data(dataToRender).draw(false);
 };
+
+export const editDataTableRowStatus = (dataTable, ids, status) =>
+{
+    ids.forEach((id) =>
+    {
+        const rowSelector = `tr[data-id="${id}"]`;
+        const withdrawalStatusBadge = WITHDRAWAL_STATUS[status]?.badge;
+        dataTable.cell(rowSelector, 6).data(withdrawalStatusBadge).draw(false);
+    });
+}
 
 export const createKVRow = (key = "", value = "") =>
 {
@@ -264,4 +301,21 @@ export const createKVRow = (key = "", value = "") =>
         </div>
       </div>
     `;
+}
+
+// For All Customer Withdrawals
+
+export const renderTotalAllWithdrawalsAmount = (data, container) =>
+{
+    container.empty();
+    container.html(
+        `
+        <div class="card-body px-4 py-1">
+            <h6 class="fs-5 fw-semibold mb-1">Total Withdrawals Amount</h6>
+            <div class="fw-semibold fs-6 text-success mb-0">
+                ฿ <span id="totalAllWithdrawalsValue">${data.total_amount || "0.00"}</span>
+            </div>
+        </div>
+        `
+    );
 }

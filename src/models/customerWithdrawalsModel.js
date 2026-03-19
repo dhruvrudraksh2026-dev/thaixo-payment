@@ -29,7 +29,7 @@ class customerWithdrawalsModel
 
     static getCustomerWithdrawalsByCustomerId = async (id, transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw WHERE cw.customer_id = ?", [id]);
+        const [rows] = await transaction.query("SELECT cw.*, c.name as customer_name, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw LEFT JOIN customer c ON cw.customer_id = c.id WHERE cw.customer_id = ?", [id]);
         return rows;
     }
 
@@ -37,6 +37,30 @@ class customerWithdrawalsModel
     {
         const [rows] = await transaction.query(`SELECT SUM(withdrawal_amount) as total_pending FROM customer_withdrawals WHERE status = "PENDING"`);
         return rows[0] || 0;
+    }
+
+    // static getThisMonthsCustomerWithdrawalsAmount = async (transaction = db) =>
+    // {
+    //     const [rows] = await transaction.query(`SELECT SUM(withdrawal_amount) as total_amount FROM customer_withdrawals WHERE created_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01')`);
+    //     return rows[0] || 0;
+    // }
+
+    // static getThisMonthCustomerWithdrawalsTotalAmount = async (transaction = db) =>
+    // {
+    //     const [rows] = await transaction.query(`SELECT SUM(withdrawal_amount) as total_amount FROM customer_withdrawals WHERE created_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01')`);
+    //     return rows[0] || 0;
+    // }
+
+    static getAllCustomerWithdrawalsByDateRange = async (data, transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT cw.*, c.name as customer_name, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw LEFT JOIN customer c ON cw.customer_id = c.id WHERE cw.created_at BETWEEN ? AND ?", [data.startDate, data.endDate]);
+        return rows;
+    }
+
+    static getAllCustomerWithdrawalsTotalAmountByDateRange = async (data, transaction = db) =>
+    {
+        const [rows] = await transaction.query("SELECT SUM(withdrawal_amount) as total_amount FROM customer_withdrawals WHERE created_at BETWEEN ? AND ?", [data.startDate, data.endDate]);
+        return rows[0] || {};
     }
 
     static getCustomerWithdrawalsByDateRangeByCustomerId = async (data, transaction = db) =>
@@ -53,7 +77,7 @@ class customerWithdrawalsModel
 
     static getCustomerWithdrawalByWithdrawalId = async (id, transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw WHERE cw.id = ?", [id]);
+        const [rows] = await transaction.query("SELECT cw.*, c.name as customer_name, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw LEFT JOIN customer c ON cw.customer_id = c.id WHERE cw.id = ?", [id]);
         return rows[0] || {};
     }
 

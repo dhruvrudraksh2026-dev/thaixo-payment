@@ -1,6 +1,6 @@
-import { setUpCustomerWithdrawalsHandler } from "../handler/customerWithdrawalsHandler.js"
+import { setUpAllCustomerWithdrawalsHandler } from "../handler/customerWithdrawalsHandler.js"
 
 $(() =>
 {
-    setUpCustomerWithdrawalsHandler();
+    setUpAllCustomerWithdrawalsHandler();
 })
