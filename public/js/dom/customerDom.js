@@ -21,6 +21,7 @@ export const renderCustomers = (data, tableBody) =>
 
 export const renderCustomerInfo = (data, container) =>
 {
+    console.log(data);
     container.empty();
     const { id, name, dob, gender, mobile_no, status, about_self, coins, suspended, is_creator } = data;
     const statusBadge = status === 1 ? `<span class="badge bg-success px-3 py-2">Active</span>` : `<span class="badge bg-danger px-3 py-2">Inactive</span>`;

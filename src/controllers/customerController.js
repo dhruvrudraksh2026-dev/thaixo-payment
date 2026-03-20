@@ -1,6 +1,7 @@
 import customerModel from "../models/customerModel.js";
 import { safeJSONParse } from "../../public/js/utils/helper.js";
 import Response from "../helpers/response.js";
+import { getImageUrl } from "../helpers/helper.js";
 
 class customerController 
 {
@@ -67,6 +68,7 @@ class customerController
                 return res.json(Response.failure("Customer Not Found"));
             }
             customer.photos = safeJSONParse(customer.photos);
+            customer.profile_photo = getImageUrl(`customerProfilePhotos/${id}`, customer.profile_photo);
 
             return res.json(Response.success("Customer Fetched Successfully", customer));
         } catch (error)

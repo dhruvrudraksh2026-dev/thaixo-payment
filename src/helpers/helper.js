@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 export function datetimeConverter(uiDateTime)
 {
     if (!uiDateTime) return null;
@@ -44,3 +47,10 @@ export function datetimeConverter(uiDateTime)
 
     return `${year}-${month}-${day} ${hh}:${min}:${sec}`;
 }
+
+// Must Include UserId in Folder Name
+export const getImageUrl = (folderName, fileName) =>
+{
+    if (!fileName) return null;
+    return `${process.env.BASE_IMAGE_URL}/${folderName}/${fileName}`;
+};
