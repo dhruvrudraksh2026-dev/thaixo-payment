@@ -30,8 +30,15 @@ router.patch("/customer/:id/toggle-creator", customerController.toggleCreatorByI
 router.get("/customer/:id", customerController.getCustomerById);
 
 // =============================================================================================================================
+// Customer Legal Details Verification
 // =============================================================================================================================
-// Customer Withdrawals APIs
+router.patch("/customer/legal-details/approve/:id", customerController.verifyCustomerLegalDetailsById);
+router.patch("/customer/legal-details/reject/:id", customerController.unverifyCustomerLegalDetailsById);
+// =============================================================================================================================
+
+// =============================================================================================================================
+// =============================================================================================================================
+// All Customer Withdrawals APIs
 // =============================================================================================================================
 router.get("/customer-withdrawals", customerWithdrawalsController.getAllCustomerWithdrawals);
 router.get("/customer-withdrawals/by-date-range", customerWithdrawalsController.getAllCustomerWithdrawalsByDateRange);

@@ -2,6 +2,7 @@ import customerWithdrawalsModel from "../models/customerWithdrawalsModel.js";
 import Response from "../helpers/response.js";
 import customerModel from "../models/customerModel.js";
 import { safeJSONParse } from "../../public/js/utils/helper.js";
+import webNotificationsModel from "../models/webNotificationsModel.js";
 
 class customerWithdrawalsController
 {
@@ -488,6 +489,22 @@ class customerWithdrawalsController
 
             withdrawal.payoutDetails = safeJSONParse(withdrawal.payoutDetails);
 
+            // Web Notifications
+            if (data.status === "DONE")
+            {
+                const webNotification = await webNotificationsModel.createWebNotification({
+                    customer_id: data.customerId,
+                    type: "WITHDRAWAL_DONE",
+                    title: "Withdrawal Done",
+                    body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been successfully completed.`
+                });
+
+                if (!webNotification)
+                {
+                    return res.json(Response.failure("Failed To Create Web Notification"));
+                }
+            }
+
             return res.json(Response.success("Withdrawal Edited Successfully", withdrawal));
         }
         catch (error)
@@ -553,6 +570,26 @@ class customerWithdrawalsController
             if (!withdrawal)
             {
                 return res.json(Response.failure("Withdrawals Not Updated"));
+            }
+
+            // Web Notifications
+            if (data.status === "DONE")
+            {
+                for (const id of ids)
+                {
+                    const withdrawal = await customerWithdrawalsModel.getCustomerWithdrawalByWithdrawalId(id);
+                    const webNotification = await webNotificationsModel.createWebNotification({
+                        customer_id: withdrawal.customer_id,
+                        type: "WITHDRAWAL_DONE",
+                        title: "Withdrawal Done",
+                        body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been successfully completed.`
+                    });
+
+                    if (!webNotification)
+                    {
+                        return res.json(Response.failure("Failed To Create Web Notification"));
+                    }
+                }
             }
 
             return res.json(Response.success("Withdrawals Updated Successfully", withdrawal));

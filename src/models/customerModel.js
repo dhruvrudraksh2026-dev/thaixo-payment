@@ -68,6 +68,36 @@ class customerModel
         }
         return false;
     }
+
+    static verifyCustomerLegalDetailsById = async (id, transaction = db) =>
+    {
+        const [result] = await transaction.query(`UPDATE customer SET is_legal_details_verified = true , legal_details_verification_status = 'APPROVED'  WHERE id = ?`, [id]);
+        if (result.affectedRows > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    static unverifyCustomerLegalDetailsById = async (id, transaction = db) =>
+    {
+        const [result] = await transaction.query(`UPDATE customer SET is_legal_details_verified = false , legal_details_verification_status = 'REJECTED'  WHERE id = ?`, [id]);
+        if (result.affectedRows > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    static updateCustomerLegalDetails = async (data, transaction = db) =>
+    {
+        const [result] = await transaction.query('UPDATE customer SET customer_legal_details = ? WHERE id = ?', [JSON.stringify(data.customer_legal_details), data.id]);
+        if (result.affectedRows > 0)
+        {
+            return await this.getCustomerById(data.id, transaction);
+        }
+        return false;
+    }
 }
 
 export default customerModel;

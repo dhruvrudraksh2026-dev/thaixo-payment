@@ -1,5 +1,5 @@
-import { getCustomerById } from "../api/customerApi.js";
-import { renderCustomerInfo } from "../dom/customerDom.js";
+import { getCustomerById, unverifyCustomerLegalDetailsById, verifyCustomerLegalDetailsById } from "../api/customerApi.js";
+import { handlerCustomerLegalDetailsVerificationStatusUpdate, renderCustomerInfo } from "../dom/customerDom.js";
 
 import { toggleCreatorById, updateGeneratedOtpById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsInfoAPI.js";
 import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleCreatorSection, renderCreatorBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals, renderCustomerBreadcrumbs, renderCustomerWithdrawalsTableHeader, resetForm, createKVRow } from "../dom/customerTransactionsInfoDom.js";
@@ -46,6 +46,10 @@ export const setupTransactionsViewHandler = () =>
     fetchCustomerEarningsTotalAmount();
     fetchCustomerWithdrawalsTotalPaidAmount();
     fetchCustomerWithdrawalsTotalPendingAmount();
+
+    // (6.) For Verifying Legal Details
+    $(document).on("click", "#approveCustomerLegalDetailsBtn", handleApproveLegalDetailsVerificationBtnClick);
+    $(document).on("click", "#rejectCustomerLegalDetailsBtn", handleRejectLegalDetailsVerificationBtnClick);
 
     // Cancel Note Logic
     $(document).on("change", "#addWithdrawalStatus", function ()
@@ -121,7 +125,6 @@ export const fetchAndViewCustomersWithdrawals = async () =>
 
     checkAndExecute(response, () =>
     {
-        console.log(response.data);
         renderCustomerWithdrawals(response.data, $("#customer-withdrawals-table-body"));
         renderCustomerWithdrawalsTableHeader(customerInfo.data.is_creator, $("#customer-withdrawals-table-header"));
         withdrawalDataTable = $("#customer-withdrawals-table").DataTable({ "order": [[0, "desc"]] });
@@ -420,3 +423,41 @@ const handleRemoveRow = (e) =>
     btn.closest(".kv-row").remove();
 }
 // ==========================================================================================
+
+
+// ===============================================================================================================
+// (6.) Verifying Customer Legal Details
+// ===============================================================================================================
+// For Legal Details Verification
+const handleApproveLegalDetailsVerificationBtnClick = async (e) => 
+{
+    const id = $(e.currentTarget).data("id");
+
+    if (!confirm("Are you sure you want to approve this legal details verification?"))
+    {
+        return;
+    }
+
+    const response = await verifyCustomerLegalDetailsById(id);
+    checkAndExecute(response, () => 
+    {
+        handlerCustomerLegalDetailsVerificationStatusUpdate(true);
+    });
+}
+
+const handleRejectLegalDetailsVerificationBtnClick = async (e) => 
+{
+    const id = $(e.currentTarget).data("id");
+
+    if (!confirm("Are you sure you want to reject this legal details verification?\nThis action will delete the customer legal details photos."))
+    {
+        return;
+    }
+
+    const response = await unverifyCustomerLegalDetailsById(id);
+    checkAndExecute(response, () => 
+    {
+        console.log(response.data);
+        handlerCustomerLegalDetailsVerificationStatusUpdate(false);
+    });
+}

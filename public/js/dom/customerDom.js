@@ -1,3 +1,10 @@
+const verificationStatusColors = {
+    "NOT_STARTED": { class: "bg-secondary", text: "Not Started", iconClass: "fa-solid fa-ban" },
+    "PENDING": { class: "bg-warning text-dark", text: "Pending", iconClass: "fa-regular fa-hourglass" },
+    "APPROVED": { class: "bg-success", text: "Approved", iconClass: "fa-regular fa-circle-check" },
+    "REJECTED": { class: "bg-danger", text: "Rejected", iconClass: "fa-regular fa-circle-xmark" }
+};
+
 export const renderCustomers = (data, tableBody) => 
 {
     tableBody.empty();
@@ -21,72 +28,214 @@ export const renderCustomers = (data, tableBody) =>
 
 export const renderCustomerInfo = (data, container) =>
 {
-    console.log(data);
     container.empty();
-    const { id, name, dob, gender, mobile_no, status, about_self, coins, suspended, is_creator } = data;
+    const { id, name, dob, gender, mobile_no, status, about_self, coins, suspended, is_creator, photos, customer_legal_details, is_legal_details_verified, legal_details_verification_status } = data;
     const statusBadge = status === 1 ? `<span class="badge bg-success px-3 py-2">Active</span>` : `<span class="badge bg-danger px-3 py-2">Inactive</span>`;
     const creatorBadge = is_creator === 1 ? `<span class="badge bg-success px-4 py-1">Yes</span>` : `<span class="badge bg-danger px-4 py-1">No</span>`;
+
+    const isCreator = is_creator == 1;
+    const customerLegalPhotos = (customer_legal_details?.legal_id_image && customer_legal_details?.passbook_image) ? [customer_legal_details.legal_id_image, customer_legal_details.passbook_image] : [];
+    const isCustomerLegalDetailsVerificationPending = legal_details_verification_status === "PENDING" && !is_legal_details_verified;
+    const legalDetailsVerificationStatus = verificationStatusColors[legal_details_verification_status] || verificationStatusColors["NOT_STARTED"];
+
+    const renderPhotos = (arr, galleryName) =>
+        arr && arr.length
+            ? arr.map((photo, index) => `
+        <a href="${photo}"
+           class="glightbox-customer"
+           target="_blank"
+           data-gallery="${galleryName}"
+           data-title="LegalPhoto ${name} ${index + 1}">
+           
+           <img src="${photo}"
+                class="rounded border"
+                style="max-width:360px; max-height:360px; object-fit:cover; cursor:pointer;">
+        </a>
+      `).join("")
+            : `<span class="text-muted">No Photos</span>`;
+
     const cardHTML = `
         <div class="card shadow-sm border-0 px-4 py-3 mb-0">
-        <div class="d-flex align-items-center justify-content-between position-relative flex-wrap">
+            <div class="d-flex align-items-center justify-content-between position-relative flex-wrap">
 
-            <!-- Left: Primary Info -->
-            <div class="d-flex align-items-center gap-3">
-            <div>
-                <h6 class="mb-1 fw-semibold">${name || "N/A"}</h6>
-                <div class="d-flex align-items-center gap-2">
-                    <small class="text-muted">ID: ${id || "-"}</small>
-                    ${statusBadge}
-                    <!-- Suspended Badge -->
-                    ${suspended ? `
-                    <div class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">
-                        Suspended
+                <!-- Left: Primary Info -->
+                <div class="d-flex align-items-center gap-3">
+                    <div>
+                        <h6 class="mb-1 fw-semibold">${name || "N/A"}</h6>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <small class="text-muted">ID: ${id || "-"}</small>
+                            ${statusBadge}
+                            <!-- Suspended Badge -->
+                            ${suspended ? `
+                            <div class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">
+                                Suspended
+                            </div>
+                            ` : ""}
+                        </div>                    
                     </div>
-                    ` : ""}
+                </div>
+
+                <!-- Middle: Details -->
+                <div class="d-flex gap-5 align-items-center flex-wrap mt-3 mt-md-0">
+
+                    <div class="text-center">
+                        <small class="text-uppercase text-muted">Gender</small>
+                        <div class="fw-medium">${gender || "N/A"}</div>
+                    </div>
+
+                    <div class="text-center">
+                        <small class="text-uppercase text-muted">DOB</small>
+                        <div class="fw-medium">${dob || "N/A"}</div>
+                    </div>
+
+                    <div class="text-center">
+                        <small class="text-uppercase text-muted">Mobile</small>
+                        <div class="fw-medium">${mobile_no || "N/A"}</div>
+                    </div>
+
+                    <div style="max-width: 240px;">
+                        <small class="text-uppercase text-muted">Bio</small>
+                        <div class="fw-medium text-truncate">
+                        ${about_self || "N/A"}
+                        </div>
+                    </div>
+
+                    <div style="max-width: 240px;">
+                        <small class="text-uppercase text-muted">Coins</small>
+                        <div class="fw-medium text-truncate" id="coinsText">
+                        ${coins}
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <small class="text-uppercase text-black fw-semibold">Creator</small>
+                        <div class="fw-medium" id="creator-badge">${creatorBadge}</div>
+                    </div>                    
                 </div>
             </div>
-            </div>
 
-            <!-- Middle: Details -->
-            <div class="d-flex gap-5 align-items-center flex-wrap mt-3 mt-md-0">
+            <hr>
 
-            <div class="text-center">
-                <small class="text-uppercase text-muted">Gender</small>
-                <div class="fw-medium">${gender || "N/A"}</div>
-            </div>
+            <div class="d-flex gap-5 align-items-center justify-content-start flex-wrap mt-3 mt-md-0">
+                <div id="isLegalDetailsVerified" class="text-center">
+                    <div>
+                        <small class="text-uppercase text-black fw-semibold">Legal Details Verification</small>
+                    </div>
+                    <div id="isCustomerLegalDetailsVerifiedBadge">
+                        ${is_legal_details_verified ? `
+                            <span class="badge bg-success p-2 fs-6">
+                                <i class="fa-regular fa-circle-check"></i>
+                                Verified
+                            </span>
+                        `: `
+                            <span class="badge bg-danger p-2 fs-6">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                Not Verified
+                            </span>
+                        `}
+                    </div>
+                </div>
 
-            <div class="text-center">
-                <small class="text-uppercase text-muted">DOB</small>
-                <div class="fw-medium">${dob || "N/A"}</div>
-            </div>
-
-            <div class="text-center">
-                <small class="text-uppercase text-muted">Mobile</small>
-                <div class="fw-medium">${mobile_no || "N/A"}</div>
-            </div>
-
-            <div style="max-width: 240px;">
-                <small class="text-uppercase text-muted">Bio</small>
-                <div class="fw-medium text-truncate">
-                ${about_self || "N/A"}
+                <div id="isLegalDetailsVerifiedStatus" class="text-center">
+                    <div>
+                        <small class="text-uppercase text-black fw-semibold">Legal Details Verification Status</small>
+                    </div>
+                    <div id="customerLegalDetailsVerificationStatus">
+                        <span class="badge rounded-pill fs-6 px-3 py-2 ${legalDetailsVerificationStatus.class}">
+                            <i class="${legalDetailsVerificationStatus.iconClass} me-1"></i>
+                            ${legalDetailsVerificationStatus.text}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div style="max-width: 240px;">
-                <small class="text-uppercase text-muted">Coins</small>
-                <div class="fw-medium text-truncate" id="coinsText">
-                ${coins}
+            ${isCreator ? `
+                <hr>
+                <div class="mb-3 p-1 w-100 w-md-50">
+                    <h4 class="fw-bold mb-3">Customer Legal Photos</h4>
+                    <div class="d-flex gap-2 flex-wrap" id="customerLegalPhotos">${renderPhotos(customerLegalPhotos, `customer-legal-photos-${id}`)}</div>
                 </div>
-            </div>
+                <hr>
+                ${isCustomerLegalDetailsVerificationPending || (["PENDING", "APPROVED"].includes(legal_details_verification_status)) ? `
+                    <div class="row mb-3" id="customerLegalDetailsVerificationBtns">
+                        <h4 class="fw-bold mb-3">Customer Legal Details Verification</h4>
+                        <div class="col d-flex align-items-center justify-content-start gap-3 flex-wrap">                        
+                            <!-- Approve Customer Legal Details Verification Request Button -->
+                            <button type="button" class="btn btn-success me-2 text-truncate" data-id="${id}" id="approveCustomerLegalDetailsBtn">
+                                <span class="spinner-border spinner-border-sm d-none" id="approveCustomerLegalDetailsSpinner"></span>
+                                <i class="fa-regular fa-circle-check"></i>
+                                Approve Customer Legal Details Verification
+                            </button>
 
-            <div class="text-center">
-                <small class="text-uppercase text-black fw-semibold">Creator</small>
-                <div class="fw-medium" id="creator-badge">${creatorBadge}</div>
-            </div>            
-            </div>
-        </div>
+                            <!-- Reject Customer Legal Details Verification Request Button -->
+                            <button type="button" class="btn btn-danger" data-id="${id}" id="rejectCustomerLegalDetailsBtn">
+                                <span class="spinner-border spinner-border-sm d-none" id="rejectCustomerLegalDetailsSpinner"></span>
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                Reject Customer Legal Details Verification
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                `: ``}
+            ` : ``}
         </div>
     `;
 
     container.append(cardHTML);
 };
+
+
+export const handlerCustomerLegalDetailsVerificationStatusUpdate = (status) =>
+{
+    updateAndRenderCustomerLegalDetailsVerificationStatus(status ? "APPROVED" : "REJECTED");
+    updateAndRenderIsCustomerLegalDetailsVerified(status ? true : false);
+    if (!status)
+    {
+        renderCustomerLegalPhotosDeletion();
+        $("#customerLegalDetailsVerificationBtns").addClass("d-none");
+    }
+}
+
+export const renderCustomerLegalPhotosDeletion = () =>
+{
+    const photosDivison = $("#customerLegalPhotos");
+    photosDivison.html(
+        `<span class="text-muted">No Photos</span>`
+    );
+}
+
+export const updateAndRenderIsCustomerLegalDetailsVerified = (isCustomerLegalDetailsVerified) =>
+{
+    const badge = $("#isCustomerLegalDetailsVerifiedBadge");
+    if (isCustomerLegalDetailsVerified)
+    {
+        badge.html(`
+      <span class="badge bg-success p-2 fs-6">
+         <i class="fa-regular fa-circle-check"></i>
+         Verified
+      </span>
+   `);
+    } else
+    {
+        badge.html(`
+      <span class="badge bg-danger p-2 fs-6">
+         <i class="fa-regular fa-circle-xmark"></i>
+         Not Verified
+      </span>
+         `);
+    }
+}
+
+export const updateAndRenderCustomerLegalDetailsVerificationStatus = (status) =>
+{
+    const verificationStatus = verificationStatusColors[status] || verificationStatusColors["NOT_STARTED"];
+    const verificationStatusDivison = $("#customerLegalDetailsVerificationStatus");
+    verificationStatusDivison.html(
+        `
+      <span class="badge rounded-pill fs-6 px-3 py-2 ${verificationStatus.class}">
+         <i class="${verificationStatus.iconClass} me-1"></i>
+         ${verificationStatus.text}
+      </span>
+      `
+    );
+}

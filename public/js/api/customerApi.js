@@ -56,3 +56,32 @@ export const getCreatorThaiCustomers = async () =>
             }
         });
 };
+
+// --------------------------
+// Customer Legal Details Verification
+// --------------------------
+export const verifyCustomerLegalDetailsById = async (id) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer/legal-details/approve/${id}`,
+            method: "PATCH",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
+export const unverifyCustomerLegalDetailsById = async (id) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer/legal-details/reject/${id}`,
+            method: "PATCH",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};

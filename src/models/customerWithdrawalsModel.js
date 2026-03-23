@@ -143,6 +143,7 @@ class customerWithdrawalsModel
                 AND c.suspended = 0
                 AND c.is_creator = 1
                 AND c.is_verified = 1
+                AND c.is_legal_details_verified = 1
 
                 AND NOT EXISTS (
                     SELECT 1 
