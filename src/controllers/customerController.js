@@ -4,6 +4,9 @@ import Response from "../helpers/response.js";
 import { getImageUrl } from "../helpers/helper.js";
 import webNotificationsModel from "../models/webNotificationsModel.js";
 import db from "../../config/db.js";
+import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
 
 class customerController 
 {
@@ -180,32 +183,6 @@ class customerController
                 return res.json(Response.failure("Failed To Verify Customer Legal Details"));
             }
 
-            // // Firebase Notification Flow
-            // // Sending Firebase Notification - Even If It Got Failed, We Will update the data
-            // const customerToSend = Object.fromEntries(
-            //     Object.entries(customer).map(([key, value]) => [
-            //         key,
-            //         value === null || value === undefined ? "" : JSON.stringify(value)
-            //     ])
-            // );
-
-            // const notification = {
-            //     title: "🎉 Profile Verified",
-            //     body: `Hi ${customer.name}, your profile has been successfully verified. You can now enjoy all features without any restrictions`,
-            //     data: {
-            //         type: "PROFILE_VERIFICATION_APPROVED",
-            //         ...customerToSend
-            //     }
-            // }
-
-            // try
-            // {
-            //     sendPushNotification(customer.device_token, notification.title, notification.body, notification.data);
-            // } catch (error)
-            // {
-            //     console.log("Firebase Notification Sending Failed - While Approving Application", error);
-            // }
-
             // Web Notifications
             const webNotification = await webNotificationsModel.createWebNotification({
                 customer_id: id,
@@ -261,16 +238,6 @@ class customerController
                 return res.json(Response.failure("Failed To Unverify Customer Legal Details"));
             }
 
-            // Deleting Legal Photos From Storage And Database
-            // const folderPath = path.join(process.cwd(), "public", "customer", String(id));
-
-            // const legal_photos = customer.customer_legal_details ? JSON.parse(customer.customer_legal_details).legal_photos : [];
-            // if (!legal_photos)
-            // {
-            //     await connection.rollback();
-            //     return res.json(Response.failure("Legal Photos Not Found"));
-            // }
-
             const updatedCustomer = await customerModel.updateCustomerLegalDetails({ id, customer_legal_details: {} }, connection);
             if (!updatedCustomer)
             {
@@ -278,31 +245,14 @@ class customerController
                 return res.json(Response.failure("Failed To Delete Verification Photos"));
             }
 
-            // // Firebase Notification Flow
-            // // Sending Firebase Notification - Even If It Got Failed, We Will update the data
-            // const customerToSend = Object.fromEntries(
-            //     Object.entries(updatedCustomer).map(([key, value]) => [
-            //         key,
-            //         value === null || value === undefined ? "" : JSON.stringify(value)
-            //     ])
-            // );
+            // Calling API To Delete Customer Legal Photos
+            const deleteCustomerLegalPhotosResponse = await axios.delete(`${process.env.BASE_IMAGE_URL}/api/customer/legal-photos/${id}`);
 
-            // const notification = {
-            //     title: "❌ Profile Verification Failed",
-            //     body: `Hi ${updatedCustomer.name}, we couldn’t verify your profile. Please re-upload verification photos to continue`,
-            //     data: {
-            //         type: "PROFILE_VERIFICATION_REJECTED",
-            //         ...customerToSend
-            //     }
-            // }
-
-            // try
-            // {
-            //     sendPushNotification(updatedCustomer.device_token, notification.title, notification.body, notification.data);
-            // } catch (error)
-            // {
-            //     console.log("Firebase Notification Sending Failed - While Unapproving Application", error);
-            // }
+            if (!deleteCustomerLegalPhotosResponse?.data?.success)
+            {
+                await connection.rollback();
+                return res.json(Response.failure("Failed To Delete Customer Legal Photos"));
+            }
 
             // Web Notifications
             const webNotification = await webNotificationsModel.createWebNotification({

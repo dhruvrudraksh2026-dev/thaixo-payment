@@ -26,6 +26,34 @@ export const renderCustomers = (data, tableBody) =>
     });
 };
 
+function renderLegalDetails(containerId, data)
+{
+    const $container = $("#" + containerId);
+    $container.empty();
+
+    if (Object.keys(data).length === 0)
+    {
+        $container.append(`
+            <div class="d-flex justify-content-center py-2 w-100">
+                <span class="text-muted">No Legal Details</span>
+            </div>
+        `);
+        return;
+    }
+
+    $.each(data, function (key, value)
+    {
+        const row = `
+            <div class="d-flex justify-content-between border-bottom py-2 w-100">
+                <span class="fw-semibold text-capitalize fs-6">${key.replace(/_/g, " ")}</span>
+                <span class="text-muted fs-6">${value ?? "-"}</span>
+            </div>
+        `;
+
+        $container.append(row);
+    });
+}
+
 export const renderCustomerInfo = (data, container) =>
 {
     container.empty();
@@ -35,6 +63,9 @@ export const renderCustomerInfo = (data, container) =>
 
     const isCreator = is_creator == 1;
     const customerLegalPhotos = (customer_legal_details?.legal_id_image && customer_legal_details?.passbook_image) ? [customer_legal_details.legal_id_image, customer_legal_details.passbook_image] : [];
+
+    const customerLegalDetailsJson = Object.keys(customer_legal_details).length > 0 ? { bank_name: customer_legal_details?.bank_name, legal_name: customer_legal_details?.legal_name, document_type: customer_legal_details?.document_type, bank_account_no: customer_legal_details?.bank_account_no } : {};
+
     const isCustomerLegalDetailsVerificationPending = legal_details_verification_status === "PENDING" && !is_legal_details_verified;
     const legalDetailsVerificationStatus = verificationStatusColors[legal_details_verification_status] || verificationStatusColors["NOT_STARTED"];
 
@@ -45,11 +76,11 @@ export const renderCustomerInfo = (data, container) =>
            class="glightbox-customer"
            target="_blank"
            data-gallery="${galleryName}"
-           data-title="LegalPhoto ${name} ${index + 1}">
+           data-title="Legal Image ${index + 1}">
            
            <img src="${photo}"
                 class="rounded border"
-                style="max-width:360px; max-height:360px; object-fit:cover; cursor:pointer;">
+                style="max-width:350px; max-height:350px; object-fit:cover; cursor:pointer;">
         </a>
       `).join("")
             : `<span class="text-muted">No Photos</span>`;
@@ -151,9 +182,15 @@ export const renderCustomerInfo = (data, container) =>
 
             ${isCreator ? `
                 <hr>
-                <div class="mb-3 p-1 w-100 w-md-50">
-                    <h4 class="fw-bold mb-3">Customer Legal Photos</h4>
-                    <div class="d-flex gap-2 flex-wrap" id="customerLegalPhotos">${renderPhotos(customerLegalPhotos, `customer-legal-photos-${id}`)}</div>
+                <div class="mb-3 p-1 w-100">
+                    <h4 class="fw-bold mb-3">Customer Legal Details</h4>
+                    <div id="customerLegalDetails" class="row w-100 m-0">
+                        <div id="customerLegalPhotos" class="col-12 col-md-5 d-flex flex-wrap gap-3 justify-content-center align-items-center p-0 pe-md-3 mb-4 mb-md-0">${renderPhotos(customerLegalPhotos, `customer-legal-photos-${id}`)}</div>
+                        <div class="col-12 col-md-1 p-0 ps-md-3 d-flex flex-column justify-content-center">
+                            <div style="width: 0.5%; height: 100%; background-color: #6d6d6dff; align-self: stretch; margin: 0 1px;"></div>
+                        </div>
+                        <div id="customerLegalDetailsJson" class="col-12 col-md-6 p-0 ps-md-3 d-flex flex-column justify-content-center"></div>
+                    </div>
                 </div>
                 <hr>
                 ${isCustomerLegalDetailsVerificationPending || (["PENDING", "APPROVED"].includes(legal_details_verification_status)) ? `
@@ -182,8 +219,9 @@ export const renderCustomerInfo = (data, container) =>
     `;
 
     container.append(cardHTML);
-};
 
+    renderLegalDetails("customerLegalDetailsJson", customerLegalDetailsJson);
+};
 
 export const handlerCustomerLegalDetailsVerificationStatusUpdate = (status) =>
 {
@@ -193,6 +231,7 @@ export const handlerCustomerLegalDetailsVerificationStatusUpdate = (status) =>
     {
         renderCustomerLegalPhotosDeletion();
         $("#customerLegalDetailsVerificationBtns").addClass("d-none");
+        renderLegalDetails("customerLegalDetailsJson", {});
     }
 }
 

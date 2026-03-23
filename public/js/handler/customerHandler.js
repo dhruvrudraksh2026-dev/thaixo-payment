@@ -2,24 +2,6 @@ import { getNonCreatorThaiCustomers, getThaiCustomers, getCreatorThaiCustomers }
 import { renderCustomers } from "../dom/customerDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 let dataTable;
-let customerLightbox = null;
-
-export function initCustomerLightbox()
-{
-    if (customerLightbox)
-    {
-        customerLightbox.destroy();
-    }
-
-    customerLightbox = GLightbox({
-        selector: '.glightbox-customer',
-        touchNavigation: true,
-        // loop: true,
-        zoomable: true,
-        draggable: true,
-        closeButton: true
-    });
-}
 
 const fetchAndRenderThaiCustomers = () => 
 {

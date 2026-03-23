@@ -15,6 +15,24 @@ import { checkAndExecute } from "../utils/helper.js";
 
 let dataTable; // Transactions Table
 let withdrawalDataTable; // Withdrawals Table
+let customerLightbox = null; // Lightbox For Customer Legal Photos
+
+export function initCustomerLightbox()
+{
+    if (customerLightbox)
+    {
+        customerLightbox.destroy();
+    }
+
+    customerLightbox = GLightbox({
+        selector: '.glightbox-customer',
+        touchNavigation: true,
+        // loop: true,
+        zoomable: true,
+        draggable: true,
+        closeButton: true
+    });
+}
 
 export const setupTransactionsViewHandler = () =>
 {
@@ -112,6 +130,8 @@ export const fetchAndViewCustomersTransactions = async () =>
         renderToggleCreatorSection(data.customer, $("#toggle-creator"));
         renderCustomerBreadcrumbs(data.customer.is_creator, $("#breadcrumbs-section")); // For Breadcrumbs
         dataTable = $("#customer-transactions-table").DataTable();
+        
+        initCustomerLightbox();
     });
 }
 
