@@ -48,7 +48,13 @@ export function datetimeConverter(uiDateTime)
     return `${year}-${month}-${day} ${hh}:${min}:${sec}`;
 }
 
-// Must Include UserId in Folder Name
+export const getPublicFileUrl = (folderName, fileName) =>
+{
+    if (!fileName) return null;
+    return `${process.env.BASE}/${folderName}/${fileName}`;
+}
+
+// Must Include UserId in Folder Name - From SagarXO
 export const getImageUrl = (folderName, fileName) =>
 {
     if (!fileName) return null;

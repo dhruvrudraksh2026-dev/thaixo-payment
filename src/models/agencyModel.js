@@ -1,5 +1,19 @@
 import db from "../../config/db.js";
 
+// mysql> desc agency;
+// +---------------------+--------------+------+-----+-------------------+-------------------+
+// | Field               | Type         | Null | Key | Default           | Extra             |
+// +---------------------+--------------+------+-----+-------------------+-------------------+
+// | id                  | varchar(255) | NO   | PRI | NULL              |                   |
+// | name                | varchar(255) | NO   |     | NULL              |                   |
+// | owner_name          | varchar(255) | NO   |     | NULL              |                   |
+// | photo_id            | varchar(255) | NO   |     | NULL              |                   |
+// | bank_name           | varchar(255) | NO   |     | NULL              |                   |
+// | bank_account_number | varchar(255) | NO   |     | NULL              |                   |
+// | status              | tinyint(1)   | YES  |     | 1                 |                   |
+// | created_at          | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+// +---------------------+--------------+------+-----+-------------------+-------------------+
+
 class agencyModel
 {
     static getAllAgency = async (transaction = db) =>
@@ -9,7 +23,7 @@ class agencyModel
         {
             return rows;
         }
-        return false;
+        return [];
     }
 
     static getAgencyById = async (id, transaction = db) =>
@@ -24,7 +38,7 @@ class agencyModel
 
     static addAgency = async (data, transaction = db) =>
     {
-        const [result] = await transaction.query(`INSERT INTO agency (id, name, status, agency_legal_details) VALUES (?, ?, ?, ?)`, [data.id, data.name, data.status, data.agency_legal_details]);
+        const [result] = await transaction.query(`INSERT INTO agency (id, name, owner_name, photo_id, bank_name, bank_account_number, status) VALUES (?, ?, ?, ?, ?, ?, ?)`, [data.id, data.name, data.owner_name, data.photo_id, data.bank_name, data.bank_account_number, data.status]);
         if (result.affectedRows > 0)
         {
             return await this.getAgencyById(data.id);
@@ -34,7 +48,7 @@ class agencyModel
 
     static updateAgencyById = async (data, transaction = db) =>
     {
-        const [result] = await transaction.query(`UPDATE agency SET name = ? , status = ? , agency_legal_details = ? WHERE id = ?`, [data.name, data.status, data.agency_legal_details, data.id]);
+        const [result] = await transaction.query(`UPDATE agency SET name = ? , owner_name = ? , photo_id = ? , bank_name = ? , bank_account_number = ? , status = ? WHERE id = ?`, [data.name, data.owner_name, data.photo_id, data.bank_name, data.bank_account_number, data.status, data.id]);
         if (result.affectedRows > 0)
         {
             return await this.getAgencyById(data.id);

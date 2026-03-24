@@ -70,12 +70,15 @@ router.patch("/customer-withdrawals/update-status", upload.none(), customerWithd
 // =============================================================================================================================
 // =============================================================================================================================
 
+// =============================================================================================================================
 // For Agency
+// =============================================================================================================================
 router.get("/agencies", agencyController.getAllAgency);
 router.get("/agency/:id", agencyController.getAgencyById);
-router.post("/agency", upload.none(), agencyController.addAgency);
-router.put("/agency", upload.none(), agencyController.updateAgencyById);
+router.post("/agency", upload.single("photoId"), agencyController.addAgency);
+router.put("/agency", upload.single("photoId"), agencyController.updateAgencyById);
 router.delete("/agency/:id", upload.none(), agencyController.deleteAgencyById);
+// =============================================================================================================================
 
 router.use((req, res, next) =>
 {
