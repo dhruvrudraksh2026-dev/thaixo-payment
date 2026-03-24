@@ -18,7 +18,7 @@ class agencyModel
 {
     static getAllAgency = async (transaction = db) =>
     {
-        const [rows] = await transaction.query(`SELECT * FROM agency;`);
+        const [rows] = await transaction.query(`SELECT * FROM agency ORDER BY created_at DESC;`);
         if (rows.length > 0)
         {
             return rows;

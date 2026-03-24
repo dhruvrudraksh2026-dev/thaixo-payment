@@ -7,6 +7,7 @@ import customerController from '../controllers/customerController.js';
 import customerTransactionsController from '../controllers/customerTransactionsController.js';
 import customerWithdrawalsController from '../controllers/customerWithdrawalsController.js';
 import agencyController from '../controllers/agencyController.js';
+import customerAgencyController from '../controllers/customerAgencyController.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -80,6 +81,11 @@ router.put("/agency", upload.single("photoId"), agencyController.updateAgencyByI
 router.delete("/agency/:id", upload.none(), agencyController.deleteAgencyById);
 // =============================================================================================================================
 
+// =============================================================================================================================
+// For Agency Customers
+// =============================================================================================================================
+router.get("/agency/customers/:id", customerAgencyController.getAgencyCustomers);
+// =============================================================================================================================
 router.use((req, res, next) =>
 {
     return res.json(Response.failure('API not found'));

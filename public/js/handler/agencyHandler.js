@@ -1,8 +1,28 @@
 import { getAllAgency, addAgency, getAgencyById, updateAgencyById } from "../api/agencyApi.js";
-import { renderAgencies, addAgencyTableRow, editDataTableRow } from "../dom/agencyDom.js";
+import { getAgencyCustomers } from "../api/customerAgencyApi.js";
+import { renderAgencies, addAgencyTableRow, editDataTableRow, renderAgencyInfo, renderAgencyCustomers } from "../dom/agencyDom.js";
 import { checkAndExecute } from "../utils/helper.js";
 
 let dataTable;
+let agencyCustomersDataTable;
+let customerLightbox = null;
+
+export function initCustomerLightbox()
+{
+    if (customerLightbox)
+    {
+        customerLightbox.destroy();
+    }
+
+    customerLightbox = GLightbox({
+        selector: '.glightbox-customer',
+        touchNavigation: true,
+        // loop: true,
+        zoomable: true,
+        draggable: true,
+        closeButton: true
+    });
+}
 
 export const setupAgencyHandlers = () => 
 {
@@ -19,7 +39,11 @@ const fetchAndRenderAgencies = () =>
     getAllAgency().then(response => checkAndExecute(response, () => 
     {
         renderAgencies(response.data, $("#agency-table-body"));
-        dataTable = $("#agency-table").DataTable();
+        dataTable = $("#agency-table").DataTable(
+            {
+                order: [[0, 'desc']],
+                responsive: true
+            });
     })
     );
 };
@@ -73,3 +97,45 @@ const handleEditAgencySubmit = (e) =>
         editDataTableRow(dataTable, response.data);
     }));
 }
+
+// ==================================================================================================
+// For Agency Info
+// ==================================================================================================
+export const setupAgencyInfoHandlers = () =>
+{
+    fetchAndViewAgencies();
+    fetchAndRenderAgencyCustomers();
+}
+
+export const fetchAndViewAgencies = async () =>
+{
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    const response = await getAgencyById(id);
+    checkAndExecute(response, () =>
+    {
+        const tableBody = $(".agency-detail");
+        renderAgencyInfo(response.data, tableBody);
+        initCustomerLightbox();
+    });
+}
+
+export const fetchAndRenderAgencyCustomers = async () =>
+{
+    const pathParts = window.location.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
+    const response = await getAgencyCustomers(id);
+    checkAndExecute(response, () =>
+    {
+        const tableBody = $("#agency-customer-table-body");
+        renderAgencyCustomers(response.data, tableBody);
+        agencyCustomersDataTable = $("#agency-customer-table").DataTable(
+            {
+                order: [[0, 'desc']],
+                responsive: true
+            });
+    });
+}
+// ==================================================================================================
