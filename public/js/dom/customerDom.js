@@ -57,17 +57,23 @@ function renderLegalDetails(containerId, data)
 export const renderCustomerInfo = (data, container) =>
 {
     container.empty();
-    const { id, name, dob, gender, mobile_no, status, about_self, coins, suspended, is_creator, photos, customer_legal_details, is_legal_details_verified, legal_details_verification_status } = data;
+    const { id, name, dob, gender, mobile_no, status, about_self, coins, suspended, is_creator, photos, customer_legal_details, is_legal_details_verified, legal_details_verification_status, is_from_agency } = data;
     const statusBadge = status === 1 ? `<span class="badge bg-success px-3 py-2">Active</span>` : `<span class="badge bg-danger px-3 py-2">Inactive</span>`;
     const creatorBadge = is_creator === 1 ? `<span class="badge bg-success px-4 py-1">Yes</span>` : `<span class="badge bg-danger px-4 py-1">No</span>`;
 
     const isCreator = is_creator == 1;
-    const customerLegalPhotos = (customer_legal_details?.legal_id_image && customer_legal_details?.passbook_image) ? [customer_legal_details.legal_id_image, customer_legal_details.passbook_image] : [];
+    let customerLegalPhotos = (customer_legal_details?.legal_id_image && customer_legal_details?.passbook_image) ? [customer_legal_details.legal_id_image, customer_legal_details.passbook_image] : [];
+    if (is_from_agency === 1)
+    {
+        customerLegalPhotos.push(customer_legal_details.passport_image);
+    }
 
     const customerLegalDetailsJson = Object.keys(customer_legal_details).length > 0 ? { bank_name: customer_legal_details?.bank_name, legal_name: customer_legal_details?.legal_name, document_type: customer_legal_details?.document_type, bank_account_no: customer_legal_details?.bank_account_no } : {};
 
     const isCustomerLegalDetailsVerificationPending = legal_details_verification_status === "PENDING" && !is_legal_details_verified;
     const legalDetailsVerificationStatus = verificationStatusColors[legal_details_verification_status] || verificationStatusColors["NOT_STARTED"];
+
+    const agencyCreatorBadge = is_from_agency === 1 ? `<span class="badge bg-success px-3 py-2">Agency Creator</span>` : ``;
 
     const renderPhotos = (arr, galleryName) =>
         arr && arr.length
@@ -102,6 +108,7 @@ export const renderCustomerInfo = (data, container) =>
                                 Suspended
                             </div>
                             ` : ""}
+                            ${agencyCreatorBadge}
                         </div>                    
                     </div>
                 </div>
@@ -193,7 +200,7 @@ export const renderCustomerInfo = (data, container) =>
                     </div>
                 </div>
                 <hr>
-                ${isCustomerLegalDetailsVerificationPending || (["PENDING", "APPROVED"].includes(legal_details_verification_status)) ? `
+                ${!is_from_agency && (isCustomerLegalDetailsVerificationPending || (["PENDING", "APPROVED"].includes(legal_details_verification_status))) ? `
                     <div class="row mb-3" id="customerLegalDetailsVerificationBtns">
                         <h4 class="fw-bold mb-3">Customer Legal Details Verification</h4>
                         <div class="col d-flex align-items-center justify-content-start gap-3 flex-wrap">                        

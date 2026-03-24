@@ -137,7 +137,6 @@ export const renderAgencyInfo = (data, container) =>
 export const renderAgencyCustomers = (data, tableBody) => 
 {
     tableBody.empty();
-    console.log(data);
     data.forEach((customer) => 
     {
         const country = codes.find(c => c.countryCodes[0] === customer.country_code.replace("+", ""));

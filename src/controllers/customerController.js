@@ -81,10 +81,14 @@ class customerController
 
             const isCustomerHavingLegalDetails = Object.keys(customer.customer_legal_details).length > 0;
 
-            if (isCustomerHavingLegalDetails)
+            if (isCustomerHavingLegalDetails && customer.is_from_agency === 0)
             {
                 customer.customer_legal_details.legal_id_image = getImageUrl(`customerLegalPhotos/${id}`, customer.customer_legal_details.legal_id_image);
                 customer.customer_legal_details.passbook_image = getImageUrl(`customerLegalPhotos/${id}`, customer.customer_legal_details.passbook_image);
+            }
+            else if (isCustomerHavingLegalDetails && customer.is_from_agency === 1)
+            {
+                customer.customer_legal_details.passport_image = getImageUrl(`customerLegalPhotos/${id}`, customer.customer_legal_details.passport_image);
             }
 
             return res.json(Response.success("Customer Fetched Successfully", customer));

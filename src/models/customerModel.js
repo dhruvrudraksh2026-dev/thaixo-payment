@@ -20,9 +20,31 @@ class customerModel
         return rows;
     }
 
+    // static getCustomerById = async (id, transaction = db) =>
+    // {
+    //     const [rows] = await transaction.query(`SELECT c.* FROM customer c WHERE c.id = ?`, [id]);
+    //     if (rows.length > 0)
+    //     {
+    //         return rows[0];
+    //     }
+    //     return false;
+    // };
+
     static getCustomerById = async (id, transaction = db) =>
     {
-        const [rows] = await transaction.query(`SELECT c.* FROM customer c WHERE c.id = ?`, [id]);
+        const [rows] = await transaction.query(`
+            SELECT 
+                c.*,
+                ca.agency_id,
+                CASE 
+                    WHEN ca.agency_id IS NOT NULL THEN 1
+                    ELSE 0
+                END AS is_from_agency
+            FROM customer c
+            LEFT JOIN customer_agency ca 
+                ON ca.customer_id = c.id
+            WHERE c.id = ?            
+        `, [id]);
         if (rows.length > 0)
         {
             return rows[0];

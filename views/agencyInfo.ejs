@@ -93,16 +93,86 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Agency Customer's Withdrawals Info -->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div
+                                                    class="card-header pb-1 card-no-border d-flex w-100 justify-content-between align-items-center">
+                                                    <h4>Agency Customers Withdrawals Info</h4>
+                                                </div>
+
+                                                <div class="card-body p-0">
+                                                    <div
+                                                        class="card-header pb-1 card-no-border d-flex w-100 justify-content-end align-items-center">
+                                                        <div class="card-action">
+                                                            <button class="btn btn-primary btn-sm" id="edit-withdrawals"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#editWithdrawalsStatusModal" disabled>
+                                                                Edit Withdrawals
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="app-datatable-default overflow-auto">
+                                                            <table
+                                                                class="display app-data-table default-data-table table"
+                                                                id="customer-withdrawals-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th
+                                                                            class="d-flex align-items-center justify-content-center gap-2">
+                                                                            <input type="checkbox" id="select-all"
+                                                                                class="cursor-pointer">
+                                                                            <label for="select-all">Select
+                                                                                All</label>
+                                                                        </th>
+                                                                        <th>Withdrawal Id</th>
+                                                                        <th>Customer</th>
+                                                                        <th>Method</th>
+                                                                        <th>Amount</th>
+                                                                        <th>Payout Details</th>
+                                                                        <th>Status</th>
+                                                                        <th>Created At</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="customer-withdrawals-table-body"></tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th class="text-center fs-5">Total:
+                                                                        </th>
+                                                                        <th class="text-start fs-5">0.00
+                                                                        </th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </main>
-                        <div class="go-top">
-                            <span class="progress-value">
-                                <i class="ti ti-arrow-up"></i>
-                            </span>
-                        </div>
+                </div>
+                </main>
+                <div class="go-top">
+                    <span class="progress-value">
+                        <i class="ti ti-arrow-up"></i>
+                    </span>
                 </div>
             </div>
+    </div>
     </div>
 
     <%- include('partials/modals') %>
