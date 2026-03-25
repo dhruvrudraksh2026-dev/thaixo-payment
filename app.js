@@ -40,13 +40,14 @@ cron.schedule("0 0 1 * *", async () =>
 });
 
 // Generates Withdrawals On Minute Bases
-// cron.schedule("*/1 * * * *", () =>
+// cron.schedule("*/1 * * * *", async () =>
 // {
 //     try
 //     {
-//         customerWithdrawalsModel.insertLastMonthsWithdrawals();
-//         customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
-//         console.log("[WITHDRAWALS] Minutely Withdrawals Generated Successfully");
+//         await customerWithdrawalsModel.insertLastMonthsWithdrawals();
+//         console.log("[WITHDRAWALS] Minutely Customer Withdrawals Generated Successfully");
+//         await customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
+//         console.log("[WITHDRAWALS] Minutely Agency Withdrawals Generated Successfully");
 //     } catch (error)
 //     {
 //         console.log("[WITHDRAWALS] Error Generating Minutely Withdrawals", error);

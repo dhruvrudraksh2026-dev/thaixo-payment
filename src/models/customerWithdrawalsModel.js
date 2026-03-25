@@ -222,6 +222,7 @@ class customerWithdrawalsModel
 
             GROUP BY ct.customer_id;
         `);
+        // console.log("Normal Creators", rows);
         return rows;
     }
 
@@ -264,6 +265,7 @@ class customerWithdrawalsModel
 
             GROUP BY ct.customer_id;
         `);
+        // console.log("Agency", rows);
         return rows;
     }
 }

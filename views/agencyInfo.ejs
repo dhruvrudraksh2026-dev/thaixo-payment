@@ -247,6 +247,59 @@
         </div>
     </div>
 
+    <!-- Edit Withdrawals Status Modal -->
+    <div class="modal fade" id="editWithdrawalsStatusModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md shadow-lg">
+            <div class="modal-content border-0">
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title text-white">
+                        <i class="ti ti-settings fs-4 me-2"></i>Update Withdrawal Status
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body py-4">
+                    <form id="updateStatusForm" class="custom-input">
+                        <div class="mb-4">
+                            <label class="form-label fs-6 text-dark mb-2"
+                                for="editWithdrawalsStatus">
+                                Select New Status <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select form-select-lg shadow-sm border-primary-subtle"
+                                name="status" id="editWithdrawalsStatus" required>
+                                <option value="" selected disabled>Choose status...</option>
+                                <option value="PENDING">🟡 Pending</option>
+                                <option value="DONE">🟢 Done</option>
+                                <option value="CANCELLED">🔴 Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4 d-none" id="editBulkCancelNoteContainer">
+                            <label class="form-label fs-6 text-dark mb-2" for="editBulkCancelNote">
+                                Cancel Note <span class="text-danger">*</span>
+                            </label>
+                            <textarea
+                                class="form-control form-control-lg shadow-sm border-primary-subtle"
+                                name="note" id="editBulkCancelNote" rows="3"
+                                placeholder="Enter reason for cancellation..."></textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-lg shadow" type="submit"
+                                id="updateStatusBtn">
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <%- include('partials/modals') %>
         <%- include('partials/jsFooter') %>
             <!-- glight js -->

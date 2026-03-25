@@ -269,7 +269,7 @@ export const editDataTableRow = (dataTable, data) =>
         `
     ];
 
-    (path === "/customer-withdrawals" || path === "/pending-customer-withdrawals") ? dataToRender.unshift(`<input type="checkbox" class="row-checkbox cursor-pointer" value="${data.id}">`) : null;
+    (path === "/customer-withdrawals" || path === "/pending-customer-withdrawals" || path.includes("agency-details")) ? dataToRender.unshift(`<input type="checkbox" class="row-checkbox cursor-pointer" value="${data.id}">`) : null;
 
     dataTable.row(rowSelector).data(dataToRender).draw(false);
 };
