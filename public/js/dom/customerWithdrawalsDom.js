@@ -101,7 +101,7 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
         tableBody.append(
             `
             <tr data-id=${withdrawal.id}>
-                ${path === "/customer-withdrawals" || path === "/pending-customer-withdrawals"
+                ${path === "/customer-withdrawals" || path === "/pending-customer-withdrawals" || path.includes("agency-details")
                 ? `<td class="p-2">
                         <input type="checkbox" class="row-checkbox cursor-pointer" value="${withdrawal.id}">
                     </td>`

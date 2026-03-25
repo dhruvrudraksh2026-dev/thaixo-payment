@@ -202,3 +202,17 @@ export const getAllCustomerWithdrawalsByDateRange = async (data) =>
             }
         });
 }
+
+// For Agency Related Customer Withdrawals
+export const getAllPendingAgencyCustomerWithdrawals = async (agencyId) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer-withdrawals/agency/${agencyId}/pending`,
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};

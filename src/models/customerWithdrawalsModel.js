@@ -2,6 +2,7 @@ import db from "../../config/db.js";
 
 class customerWithdrawalsModel
 {
+    // For Customer Withdrawals Page - All
     static getAllCustomerWithdrawals = async (transaction = db) =>
     {
         // Fetching Withdrawals With Package Details
@@ -32,6 +33,31 @@ class customerWithdrawalsModel
 
         ORDER BY cw.created_at DESC
     `);
+        return rows;
+    }
+
+    // For Agency Info Page - Agency Customer Withdrawals
+    static getAllPendingAgencyCustomerWithdrawalsByAgencyId = async (agencyId, transaction = db) =>
+    {
+        const [rows] = await transaction.query(`
+        SELECT 
+            cw.*,
+            c.name AS customer_name,
+            DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') AS created_at
+
+        FROM customer_withdrawals cw
+
+        INNER JOIN customer_agency ca 
+            ON ca.customer_id = cw.customer_id
+
+        LEFT JOIN customer c 
+            ON cw.customer_id = c.id
+
+        WHERE ca.agency_id = ?
+        AND cw.status IN ('PENDING','CANCELLED')
+
+        ORDER BY cw.created_at DESC
+    `, [agencyId]);
         return rows;
     }
 
@@ -83,12 +109,14 @@ class customerWithdrawalsModel
     //     return rows[0] || 0;
     // }
 
+    // For Customer Withdrawals Page - All
     static getAllCustomerWithdrawalsByDateRange = async (data, transaction = db) =>
     {
         const [rows] = await transaction.query("SELECT cw.*, c.name as customer_name, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw LEFT JOIN customer c ON cw.customer_id = c.id WHERE cw.created_at BETWEEN ? AND ?", [data.startDate, data.endDate]);
         return rows;
     }
 
+    // For Customer Withdrawals Page - All
     static getAllCustomerWithdrawalsTotalAmountByDateRange = async (data, transaction = db) =>
     {
         const [rows] = await transaction.query("SELECT SUM(withdrawal_amount) as total_amount FROM customer_withdrawals WHERE created_at BETWEEN ? AND ?", [data.startDate, data.endDate]);

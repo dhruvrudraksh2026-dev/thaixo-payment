@@ -130,7 +130,7 @@ export const fetchAndViewCustomersTransactions = async () =>
         renderToggleCreatorSection(data.customer, $("#toggle-creator"));
         renderCustomerBreadcrumbs(data.customer.is_creator, $("#breadcrumbs-section")); // For Breadcrumbs
         dataTable = $("#customer-transactions-table").DataTable();
-        
+
         initCustomerLightbox();
     });
 }

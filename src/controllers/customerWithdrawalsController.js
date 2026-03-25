@@ -3,6 +3,7 @@ import Response from "../helpers/response.js";
 import customerModel from "../models/customerModel.js";
 import { safeJSONParse } from "../../public/js/utils/helper.js";
 import webNotificationsModel from "../models/webNotificationsModel.js";
+import agencyModel from "../models/agencyModel.js";
 
 class customerWithdrawalsController
 {
@@ -91,6 +92,36 @@ class customerWithdrawalsController
         try
         {
             const pendingWithdrawals = await customerWithdrawalsModel.getAllPendingCustomerWithdrawals();
+            if (!pendingWithdrawals)
+            {
+                return res.json(Response.failure("Pending Withdrawals Not Found"));
+            }
+
+            return res.json(Response.success("Pending Withdrawals Fetched Successfully", pendingWithdrawals));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
+    static getAllPendingAgencyCustomerWithdrawalsByAgencyId = async (req, res, next) =>
+    {
+        try
+        {
+            const agencyId = req.params.agencyId;
+            if (!agencyId)
+            {
+                return res.json(Response.failure("Agency Id Not Found"));
+            }
+
+            const isAgencyExists = await agencyModel.getAgencyById(agencyId);
+            if (!isAgencyExists)
+            {
+                return res.json(Response.failure("Agency Not Found With This Id"));
+            }
+
+            const pendingWithdrawals = await customerWithdrawalsModel.getAllPendingAgencyCustomerWithdrawalsByAgencyId(agencyId);
             if (!pendingWithdrawals)
             {
                 return res.json(Response.failure("Pending Withdrawals Not Found"));
@@ -503,6 +534,19 @@ class customerWithdrawalsController
                 {
                     return res.json(Response.failure("Failed To Create Web Notification"));
                 }
+            } else if (data.status === "CANCELLED")
+            {
+                const webNotification = await webNotificationsModel.createWebNotification({
+                    customer_id: data.customerId,
+                    type: "WITHDRAWAL_CANCELLED",
+                    title: "Withdrawal Cancelled",
+                    body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been cancelled. Note: ${data.note}`
+                });
+
+                if (!webNotification)
+                {
+                    return res.json(Response.failure("Failed To Create Web Notification"));
+                }
             }
 
             return res.json(Response.success("Withdrawal Edited Successfully", withdrawal));
@@ -583,6 +627,23 @@ class customerWithdrawalsController
                         type: "WITHDRAWAL_DONE",
                         title: "Withdrawal Done",
                         body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been successfully completed.`
+                    });
+
+                    if (!webNotification)
+                    {
+                        return res.json(Response.failure("Failed To Create Web Notification"));
+                    }
+                }
+            } else if (data.status === "CANCELLED")
+            {
+                for (const id of ids)
+                {
+                    const withdrawal = await customerWithdrawalsModel.getCustomerWithdrawalByWithdrawalId(id);
+                    const webNotification = await webNotificationsModel.createWebNotification({
+                        customer_id: withdrawal.customer_id,
+                        type: "WITHDRAWAL_CANCELLED",
+                        title: "Withdrawal Cancelled",
+                        body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been cancelled. Note: ${data.note}`
                     });
 
                     if (!webNotification)

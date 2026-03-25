@@ -86,6 +86,12 @@ router.delete("/agency/:id", upload.none(), agencyController.deleteAgencyById);
 // =============================================================================================================================
 router.get("/agency/customers/:id", customerAgencyController.getAgencyCustomers);
 // =============================================================================================================================
+
+// =============================================================================================================================
+// For Agency Customer Withdrawals
+// =============================================================================================================================
+router.get("/customer-withdrawals/agency/:agencyId/pending", customerWithdrawalsController.getAllPendingAgencyCustomerWithdrawalsByAgencyId);
+// =============================================================================================================================
 router.use((req, res, next) =>
 {
     return res.json(Response.failure('API not found'));
