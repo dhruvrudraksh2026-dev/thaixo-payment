@@ -30,8 +30,10 @@ cron.schedule("0 0 1 * *", async () =>
 {
     try
     {
+        // await customerWithdrawalsModel.insertLastMonthsWithdrawals();
+        // await customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
+
         await customerWithdrawalsModel.insertLastMonthsWithdrawals();
-        await customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
         console.log("[WITHDRAWALS] Monthly Withdrawals Generated Successfully");
     } catch (error)
     {
@@ -44,10 +46,13 @@ cron.schedule("0 0 1 * *", async () =>
 // {
 //     try
 //     {
+//         // await customerWithdrawalsModel.insertLastMonthsWithdrawals();
+//         // console.log("[WITHDRAWALS] Minutely Customer Withdrawals Generated Successfully");
+//         // await customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
+//         // console.log("[WITHDRAWALS] Minutely Agency Withdrawals Generated Successfully");
+
 //         await customerWithdrawalsModel.insertLastMonthsWithdrawals();
 //         console.log("[WITHDRAWALS] Minutely Customer Withdrawals Generated Successfully");
-//         await customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
-//         console.log("[WITHDRAWALS] Minutely Agency Withdrawals Generated Successfully");
 //     } catch (error)
 //     {
 //         console.log("[WITHDRAWALS] Error Generating Minutely Withdrawals", error);

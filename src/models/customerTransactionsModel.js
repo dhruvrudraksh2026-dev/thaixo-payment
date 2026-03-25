@@ -29,7 +29,7 @@ class customerTransactionsModel
 
     static getCustomerEarningsTotalAmountById = async (id, transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT SUM(earnings) as total_earnings FROM customer_transactions WHERE rate_per_minute != 0 AND minutes != 0 AND customer_id = ?", [id]);
+        const [rows] = await transaction.query("SELECT SUM(earnings) as total_earnings FROM customer_transactions WHERE customer_id = ?", [id]);
         return rows[0] || {};
     }
 

@@ -179,7 +179,7 @@ class customerWithdrawalsModel
         return result.affectedRows > 0;
     }
 
-    // Old Logic Code - Also Preventing Customers Without Legal Details - Or Verified Legal Details
+    // Updated Logic
     // static insertLastMonthsWithdrawals = async (transaction = db) =>
     // {
     //     const [rows] = await transaction.query(`
@@ -187,142 +187,106 @@ class customerWithdrawalsModel
     //         (customer_id, method, withdrawal_amount, payout_details, status, created_at)
 
     //         SELECT 
-    //             ct.customer_id,
+    //             c.id,
     //             'Bank',
-    //             SUM(ct.earnings),
+
+    //             (
+    //                 COALESCE(SUM(ct.earnings),0)
+    //                 -
+    //                 COALESCE((
+    //                     SELECT SUM(cw.withdrawal_amount)
+    //                     FROM customer_withdrawals cw
+    //                     WHERE cw.customer_id = c.id
+    //                     AND cw.status IN ('DONE','PENDING')
+    //                 ),0)
+    //             ) AS withdrawable_amount,
+
     //             c.customer_legal_details,
     //             'PENDING',
-    //             DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+    //             NOW()
 
-    //         FROM customer_transactions ct
-    //         JOIN customer c ON c.id = ct.customer_id
+    //         FROM customer c
+    //         LEFT JOIN customer_transactions ct 
+    //             ON ct.customer_id = c.id
 
-    //         WHERE 
-    //             ct.created_at >= DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
-    //             AND ct.created_at < DATE_FORMAT(CURDATE(), '%Y-%m-01')
-
-    //             AND c.suspended = 0
+    //         WHERE
+    //             c.suspended = 0
     //             AND c.is_creator = 1
     //             AND c.is_verified = 1
     //             AND c.is_legal_details_verified = 1
 
-    //             -- exclude customers belonging to agency
     //             AND NOT EXISTS (
     //                 SELECT 1
     //                 FROM customer_agency ca
-    //                 WHERE ca.customer_id = ct.customer_id
+    //                 WHERE ca.customer_id = c.id
     //             )
 
-    //             -- prevent duplicate withdrawal
-    //             AND NOT EXISTS (
-    //                 SELECT 1 
-    //                 FROM customer_withdrawals cw
-    //                 WHERE cw.customer_id = ct.customer_id
-    //                 AND cw.created_at = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
-    //             )
+    //         GROUP BY c.id
 
-    //         GROUP BY ct.customer_id;
+    //         HAVING withdrawable_amount > 1000;
     //     `);
     //     console.log("Normal Creators", rows);
     //     return rows;
     // }
 
     // Updated Logic
-    static insertLastMonthsWithdrawals = async (transaction = db) =>
-    {
-        const [rows] = await transaction.query(`
-            INSERT INTO customer_withdrawals
-            (customer_id, method, withdrawal_amount, payout_details, status, created_at)
-
-            SELECT 
-                c.id,
-                'Bank',
-
-                (
-                    COALESCE(SUM(ct.earnings),0)
-                    -
-                    COALESCE((
-                        SELECT SUM(cw.withdrawal_amount)
-                        FROM customer_withdrawals cw
-                        WHERE cw.customer_id = c.id
-                        AND cw.status IN ('DONE','PENDING')
-                    ),0)
-                ) AS withdrawable_amount,
-
-                c.customer_legal_details,
-                'PENDING',
-                NOW()
-
-            FROM customer c
-            LEFT JOIN customer_transactions ct 
-                ON ct.customer_id = c.id
-
-            WHERE
-                c.suspended = 0
-                AND c.is_creator = 1
-                AND c.is_verified = 1
-                AND c.is_legal_details_verified = 1
-
-                AND NOT EXISTS (
-                    SELECT 1
-                    FROM customer_agency ca
-                    WHERE ca.customer_id = c.id
-                )
-
-            GROUP BY c.id
-
-            HAVING withdrawable_amount > 1000;
-        `);
-        console.log("Normal Creators", rows);
-        return rows;
-    }
-
-    // Old Logic
     // static insertLastMonthsWithdrawalsForAgencies = async (transaction = db) =>
     // {
     //     const [rows] = await transaction.query(`
-    //         INSERT INTO customer_withdrawals
-    //         (customer_id, method, withdrawal_amount, payout_details, status, created_at)
+    //     INSERT INTO customer_withdrawals
+    //     (customer_id, method, withdrawal_amount, payout_details, status, created_at)
 
-    //         SELECT 
-    //             ct.customer_id,
-    //             'Via Agency',
-    //             SUM(ct.earnings),
-    //             c.customer_legal_details,
-    //             'PENDING',
-    //             DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+    //     SELECT 
+    //         c.id,
+    //         'Via Agency',
 
-    //         FROM customer_transactions ct
-    //         JOIN customer c 
-    //             ON c.id = ct.customer_id
-
-    //         JOIN customer_agency ca 
-    //             ON ca.customer_id = ct.customer_id
-
-    //         WHERE 
-    //             ct.created_at >= DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
-    //             AND ct.created_at < DATE_FORMAT(CURDATE(), '%Y-%m-01')
-
-    //             AND c.suspended = 0
-    //             AND c.is_creator = 1
-    //             AND c.is_verified = 1
-
-    //             -- prevent duplicates
-    //             AND NOT EXISTS (
-    //                 SELECT 1
+    //         (
+    //             COALESCE(SUM(ct.earnings),0)
+    //             -
+    //             COALESCE((
+    //                 SELECT SUM(cw.withdrawal_amount)
     //                 FROM customer_withdrawals cw
-    //                 WHERE cw.customer_id = ct.customer_id
-    //                 AND cw.created_at = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
-    //             )
+    //                 WHERE cw.customer_id = c.id
+    //                 AND cw.status IN ('DONE','PENDING')
+    //             ),0)
+    //         ) AS withdrawable_amount,
 
-    //         GROUP BY ct.customer_id;
-    //     `);
-    //     console.log("Agency", rows);
+    //         c.customer_legal_details,
+    //         'PENDING',
+    //         NOW()
+
+    //     FROM customer c
+
+    //     JOIN customer_agency ca
+    //         ON ca.customer_id = c.id
+
+    //     LEFT JOIN customer_transactions ct
+    //         ON ct.customer_id = c.id
+
+    //     WHERE
+    //         c.suspended = 0
+    //         AND c.is_creator = 1
+    //         AND c.is_verified = 1
+
+    //         -- prevent duplicate pending withdrawals
+    //         AND NOT EXISTS (
+    //             SELECT 1
+    //             FROM customer_withdrawals cw
+    //             WHERE cw.customer_id = c.id
+    //             AND cw.status = 'PENDING'
+    //         )
+
+    //     GROUP BY c.id
+
+    //     HAVING withdrawable_amount > 1000
+    // `);
+
+    //     console.log("Agency Creators", rows);
     //     return rows;
     // }
 
-    // Updated Logic
-    static insertLastMonthsWithdrawalsForAgencies = async (transaction = db) =>
+    // Single Query For Both Normal And Agency Creators
+    static insertLastMonthsWithdrawals = async (transaction = db) =>
     {
         const [rows] = await transaction.query(`
         INSERT INTO customer_withdrawals
@@ -330,7 +294,11 @@ class customerWithdrawalsModel
 
         SELECT 
             c.id,
-            'Via Agency',
+
+            CASE 
+                WHEN ca.customer_id IS NOT NULL THEN 'Via Agency'
+                ELSE 'Bank'
+            END AS method,
 
             (
                 COALESCE(SUM(ct.earnings),0)
@@ -349,16 +317,22 @@ class customerWithdrawalsModel
 
         FROM customer c
 
-        JOIN customer_agency ca
-            ON ca.customer_id = c.id
-
         LEFT JOIN customer_transactions ct
             ON ct.customer_id = c.id
+
+        LEFT JOIN customer_agency ca
+            ON ca.customer_id = c.id
 
         WHERE
             c.suspended = 0
             AND c.is_creator = 1
             AND c.is_verified = 1
+
+            -- legal verification required only for non-agency creators
+            AND (
+                ca.customer_id IS NOT NULL
+                OR c.is_legal_details_verified = 1
+            )
 
             -- prevent duplicate pending withdrawals
             AND NOT EXISTS (
@@ -370,10 +344,10 @@ class customerWithdrawalsModel
 
         GROUP BY c.id
 
-        HAVING withdrawable_amount > 1000
+        HAVING withdrawable_amount > 1000;
     `);
 
-        console.log("Agency Creators", rows);
+        console.log("Creators", rows);
         return rows;
     }
 }
