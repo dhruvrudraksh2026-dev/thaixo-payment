@@ -8,18 +8,60 @@ class customerModel
         return rows;
     }
 
+    // Old Version
+    // static getCreatorThaiCustomers = async (transaction = db) =>
+    // {
+    //     const [rows] = await transaction.query("SELECT * FROM customer WHERE country_code = '+66' AND is_creator = 1");
+    //     return rows;
+    // }
+
+    // static getNonCreatorThaiCustomers = async (transaction = db) =>
+    // {
+    //     const [rows] = await transaction.query("SELECT * FROM customer WHERE country_code = '+66' AND is_creator = 0");
+    //     return rows;
+    // }
+
+    // For Creators Page
     static getCreatorThaiCustomers = async (transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT * FROM customer WHERE country_code = '+66' AND is_creator = 1");
+        const [rows] = await transaction.query(`
+            SELECT 
+                c.*,
+                EXISTS (
+                    SELECT 1 
+                    FROM customer_agency ca 
+                    WHERE ca.customer_id = c.id
+                ) AS is_from_agency
+
+            FROM customer c
+
+            WHERE c.country_code = '+66'
+            AND c.is_creator = 1;
+            `);
         return rows;
     }
 
+    // For Non Creators Page
     static getNonCreatorThaiCustomers = async (transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT * FROM customer WHERE country_code = '+66' AND is_creator = 0");
+        const [rows] = await transaction.query(`
+            SELECT 
+                c.*,
+                EXISTS (
+                    SELECT 1 
+                    FROM customer_agency ca 
+                    WHERE ca.customer_id = c.id
+                ) AS is_from_agency
+
+            FROM customer c 
+
+            WHERE c.country_code = '+66'
+            AND c.is_creator = 0;
+            `);
         return rows;
     }
 
+    // Old Version
     // static getCustomerById = async (id, transaction = db) =>
     // {
     //     const [rows] = await transaction.query(`SELECT c.* FROM customer c WHERE c.id = ?`, [id]);

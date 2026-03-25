@@ -7,9 +7,12 @@ const verificationStatusColors = {
 
 export const renderCustomers = (data, tableBody) => 
 {
+    console.log(data);
     tableBody.empty();
+
     data.forEach((customer) => 
     {
+        const legal_details_verification_status = verificationStatusColors[customer.legal_details_verification_status] || verificationStatusColors["NOT_STARTED"];
         tableBody.append(`
             <tr data-id=${customer.id}>
                 <td>#${customer.id}</td>
@@ -18,6 +21,13 @@ export const renderCustomers = (data, tableBody) =>
                 <td><span class="badge text-bg-${customer.status ? "success" : "danger"}">${customer.status ? "Active" : "Inactive"}</span></td>
                 <td><span class="badge text-bg-${customer.suspended ? "success" : "danger"}">${customer.suspended ? "Yes" : "No"}</span></td>
                 <td><span class="badge text-bg-${customer.is_creator ? "success" : "danger"}">${customer.is_creator ? "Yes" : "No"}</span></td>
+                <td>
+                  <span class="badge ${legal_details_verification_status.class}">
+                     <i class="${legal_details_verification_status.iconClass}"></i>
+                     ${legal_details_verification_status.text}
+                  </span>
+                </td>
+                <td><span class="badge text-bg-${customer.is_from_agency ? "success" : "danger"}">${customer.is_from_agency ? "Yes" : "No"}</span></td>
                 <td>
                    <a href="/customer-transactions-details/${customer.id}"> <button class="btn btn-primary m-1 viewButton" data-id="${customer.id}">View</button> </a>
                 </td>
@@ -152,40 +162,42 @@ export const renderCustomerInfo = (data, container) =>
                 </div>
             </div>
 
-            <hr>
-
-            <div class="d-flex gap-5 align-items-center justify-content-start flex-wrap mt-3 mt-md-0">
-                <div id="isLegalDetailsVerified" class="text-center">
-                    <div>
-                        <small class="text-uppercase text-black fw-semibold">Legal Details Verification</small>
+            
+            ${!is_from_agency ? `
+                <hr>
+                <div class="d-flex gap-5 align-items-center justify-content-start flex-wrap mt-3 mt-md-0">
+                    <div id="isLegalDetailsVerified" class="text-center">
+                        <div>
+                            <small class="text-uppercase text-black fw-semibold">Legal Details Verification</small>
+                        </div>
+                        <div id="isCustomerLegalDetailsVerifiedBadge">
+                            ${is_legal_details_verified ? `
+                                <span class="badge bg-success p-2 fs-6">
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    Verified
+                                </span>
+                            `: `
+                                <span class="badge bg-danger p-2 fs-6">
+                                    <i class="fa-regular fa-circle-xmark"></i>
+                                    Not Verified
+                                </span>
+                            `}
+                        </div>
                     </div>
-                    <div id="isCustomerLegalDetailsVerifiedBadge">
-                        ${is_legal_details_verified ? `
-                            <span class="badge bg-success p-2 fs-6">
-                                <i class="fa-regular fa-circle-check"></i>
-                                Verified
+
+                    <div id="isLegalDetailsVerifiedStatus" class="text-center">
+                        <div>
+                            <small class="text-uppercase text-black fw-semibold">Legal Details Verification Status</small>
+                        </div>
+                        <div id="customerLegalDetailsVerificationStatus">
+                            <span class="badge rounded-pill fs-6 px-3 py-2 ${legalDetailsVerificationStatus.class}">
+                                <i class="${legalDetailsVerificationStatus.iconClass} me-1"></i>
+                                ${legalDetailsVerificationStatus.text}
                             </span>
-                        `: `
-                            <span class="badge bg-danger p-2 fs-6">
-                                <i class="fa-regular fa-circle-xmark"></i>
-                                Not Verified
-                            </span>
-                        `}
+                        </div>
                     </div>
                 </div>
-
-                <div id="isLegalDetailsVerifiedStatus" class="text-center">
-                    <div>
-                        <small class="text-uppercase text-black fw-semibold">Legal Details Verification Status</small>
-                    </div>
-                    <div id="customerLegalDetailsVerificationStatus">
-                        <span class="badge rounded-pill fs-6 px-3 py-2 ${legalDetailsVerificationStatus.class}">
-                            <i class="${legalDetailsVerificationStatus.iconClass} me-1"></i>
-                            ${legalDetailsVerificationStatus.text}
-                        </span>
-                    </div>
-                </div>
-            </div>
+                `: ``}
 
             ${isCreator ? `
                 <hr>

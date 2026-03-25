@@ -179,6 +179,54 @@ class customerWithdrawalsModel
         return result.affectedRows > 0;
     }
 
+    // Also Preventing Customers Without Legal Details - Or Verified Legal Details
+    // static insertLastMonthsWithdrawals = async (transaction = db) =>
+    // {
+    //     const [rows] = await transaction.query(`
+    //         INSERT INTO customer_withdrawals
+    //         (customer_id, method, withdrawal_amount, payout_details, status, created_at)
+
+    //         SELECT 
+    //             ct.customer_id,
+    //             'Bank',
+    //             SUM(ct.earnings),
+    //             c.customer_legal_details,
+    //             'PENDING',
+    //             DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+
+    //         FROM customer_transactions ct
+    //         JOIN customer c ON c.id = ct.customer_id
+
+    //         WHERE 
+    //             ct.created_at >= DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+    //             AND ct.created_at < DATE_FORMAT(CURDATE(), '%Y-%m-01')
+
+    //             AND c.suspended = 0
+    //             AND c.is_creator = 1
+    //             AND c.is_verified = 1
+    //             AND c.is_legal_details_verified = 1
+
+    //             -- exclude customers belonging to agency
+    //             AND NOT EXISTS (
+    //                 SELECT 1
+    //                 FROM customer_agency ca
+    //                 WHERE ca.customer_id = ct.customer_id
+    //             )
+
+    //             -- prevent duplicate withdrawal
+    //             AND NOT EXISTS (
+    //                 SELECT 1 
+    //                 FROM customer_withdrawals cw
+    //                 WHERE cw.customer_id = ct.customer_id
+    //                 AND cw.created_at = DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+    //             )
+
+    //         GROUP BY ct.customer_id;
+    //     `);
+    //     console.log("Normal Creators", rows);
+    //     return rows;
+    // }
+
     static insertLastMonthsWithdrawals = async (transaction = db) =>
     {
         const [rows] = await transaction.query(`
@@ -187,7 +235,7 @@ class customerWithdrawalsModel
 
             SELECT 
                 ct.customer_id,
-                'BANK',
+                'Bank',
                 SUM(ct.earnings),
                 c.customer_legal_details,
                 'PENDING',
@@ -203,7 +251,6 @@ class customerWithdrawalsModel
                 AND c.suspended = 0
                 AND c.is_creator = 1
                 AND c.is_verified = 1
-                AND c.is_legal_details_verified = 1
 
                 -- exclude customers belonging to agency
                 AND NOT EXISTS (

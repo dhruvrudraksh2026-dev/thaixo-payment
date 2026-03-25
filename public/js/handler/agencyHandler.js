@@ -214,6 +214,7 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
             buttons: [
                 {
                     extend: 'csv',
+                    filename: `Agency_${agencyInfo.data.name}_Pending_Customers_Withdrawal_Report_` + new Date().toISOString().split("T")[0],
                     footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
@@ -245,6 +246,7 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                 },
                 {
                     extend: 'excel',
+                    filename: `Agency_${agencyInfo.data.name}_Pending_Customers_Withdrawal_Report_` + new Date().toISOString().split("T")[0],
                     footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],

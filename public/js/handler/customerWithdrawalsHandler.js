@@ -84,6 +84,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
             buttons: [
                 {
                     extend: 'csv',
+                    filename: 'Pending_Customers_Withdrawal_Report_' + new Date().toISOString().split("T")[0],
                     footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
@@ -115,6 +116,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                 },
                 {
                     extend: 'excel',
+                    filename: 'Pending_Customers_Withdrawal_Report_' + new Date().toISOString().split("T")[0],
                     footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
@@ -503,6 +505,7 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
             buttons: [
                 {
                     extend: 'csv',
+                    filename: 'All_Customers_Withdrawal_Report_' + new Date().toISOString().split("T")[0],
                     footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
@@ -534,6 +537,7 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                 },
                 {
                     extend: 'excel',
+                    filename: 'All_Customers_Withdrawal_Report_' + new Date().toISOString().split("T")[0],
                     footer: true,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
