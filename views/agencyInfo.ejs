@@ -18,6 +18,68 @@
         <!-- glight css -->
         <link href="/assets/vendor/glightbox/glightbox.min.css" rel="stylesheet" />
 
+        <!-- Data Table css-->
+        <link href="/assets/vendor/datatable/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+
+        <!-- Buttons extension CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+        <style>
+            input[type="checkbox"].row-checkbox,
+            input[type="checkbox"]#select-all {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 24px;
+                height: 24px;
+                margin-left: 5px;
+                cursor: pointer;
+                background-color: #fff;
+                border: 2px solid #cbd5e1;
+                border-radius: 6px;
+                display: inline-block;
+                position: relative;
+                transition: all 0.2s ease;
+            }
+
+            /* Hover state */
+            input[type="checkbox"].row-checkbox:hover,
+            input[type="checkbox"]#select-all:hover {
+                border-color: #3b82f6;
+                background-color: #eff6ff;
+            }
+
+            /* Checked state background */
+            input[type="checkbox"].row-checkbox:checked,
+            input[type="checkbox"]#select-all:checked {
+                background-color: #3b82f6;
+                border-color: #3b82f6;
+            }
+
+            /* The checkmark icon (drawn using a pseudo-element) */
+            input[type="checkbox"].row-checkbox:checked::after,
+            input[type="checkbox"]#select-all::after {
+                content: '';
+                position: absolute;
+                left: 7px;
+                top: 3px;
+                width: 6px;
+                height: 11px;
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                transform: rotate(45deg);
+            }
+
+            .dt-buttons .dt-button {
+                margin: 13px;
+                padding: 12px;
+                font-size: 14px !important;
+                border-radius: 6px !important;
+                font-weight: 600 !important;
+                color: #fff !important;
+                background-color: rgb(15 98 106) !important;
+            }
+        </style>
+
 </head>
 
 <body>
@@ -122,12 +184,13 @@
                                                                 id="customer-withdrawals-table">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th
-                                                                            class="d-flex align-items-center justify-content-center gap-2">
-                                                                            <input type="checkbox" id="select-all"
-                                                                                class="cursor-pointer">
-                                                                            <label for="select-all">Select
-                                                                                All</label>
+                                                                        <th>
+                                                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                                                <input type="checkbox" id="select-all"
+                                                                                    class="cursor-pointer">
+                                                                                <label for="select-all" class="mb-0">Select
+                                                                                    All</label>
+                                                                            </div>
                                                                         </th>
                                                                         <th>Withdrawal Id</th>
                                                                         <th>Customer</th>
@@ -263,14 +326,12 @@
                 <div class="modal-body py-4">
                     <form id="updateStatusForm" class="custom-input">
                         <div class="mb-4">
-                            <label class="form-label fs-6 text-dark mb-2"
-                                for="editWithdrawalsStatus">
+                            <label class="form-label fs-6 text-dark mb-2" for="editWithdrawalsStatus">
                                 Select New Status <span class="text-danger">*</span>
                             </label>
 
-                            <select
-                                class="form-select form-select-lg shadow-sm border-primary-subtle"
-                                name="status" id="editWithdrawalsStatus" required>
+                            <select class="form-select form-select-lg shadow-sm border-primary-subtle" name="status"
+                                id="editWithdrawalsStatus" required>
                                 <option value="" selected disabled>Choose status...</option>
                                 <option value="PENDING">🟡 Pending</option>
                                 <option value="DONE">🟢 Done</option>
@@ -282,15 +343,13 @@
                             <label class="form-label fs-6 text-dark mb-2" for="editBulkCancelNote">
                                 Cancel Note <span class="text-danger">*</span>
                             </label>
-                            <textarea
-                                class="form-control form-control-lg shadow-sm border-primary-subtle"
-                                name="note" id="editBulkCancelNote" rows="3"
+                            <textarea class="form-control form-control-lg shadow-sm border-primary-subtle" name="note"
+                                id="editBulkCancelNote" rows="3"
                                 placeholder="Enter reason for cancellation..."></textarea>
                         </div>
 
                         <div class="d-grid">
-                            <button class="btn btn-primary btn-lg shadow" type="submit"
-                                id="updateStatusBtn">
+                            <button class="btn btn-primary btn-lg shadow" type="submit" id="updateStatusBtn">
                                 Update
                             </button>
                         </div>
@@ -304,6 +363,19 @@
         <%- include('partials/jsFooter') %>
             <!-- glight js -->
             <script src="/assets/vendor/glightbox/glightbox.min.js"></script>
+
+            <!-- data table js -->
+            <script src="/assets/vendor/datatable/jquery.dataTables.min.js"></script>
+
+            <!-- Buttons extension JS -->
+            <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+
+            <!-- Buttons HTML5 export -->
+            <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+
+            <!-- JSZip for Excel export -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
             <script src="/js/init/agencyInfoInit.js" type="module"></script>
 </body>
 

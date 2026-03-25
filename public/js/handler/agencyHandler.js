@@ -207,7 +207,7 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
             order: [[1, "desc"]],
             dom: '<"top"Blf>rt<"bottom"ip><"clear">',
             pageLength: 10,
-            paging: true,
+            paging: false,
             columnDefs: [
                 { orderable: false, targets: 0 }
             ],
@@ -285,9 +285,9 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                         typeof i === 'number' ? i : 0;
                 };
 
-                // Total over all pages
+                // Total over all pages (Filtered)
                 var total = api
-                    .column(4)
+                    .column(4, { search: 'applied' })
                     .data()
                     .reduce(function (a, b)
                     {
@@ -297,7 +297,39 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                 $(api.column(4).footer()).html(
                     total.toLocaleString('en-US', { minimumFractionDigits: 2 })
                 );
-            }
+            },
+            // initComplete: function ()
+            // {
+            //     this.api().columns().every(function ()
+            //     {
+            //         var column = this;
+            //         if (column.index() === 3)
+            //         {
+            //             var $container = $('<div class="filter-wrapper mt-1"></div>').appendTo($(column.header()));
+
+            //             var select = $('<select class="form-select form-select-sm"><option value="">All Methods</option></select>')
+            //                 .appendTo($container)
+            //                 .on('click', function (e)
+            //                 {
+            //                     e.stopPropagation();
+            //                 })
+            //                 .on('change', function ()
+            //                 {
+            //                     var val = $.fn.dataTable.util.escapeRegex($(this).val());
+            //                     column.search(val ? '^' + val + '$' : '', true, false).draw();
+            //                 });
+
+            //             column.data().unique().sort().each(function (d, j)
+            //             {
+            //                 var cleanText = d.replace(/<[^>]*>/g, "").trim();
+            //                 if (cleanText)
+            //                 {
+            //                     select.append('<option value="' + cleanText + '">' + cleanText + '</option>');
+            //                 }
+            //             });
+            //         }
+            //     });
+            // }
         });
     });
 }
@@ -327,7 +359,7 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         // Clearing old KV rows
         const $container = $("#kv-edit-container");
         $container.empty();
-        
+
         // Populating payout_details
         if (Array.isArray(data.payout_details))
         {
@@ -473,7 +505,7 @@ const handleUpdateStatusSubmit = async (e) =>
     checkAndExecute(response, () =>
     {
         editDataTableRowStatus(withdrawalDataTable, ids, status);
-        
+
         $("#editWithdrawalsStatusModal").modal("hide");
         resetForm("#updateStatusForm");
         $(".row-checkbox").prop("checked", false);
