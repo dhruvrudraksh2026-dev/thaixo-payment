@@ -35,6 +35,7 @@ export const setupAgencyHandlers = () =>
     $("#addAgencyForm").on("submit", handleAddAgencySubmit);
     $("#editAgencyForm").on("submit", handleEditAgencySubmit);
     $(document).on("click", ".editBtn", handleEditAgencyBtnClick);
+    $(document).on("click", ".copyAgencyCodeBtn", handleCopyAgencyCode);
 };
 
 const fetchAndRenderAgencies = () => 
@@ -99,6 +100,30 @@ const handleEditAgencySubmit = (e) =>
         $("#editModal").modal("hide");
         editDataTableRow(dataTable, response.data);
     }));
+}
+
+const handleCopyAgencyCode = (e) =>
+{
+    const btn = $(e.currentTarget);
+    const code = btn.data("code");
+    const originalHtml = btn.html();
+
+    if (code)
+    {
+        navigator.clipboard.writeText(code).then(() =>
+        {
+            btn.removeClass("btn-info").addClass("btn-success");
+            btn.html('<i class="ti ti-check"></i> Copied');
+            setTimeout(() =>
+            {
+                btn.removeClass("btn-success").addClass("btn-info");
+                btn.html(originalHtml);
+            }, 2000);
+        }).catch(err => console.error("Copy failed", err));
+    } else
+    {
+        alert("No code available for this agency.");
+    }
 }
 
 // ==================================================================================================

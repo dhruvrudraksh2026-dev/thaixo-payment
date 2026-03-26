@@ -19,6 +19,9 @@ export const renderAgencies = (data, tableBody) =>
                 <td>
                     <button class="btn btn-warning btn-sm editBtn" data-id="${agency.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
                     <a href="/agency-details/${agency.id}"> <button class="btn btn-primary btn-sm m-1 viewButton" data-id="${agency.id}">View</button> </a>
+                    <button class="btn btn-info btn-sm m-1 copyAgencyCodeBtn text-white" data-code="${agency.id || ''}">
+                        <i class="ti ti-copy"></i> Code
+                    </button>
                 </td>
             </tr>
         `);
@@ -38,6 +41,7 @@ export const addAgencyTableRow = (dataTable, data) =>
         `
         <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
         <a href="/agency-details/${data.id}"> <button class="btn btn-primary btn-sm m-1 viewButton" data-id="${data.id}">View</button> </a>
+        <button class="btn btn-info btn-sm m-1 copyAgencyCodeBtn text-white" data-code="${data.id || ''}"><i class="ti ti-copy"></i> Code</button>
         `
     ]).draw(false).node();
 
@@ -57,6 +61,7 @@ export const editDataTableRow = (dataTable, data) =>
         `
         <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
         <a href="/agency-details/${data.id}"> <button class="btn btn-primary btn-sm m-1 viewButton" data-id="${data.id}">View</button> </a>
+        <button class="btn btn-info btn-sm m-1 copyAgencyCodeBtn text-white" data-code="${data.id || ''}"><i class="ti ti-copy"></i> Code</button>
         `
     ];
 
