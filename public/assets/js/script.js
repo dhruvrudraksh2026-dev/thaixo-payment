@@ -164,26 +164,34 @@ if (myElement) {
 
 // Sidebar active class js
 $(function () {
-    const current = location.pathname.split('/').pop();
-    const $mainNavLinks = $('.main-nav li a');
+  let current = location.pathname.replace(/\/+$/, '');
 
-    $mainNavLinks.each(function () {
-        const $this = $(this);
-        const linkHref = $this.attr("href").split('/').pop();
+  if (current.includes('/customer-transactions-details') || current.includes('/agency-details')) {
+    current = sessionStorage.getItem('activeSidebar') || current;
+  } else {
+    sessionStorage.setItem('activeSidebar', current);
+  }
 
-        if (current === linkHref) {
-            const $parentLi = $this.parent('li');
-            const $parentUl = $this.parent().parent().parent();
-            const $grandParentUl = $parentUl.parent().parent().parent();
+  const $mainNavLinks = $('.main-nav li a');
 
-            if ($grandParentUl.hasClass("another-level")) {
-                $grandParentUl.closest('li').children().addClass('show').attr("aria-expanded", "true");
-            }
+  $mainNavLinks.each(function () {
+    const $this = $(this);
+    const linkHref = $this.attr("href").replace(/\/+$/, '');
 
-            $parentUl.children().addClass('show').attr("aria-expanded", "true");
-            $parentLi.addClass('active');
-        }
-    });
+    if (current === linkHref) {
+      const $parentLi = $this.parent('li');
+      const $parentUl = $this.parent().parent().parent();
+      const $grandParentUl = $parentUl.parent().parent().parent();
+
+      if ($grandParentUl.hasClass("another-level")) {
+        $grandParentUl.closest('li').children().addClass('show').attr("aria-expanded", "true");
+      }
+
+      $parentUl.children().addClass('show').attr("aria-expanded", "true");
+      $parentLi.addClass('active');
+      $this.addClass("bg-primary text-white");
+    }
+  });
 });
 // >>-- 07 Loader JS --<<
 $('.loader-wrapper').fadeOut('slow', function () {

@@ -15,16 +15,8 @@
 <script src="/js/utils/helper.js" type="module"></script>
 
 <script>
-    const currentPath = window.location.pathname;
-
-    document.querySelectorAll(".sidebar-nav-link").forEach(link =>
-    {
-        if (link.getAttribute("href") === currentPath)
-        {
-            link.classList.add("bg-primary");
-            link.classList.add("text-white");
-        }
-    });
+    // Active sidebar class assignment (bg-primary, text-white) is now managed by /js/script.js 
+    // to properly handle session-storage based active states across details pages.
 </script>
 
 <!-- Sidebar Payments Panel Text Changes -->
