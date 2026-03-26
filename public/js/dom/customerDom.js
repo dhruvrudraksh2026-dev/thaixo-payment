@@ -7,7 +7,6 @@ const verificationStatusColors = {
 
 export const renderCustomers = (data, tableBody) => 
 {
-    console.log(data);
     tableBody.empty();
 
     data.forEach((customer) => 

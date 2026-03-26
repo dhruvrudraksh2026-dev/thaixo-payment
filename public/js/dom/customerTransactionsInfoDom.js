@@ -168,14 +168,38 @@ export const renderTotalPendingWithdrawals = (data, container) =>
 export const renderCustomerBreadcrumbs = (isCreator, container) =>
 {
     container.empty();
-    const breadcrumb = isCreator ? "Creator Thai Customers" : "Non Creator Thai Customers";
-    container.append(`
-        <div class="col">
+    const activeSidebar = sessionStorage.getItem('activeSidebar');
+    let breadcrumbHtml = '';
+
+    // If the user navigated from the Agencies section
+    if (activeSidebar && activeSidebar.includes('/agencies')) {
+        // Try to capture the specific agency-details URL from the referrer, otherwise fallback
+        const referrer = document.referrer;
+        const agencyDetailsUrl = (referrer && referrer.includes('/agency-details')) ? referrer : 'javascript:history.back()';
+        
+        breadcrumbHtml = `
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/thai-customers/${isCreator ? "creators" : "non-creators"}">${breadcrumb}</a>
-                </li>
+                <li class="breadcrumb-item"><a href="/agencies">Agencies</a></li>
+                <li class="breadcrumb-item"><a href="${agencyDetailsUrl}">Agency Details</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Customer Transactions</li>
             </ol>
+        `;
+    } else {
+        // Default behavior for Creators / Non-Creators
+        const listPath = `/thai-customers/${isCreator ? "creators" : "non-creators"}`;
+        const listName = isCreator ? "Creator Thai Customers" : "Non Creator Thai Customers";
+        
+        breadcrumbHtml = `
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="${listPath}">${listName}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Customer Transactions</li>
+            </ol>
+        `;
+    }
+
+    container.append(`
+        <div class="col">
+            ${breadcrumbHtml}
         </div>
     `);
 };
