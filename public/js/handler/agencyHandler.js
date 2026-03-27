@@ -3,7 +3,7 @@ import { getAgencyCustomers } from "../api/customerAgencyApi.js";
 import { getAllPendingAgencyCustomerWithdrawals, getCustomerWithdrawalsById, editCustomerWithdrawal, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
 import { renderAgencies, addAgencyTableRow, editDataTableRow, renderAgencyInfo, renderAgencyCustomers } from "../dom/agencyDom.js";
 import { renderCustomerWithdrawals, createKVRow, resetForm, editDataTableRowStatus, editDataTableRow as editWithdrawalDataTableRow } from "../dom/customerWithdrawalsDom.js";
-import { checkAndExecute } from "../utils/helper.js";
+import { checkAndExecute, formatExportData } from "../utils/helper.js";
 
 let dataTable;
 let agencyCustomersDataTable;
@@ -238,17 +238,21 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
             ],
             buttons: [
                 {
-                    extend: 'csv',
-                    filename: `Agency_${agencyInfo.data.name}_Pending_Customers_Withdrawal_Report_` + new Date().toISOString().split("T")[0],
+                    extend: 'excel',
+                    title: 'Agency - ' + agencyInfo.name + ' Customers Withdrawal Report - ' + new Date().toLocaleString("en-CA", { month: 'long', year: 'numeric' }),
+                    filename: `Agency_${agencyInfo.name}_Customers_Withdrawal_Report_${new Date().toLocaleDateString('en-CA')}`,
                     footer: true,
+                    messageTop: `Generated on: ${new Date().toLocaleString()}`,
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         format: {
+                            header: function (data)
+                            {
+                                return data.replace(/<[^>]*>/g, '').trim();
+                            },
                             body: function (data, row, column)
                             {
-                                // Parse the HTML string
                                 var $temp = $('<div>').html(data);
-
                                 if ($temp.find('div.mt-1').length > 0)
                                 {
                                     var lines = [];
@@ -263,100 +267,127 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                                     });
                                     return lines.join("\n");
                                 }
-
-                                return $temp.text().trim() || data.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim();
-                            }
-                        }
-                    }
-                },
-                {
-                    extend: 'excel',
-                    filename: `Agency_${agencyInfo.data.name}_Pending_Customers_Withdrawal_Report_` + new Date().toISOString().split("T")[0],
-                    footer: true,
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
-                        format: {
-                            body: function (data, row, column)
-                            {
-                                // Parse the HTML string
-                                var $temp = $('<div>').html(data);
-
-                                if ($temp.find('div.mt-1').length > 0)
-                                {
-                                    var lines = [];
-                                    $temp.find('div.mt-1').each(function ()
-                                    {
-                                        var label = $(this).find('span.fw-semibold').text().trim();
-                                        var value = $(this).find('span:not(.fw-semibold)').text().trim();
-                                        if (label || value)
-                                        {
-                                            lines.push(label + " " + value);
-                                        }
-                                    });
-                                    return lines.join("\r\n");
-                                }
-
-                                return $temp.text().trim() || data.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim();
+                                return $temp.text().trim();
                             }
                         }
                     },
+                    customize: function (xlsx)
+                    {
+
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        var rows = $('row', sheet);
+
+                        /* -------------------------
+                           COLUMN WIDTH
+                        -------------------------- */
+                        var cols = $('col', sheet);
+                        cols.eq(0).attr('width', 20);
+                        cols.eq(1).attr('width', 25);
+                        cols.eq(2).attr('width', 20);
+                        cols.eq(3).attr('width', 60); // payout json column bigger
+                        cols.eq(4).attr('width', 18);
+                        cols.eq(5).attr('width', 18);
+                        cols.eq(6).attr('width', 20);
+                        /* -------------------------
+                           WRAP TEXT + AUTO HEIGHT
+                        -------------------------- */
+                        rows.each(function ()
+                        {
+                            $(this).attr('ht', 'auto');
+                            $(this).attr('customHeight', '0');
+                        });
+                        /* -------------------------
+                           HEADER STYLE
+                        -------------------------- */
+                        var header = rows.first();
+                        header.find('c').attr('s', '42');
+                        // bold + bigger font
+                        /* -------------------------
+                           TABLE BORDER
+                        -------------------------- */
+                        rows.each(function ()
+                        {
+                            $(this).find('c').attr('s', '25');
+                        });
+                        /* -------------------------
+                           FOOTER STYLE
+                        -------------------------- */
+                        var footer = rows.last();
+                        footer.find('c').attr('s', '47');
+                        // bold + bigger + top border
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Agency - ' + agencyInfo.name + ' Customers Withdrawal Report - ' + new Date().toLocaleString("en-CA", { month: 'long', year: 'numeric' }),
+                    filename: `Agency_${agencyInfo.name}_Customers_Withdrawal_Report_${new Date().toLocaleDateString('en-CA')}`,
+                    footer: true,
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        stripHtml: false, // Prevents DataTables from stripping our manual \n
+                        format: {
+                            body: function (data, row, column)
+                            {
+                                // Use the helper function with \n for PDF
+                                return formatExportData(data, "\n");
+                            }
+                        }
+                    },
+                    customize: function (doc)
+                    {
+                        // 1. Set Table Widths (Adjust the 3rd index if your JSON is in a different column)
+                        // 'auto' lets the text dictate height, '*' distributes remaining space
+                        doc.content[1].table.widths = ['auto', 'auto', '30%', 'auto', 'auto', 'auto', 'auto'];
+
+                        // 2. Force Alignment and Wrapping
+                        var rowCount = doc.content[1].table.body.length;
+                        for (var i = 1; i < rowCount; i++)
+                        {
+                            // This forces the "Details" cell to allow wrapping
+                            doc.content[1].table.body[i][2].alignment = 'left';
+                        }
+
+                        // 3. Define Table Borders
+                        doc.content[1].layout = {
+                            hLineWidth: function (i, node) { return 0.5; },
+                            vLineWidth: function (i, node) { return 0.5; },
+                            hLineColor: function (i, node) { return '#aaaaaa'; },
+                            vLineColor: function (i, node) { return '#aaaaaa'; },
+                            paddingLeft: function (i, node) { return 4; },
+                            paddingRight: function (i, node) { return 4; },
+                            paddingTop: function (i, node) { return 2; },
+                            paddingBottom: function (i, node) { return 2; }
+                        };
+
+                        // 4. Style the Footer to stand out
+                        doc.styles.tableFooter = {
+                            fillColor: '#f3f3f3',
+                            bold: true,
+                            alignment: 'right',
+                            margin: [0, 5, 0, 5]
+                        };
+                    }
                 }
             ],
             footerCallback: function (row, data, start, end, display)
             {
                 var api = this.api();
-                var intVal = function (i)
-                {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '') * 1 :
-                        typeof i === 'number' ? i : 0;
-                };
+                var intVal = (i) => typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
 
-                // Total over all pages (Filtered)
-                var total = api
-                    .column(4, { search: 'applied' })
-                    .data()
-                    .reduce(function (a, b)
-                    {
-                        return intVal(a) + intVal(b);
-                    }, 0);
+                var total = api.column(4, { search: 'applied' }).data().reduce((a, b) => intVal(a) + intVal(b), 0);
 
-                $(api.column(4).footer()).html(
-                    total.toLocaleString('en-US', { minimumFractionDigits: 2 })
-                );
-            },
-            // initComplete: function ()
-            // {
-            //     this.api().columns().every(function ()
-            //     {
-            //         var column = this;
-            //         if (column.index() === 3)
-            //         {
-            //             var $container = $('<div class="filter-wrapper mt-1"></div>').appendTo($(column.header()));
-
-            //             var select = $('<select class="form-select form-select-sm"><option value="">All Methods</option></select>')
-            //                 .appendTo($container)
-            //                 .on('click', function (e)
-            //                 {
-            //                     e.stopPropagation();
-            //                 })
-            //                 .on('change', function ()
-            //                 {
-            //                     var val = $.fn.dataTable.util.escapeRegex($(this).val());
-            //                     column.search(val ? '^' + val + '$' : '', true, false).draw();
-            //                 });
-
-            //             column.data().unique().sort().each(function (d, j)
-            //             {
-            //                 var cleanText = d.replace(/<[^>]*>/g, "").trim();
-            //                 if (cleanText)
-            //                 {
-            //                     select.append('<option value="' + cleanText + '">' + cleanText + '</option>');
-            //                 }
-            //             });
-            //         }
-            //     });
-            // }
+                // Highlight Footer in Browser UI
+                var footerCell = $(api.column(4).footer());
+                footerCell.html(total.toLocaleString('en-US', { minimumFractionDigits: 2 }));
+                footerCell.css({
+                    'background-color': '#f1f2f6',
+                    'font-weight': 'bold',
+                    'border': '2px solid #2f3542'
+                });
+            }
         });
     });
 }
