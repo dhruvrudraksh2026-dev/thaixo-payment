@@ -540,9 +540,9 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         format: {
-                            header: function (data)
+                            header: function (data, columnIdx)
                             {
-                                return data.replace(/<[^>]*>/g, '').trim();
+                                return data.split('All Methods')[0].replace(/<[^>]*>/g, '').trim();
                             },
                             body: function (data, row, column)
                             {
@@ -623,6 +623,10 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                         columns: [1, 2, 3, 4, 5, 6, 7],
                         stripHtml: false, // Prevents DataTables from stripping our manual \n
                         format: {
+                            header: function (data)
+                            {
+                                return data.split('All Methods')[0].replace(/<[^>]*>/g, '').trim();
+                            },
                             body: function (data, row, column)
                             {
                                 // Use the helper function with \n for PDF
