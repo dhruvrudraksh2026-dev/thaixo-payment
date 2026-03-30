@@ -113,7 +113,10 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
                 <td>${formattedPayoutDetails}</td>
                 <td>${withdrawalStatusBadge}</td>
                 <td>${withdrawal.created_at ?? "NA"}</td>
-                <td><button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button></td>
+                <td>
+                    <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                    <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
+                </td>
             </tr>
         `);
     });
@@ -154,6 +157,7 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                     withdrawal.created_at ?? '',
                     `
                 <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
             `
                 ]);
         }
@@ -169,6 +173,7 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                 withdrawal.created_at ?? '',
                 `
                 <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
             `
             ]);
     });
@@ -236,6 +241,7 @@ export const addDataTableRow = (dataTable, data) =>
         data.created_at ?? "NA",
         `
         <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+        <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
         `
     ]).draw(false).node();
 
@@ -266,6 +272,7 @@ export const editDataTableRow = (dataTable, data) =>
         data.created_at ?? "",
         `
         <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+        <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
         `
     ];
 

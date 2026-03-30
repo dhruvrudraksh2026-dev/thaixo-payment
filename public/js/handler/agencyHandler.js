@@ -3,6 +3,7 @@ import { getAgencyCustomers } from "../api/customerAgencyApi.js";
 import { getAllPendingAgencyCustomerWithdrawals, getCustomerWithdrawalsById, editCustomerWithdrawal, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
 import { renderAgencies, addAgencyTableRow, editDataTableRow, renderAgencyInfo, renderAgencyCustomers } from "../dom/agencyDom.js";
 import { renderCustomerWithdrawals, createKVRow, resetForm, editDataTableRowStatus, editDataTableRow as editWithdrawalDataTableRow } from "../dom/customerWithdrawalsDom.js";
+import { handleCopyWithdrawalBtnClick } from "./customerWithdrawalsHandler.js";
 import { checkAndExecute, formatExportData } from "../utils/helper.js";
 
 let dataTable;
@@ -145,6 +146,7 @@ export const setupAgencyInfoHandlers = () =>
 
     // For Edit Withdrawal Modal
     $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
+    $(document).on("click", ".copyBtn", handleCopyWithdrawalBtnClick);
     $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
     $(document).on("click", "#addEditRow", handleAddRow);
     $(document).on("click", ".remove-row", handleRemoveRow);

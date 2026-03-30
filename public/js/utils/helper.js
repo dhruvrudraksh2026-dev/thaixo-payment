@@ -88,3 +88,13 @@ export const formatExportData = (data, newlineChar) =>
     }
     return $temp.text().trim() || data.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim();
 }
+
+export function formatKeyName(text)
+{
+    return text
+        .replace(/[^a-zA-Z0-9]+/g, ' ') // replace _ and other chars with space
+        .trim()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+}

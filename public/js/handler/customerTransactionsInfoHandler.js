@@ -6,6 +6,7 @@ import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions
 
 import { addCustomerWithdrawal, editCustomerWithdrawal, getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsById, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
 import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
+import { handleCopyWithdrawalBtnClick } from "./customerWithdrawalsHandler.js";
 
 import { checkAndExecute } from "../utils/helper.js";
 
@@ -50,6 +51,7 @@ export const setupTransactionsViewHandler = () =>
 
     // (4.) For Customer Withdrawals
     $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
+    $(document).on("click", ".copyBtn", handleCopyWithdrawalBtnClick);
     $(document).on("click", ".addBtn", handleAddCustomerWithdrawalBtnClick);
     $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
     $("#addModal").on("submit", handleAddCustomerWithdrawalSubmit);

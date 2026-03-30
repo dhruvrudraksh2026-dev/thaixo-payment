@@ -1,6 +1,6 @@
 import { editCustomerWithdrawal, getAllCustomerWithdrawalsByDateRange, getAllCustomerWithdrawalsTotalAmountByDateRange, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
 import { createKVRow, editDataTableRow, editDataTableRowStatus, removeDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalAllWithdrawalsAmount, renderTotalPendingWithdrawalsAmount, resetForm } from "../dom/customerWithdrawalsDom.js";
-import { checkAndExecute, formatExportData, MONTHS } from "../utils/helper.js";
+import { checkAndExecute, formatExportData, formatKeyName, MONTHS, showAlert } from "../utils/helper.js";
 
 let dataTable;
 
@@ -11,6 +11,7 @@ export const setUpPendingCustomerWithdrawalsHandler = async () =>
 
     // For Edit Withdrawal Modal
     $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
+    $(document).on("click", ".copyBtn", handleCopyWithdrawalBtnClick);
     $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
     $(document).on("click", "#addEditRow", handleAddRow);
     $(document).on("click", ".remove-row", handleRemoveRow);
@@ -450,6 +451,7 @@ export const setUpAllCustomerWithdrawalsHandler = async () =>
 
     // For Edit Withdrawal Modal
     $(document).on("click", ".editBtn", handleEditCustomerWithdrawalBtnClick);
+    $(document).on("click", ".copyBtn", handleCopyWithdrawalBtnClick);
     $("#editModal").on("submit", handleEditCustomerWithdrawalSubmit);
     $(document).on("click", "#addEditRow", handleAddRow);
     $(document).on("click", ".remove-row", handleRemoveRow);
@@ -788,4 +790,91 @@ const handleDateRangeSubmit = async (e) =>
 const handleDateRangeReset = () =>
 {
     location.reload();
+}
+
+// For Copy Withdrawal Details
+export const handleCopyWithdrawalBtnClick = (e) =>
+{
+    e.preventDefault();
+    const btn = $(e.currentTarget);
+    const originalHtml = btn.html();
+    const dataStr = decodeURIComponent(btn.attr("data-withdrawal") || "{}");
+
+    let data;
+    try
+    {
+        data = JSON.parse(dataStr);
+    } catch (err)
+    {
+        console.error("Error parsing withdrawal data", err);
+        return;
+    }
+
+    let payoutText = "";
+    if (data.payout_details)
+    {
+        let parsedPayout = {};
+        try
+        {
+            parsedPayout = typeof data.payout_details === "string" ? JSON.parse(data.payout_details) : data.payout_details;
+        } catch (e)
+        {
+            parsedPayout = data.payout_details;
+        }
+
+        // Handle array of objects or single object
+        const skipWithdrawalDetailsCondition = (key) =>
+        {
+            return key.toLowerCase().includes("image") || key.toLowerCase().includes("status") || key.toLowerCase().includes("document_type");
+        }
+
+        if (Array.isArray(parsedPayout))
+        {
+            parsedPayout.forEach((pd, index) =>
+            {
+                payoutText += `\nEntry ${index + 1}:\n`;
+                for (let key in pd)
+                {
+                    if (skipWithdrawalDetailsCondition(key)) continue;
+                    payoutText += `${formatKeyName(key)}: ${pd[key] ?? "NA"}\n`;
+                }
+            });
+        } else if (typeof parsedPayout === "object" && parsedPayout !== null)
+        {
+            for (let key in parsedPayout)
+            {
+                if (skipWithdrawalDetailsCondition(key)) continue;
+                payoutText += `${formatKeyName(key)}: ${parsedPayout[key] ?? "NA"}\n`;
+            }
+        } else
+        {
+            payoutText = parsedPayout;
+        }
+    }
+
+    const copyText = `
+Withdrawal ID: ${data.id ?? "NA"}
+Customer: ${data.customer_name ?? "NA"}
+Method: ${data.method ?? "NA"}
+Amount: ${data.withdrawal_amount ?? "NA"}
+
+Payout Details:
+${payoutText}
+    `.trim();
+
+    navigator.clipboard.writeText(copyText).then(() =>
+    {
+        // showAlert("Withdrawal details copied to clipboard!");
+        btn.removeClass("btn-info").addClass("btn-success");
+        btn.html('<i class="ti ti-check"></i> Copied');
+        setTimeout(() =>
+        {
+            btn.removeClass("btn-success").addClass("btn-info");
+            btn.html(originalHtml);
+        }, 2000);
+    }).catch(err =>
+    {
+        console.error("Failed to copy", err);
+        showAlert("Failed to copy to clipboard.");
+    });
 }
