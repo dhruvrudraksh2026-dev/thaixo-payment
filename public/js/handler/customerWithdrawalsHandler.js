@@ -1,6 +1,6 @@
 import { editCustomerWithdrawal, getAllCustomerWithdrawalsByDateRange, getAllCustomerWithdrawalsTotalAmountByDateRange, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
 import { createKVRow, editDataTableRow, editDataTableRowStatus, removeDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalAllWithdrawalsAmount, renderTotalPendingWithdrawalsAmount, resetForm } from "../dom/customerWithdrawalsDom.js";
-import { checkAndExecute, formatExportData, formatKeyName, MONTHS, showAlert } from "../utils/helper.js";
+import { checkAndExecute, formatExportData, formatKeyName, showAlert } from "../utils/helper.js";
 
 let dataTable;
 
@@ -852,13 +852,20 @@ export const handleCopyWithdrawalBtnClick = (e) =>
         }
     }
 
+
+    //     const copyText = `
+    // Withdrawal ID: ${data.id ?? "NA"}
+    // Customer: ${data.customer_name ?? "NA"}
+    // Method: ${data.method ?? "NA"}
+    // Amount: ${data.withdrawal_amount ?? "NA"}
+
+    // Payout Details:
+    // ${payoutText}
+    //     `.trim();
+
     const copyText = `
 Withdrawal ID: ${data.id ?? "NA"}
-Customer: ${data.customer_name ?? "NA"}
-Method: ${data.method ?? "NA"}
 Amount: ${data.withdrawal_amount ?? "NA"}
-
-Payout Details:
 ${payoutText}
     `.trim();
 
