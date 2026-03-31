@@ -113,9 +113,9 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
                 <td>${formattedPayoutDetails}</td>
                 <td>${withdrawalStatusBadge}</td>
                 <td>${withdrawal.created_at ?? "NA"}</td>
-                <td class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                    <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
+                <td>
+                    <button class="btn btn-warning btn-sm editBtn m-1" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                    <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
                 </td>
             </tr>
         `);
@@ -156,8 +156,8 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                     WITHDRAWAL_STATUS[withdrawal.status]?.badge ?? '',
                     withdrawal.created_at ?? '',
                     `
-                <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
+                <button class="btn btn-warning btn-sm editBtn m-1" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
             `
                 ]);
         }
@@ -172,8 +172,8 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                 WITHDRAWAL_STATUS[withdrawal.status]?.badge ?? '',
                 withdrawal.created_at ?? '',
                 `
-                <button class="btn btn-warning btn-sm editBtn" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
+                <button class="btn btn-warning btn-sm editBtn m-1" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
             `
             ]);
     });
@@ -240,8 +240,8 @@ export const addDataTableRow = (dataTable, data) =>
         WITHDRAWAL_STATUS[data.status]?.badge ?? "NA",
         data.created_at ?? "NA",
         `
-        <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-        <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
+        <button class="btn btn-warning btn-sm editBtn m-1" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+        <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
         `
     ]).draw(false).node();
 
@@ -271,8 +271,8 @@ export const editDataTableRow = (dataTable, data) =>
         withdrawalStatusBadge,
         data.created_at ?? "",
         `
-        <button class="btn btn-warning btn-sm editBtn" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-        <button class="btn btn-info btn-sm copyBtn" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
+        <button class="btn btn-warning btn-sm editBtn m-1" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+        <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
         `
     ];
 

@@ -59,6 +59,7 @@ router.delete("/customer-withdrawal/:id", customerWithdrawalsController.deleteCu
 // =============================================================================================================================
 // Customer Related Withdrawals
 // =============================================================================================================================
+router.get("/customer-withdrawals/:customerId/withdrawals/stats", customerWithdrawalsController.getCustomerEarningsStatsByCustomerId); // Customer Earnings Stats By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals/paid", customerWithdrawalsController.getTotalPaidCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals/pending", customerWithdrawalsController.getTotalPendingCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id
 router.get("/customer-withdrawals/:customerId/withdrawals", customerWithdrawalsController.getAllCustomerWithdrawalsByCustomerId); // Withdrawals By Customer Id

@@ -4,7 +4,7 @@ import { handlerCustomerLegalDetailsVerificationStatusUpdate, renderCustomerInfo
 import { toggleCreatorById, updateGeneratedOtpById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsInfoAPI.js";
 import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleCreatorSection, renderCreatorBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals, renderCustomerBreadcrumbs, renderCustomerWithdrawalsTableHeader, resetForm, createKVRow } from "../dom/customerTransactionsInfoDom.js";
 
-import { addCustomerWithdrawal, editCustomerWithdrawal, getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsById, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
+import { addCustomerWithdrawal, editCustomerWithdrawal, getCustomerEarningsStatsByCustomerId, getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsById, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
 import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
 import { handleCopyWithdrawalBtnClick } from "./customerWithdrawalsHandler.js";
 
@@ -63,9 +63,11 @@ export const setupTransactionsViewHandler = () =>
     $(document).on("click", ".remove-row", handleRemoveRow);
 
     // (5.) For Stats
-    fetchCustomerEarningsTotalAmount();
-    fetchCustomerWithdrawalsTotalPaidAmount();
-    fetchCustomerWithdrawalsTotalPendingAmount();
+    // fetchCustomerEarningsTotalAmount();
+    // fetchCustomerWithdrawalsTotalPaidAmount();
+    // fetchCustomerWithdrawalsTotalPendingAmount();
+
+    fetchCustomerEarningsStats();
 
     // (6.) For Verifying Legal Details
     $(document).on("click", "#approveCustomerLegalDetailsBtn", handleApproveLegalDetailsVerificationBtnClick);
@@ -154,41 +156,56 @@ export const fetchAndViewCustomersWithdrawals = async () =>
 }
 
 // (5.) For Stats
-export const fetchCustomerEarningsTotalAmount = async () =>
+// export const fetchCustomerEarningsTotalAmount = async () =>
+// {
+//     const pathParts = window.location.pathname.split("/");
+//     const id = pathParts[pathParts.length - 1];
+
+//     const response = await getCustomerEarningsTotalAmountById(id);
+
+//     checkAndExecute(response, () =>
+//     {
+//         renderTotalEarningAmount(response.data, $("#totalEarningsAmount"));
+//     });
+// }
+
+// export const fetchCustomerWithdrawalsTotalPaidAmount = async () =>
+// {
+//     const pathParts = window.location.pathname.split("/");
+//     const id = pathParts[pathParts.length - 1];
+
+//     const response = await getTotalPaidCustomerWithdrawalsByCustomerId(id);
+
+//     checkAndExecute(response, () =>
+//     {
+//         renderTotalPaidWithdrawals(response.data, $("#totalPaidAmount"));
+//     });
+// }
+
+// export const fetchCustomerWithdrawalsTotalPendingAmount = async () =>
+// {
+//     const pathParts = window.location.pathname.split("/");
+//     const id = pathParts[pathParts.length - 1];
+
+//     const response = await getTotalPendingCustomerWithdrawalsByCustomerId(id);
+
+//     checkAndExecute(response, () =>
+//     {
+//         renderTotalPendingWithdrawals(response.data, $("#totalPendingAmount"));
+//     });
+// }
+
+export const fetchCustomerEarningsStats = async () =>
 {
     const pathParts = window.location.pathname.split("/");
     const id = pathParts[pathParts.length - 1];
 
-    const response = await getCustomerEarningsTotalAmountById(id);
+    const response = await getCustomerEarningsStatsByCustomerId(id);
 
     checkAndExecute(response, () =>
     {
         renderTotalEarningAmount(response.data, $("#totalEarningsAmount"));
-    });
-}
-
-export const fetchCustomerWithdrawalsTotalPaidAmount = async () =>
-{
-    const pathParts = window.location.pathname.split("/");
-    const id = pathParts[pathParts.length - 1];
-
-    const response = await getTotalPaidCustomerWithdrawalsByCustomerId(id);
-
-    checkAndExecute(response, () =>
-    {
         renderTotalPaidWithdrawals(response.data, $("#totalPaidAmount"));
-    });
-}
-
-export const fetchCustomerWithdrawalsTotalPendingAmount = async () =>
-{
-    const pathParts = window.location.pathname.split("/");
-    const id = pathParts[pathParts.length - 1];
-
-    const response = await getTotalPendingCustomerWithdrawalsByCustomerId(id);
-
-    checkAndExecute(response, () =>
-    {
         renderTotalPendingWithdrawals(response.data, $("#totalPendingAmount"));
     });
 }
@@ -340,8 +357,9 @@ const handleAddCustomerWithdrawalSubmit = async (e) =>
 
         // Fetching The Total Pending Withdrawals Amount Again For Updating The UI
         //====================================================
-        fetchCustomerWithdrawalsTotalPendingAmount();
-        fetchCustomerWithdrawalsTotalPaidAmount();
+        // fetchCustomerWithdrawalsTotalPendingAmount();
+        // fetchCustomerWithdrawalsTotalPaidAmount();
+        fetchCustomerEarningsStats();
         //====================================================
     });
 }
@@ -426,8 +444,9 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
         resetForm("#editCustomerWithdrawalForm");
         $("#editModal").modal("hide");
 
-        fetchCustomerWithdrawalsTotalPendingAmount();
-        fetchCustomerWithdrawalsTotalPaidAmount();
+        // fetchCustomerWithdrawalsTotalPendingAmount();
+        // fetchCustomerWithdrawalsTotalPaidAmount();
+        fetchCustomerEarningsStats();
     });
 };
 

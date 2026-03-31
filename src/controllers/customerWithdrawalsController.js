@@ -87,6 +87,36 @@ class customerWithdrawalsController
         }
     }
 
+    static getCustomerEarningsStatsByCustomerId = async (req, res, next) =>
+    {
+        try
+        {
+            const id = req.params.customerId;
+            if (!id)
+            {
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            const isCustomerExists = await customerModel.doesThaiCustomerExists(id);
+            if (!isCustomerExists)
+            {
+                return res.json(Response.failure("Thai Customer Not Found With This Id"));
+            }
+
+            const totalWithdrawal = await customerWithdrawalsModel.getCustomerEarningsStats(id);
+            if (!totalWithdrawal)
+            {
+                return res.json(Response.failure("Withdrawals Stats By Customer Id Not Found"));
+            }
+
+            return res.json(Response.success("Withdrawals Stats By Customer Id Fetched Successfully", totalWithdrawal));
+        }
+        catch (error)
+        {
+            next(error);
+        }
+    }
+
     static getAllPendingCustomerWithdrawals = async (req, res, next) =>
     {
         try

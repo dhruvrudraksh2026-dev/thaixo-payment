@@ -69,7 +69,50 @@ class customerWithdrawalsModel
 
     static getCustomerWithdrawalsPendingAmountByCustomerId = async (customerId, transaction = db) =>
     {
-        const [rows] = await transaction.query(`SELECT SUM(withdrawal_amount) as total_pending FROM customer_withdrawals WHERE customer_id = ? AND status = "PENDING"`, [customerId]);
+        const [rows] = await transaction.query(`
+            SELECT
+                IFNULL(SUM(ct.earnings),0) 
+                -
+                IFNULL((
+                    SELECT SUM(withdrawal_amount)
+                    FROM customer_withdrawals
+                    WHERE customer_id = ?
+                    AND status = "DONE"
+                ),0) AS total_pending
+
+            FROM customer_transactions ct
+            WHERE ct.customer_id = ?;
+        `, [customerId, customerId, customerId]);
+        return rows[0] || 0;
+    }
+
+    // #1
+    static getCustomerEarningsStats = async (customerId, transaction = db) =>
+    {
+        const [rows] = await transaction.query(`
+            SELECT
+                IFNULL(SUM(ct.earnings),0) AS total_earnings,
+
+                IFNULL((
+                    SELECT SUM(withdrawal_amount)
+                    FROM customer_withdrawals
+                    WHERE customer_id = ?
+                    AND status = "DONE"
+                ),0) AS total_paid,
+
+                IFNULL(SUM(ct.earnings),0) 
+                -
+                IFNULL((
+                    SELECT SUM(withdrawal_amount)
+                    FROM customer_withdrawals
+                    WHERE customer_id = ?
+                    AND status = "DONE"
+                ),0) AS total_pending
+
+            FROM customer_transactions ct
+            WHERE ct.customer_id = ?;
+        `, [customerId, customerId, customerId]);
+        console.log("rows[0]", rows[0]);
         return rows[0] || 0;
     }
 
