@@ -47,7 +47,7 @@ class LoginController
             account: user.name
         };
 
-        const jwtToken = jwt.sign(payload, 'key@123', { expiresIn: "1h" });
+        const jwtToken = jwt.sign(payload, 'key@123', { expiresIn: "5h" });
         res.cookie('token', jwtToken);
         return res.json(Response.success("Logged In Successfully", { 'token': jwtToken }));
     }
