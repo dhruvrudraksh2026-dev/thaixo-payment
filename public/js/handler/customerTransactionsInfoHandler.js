@@ -498,7 +498,6 @@ const handleRejectLegalDetailsVerificationBtnClick = async (e) =>
     const response = await unverifyCustomerLegalDetailsById(id);
     checkAndExecute(response, () => 
     {
-        console.log(response.data);
         handlerCustomerLegalDetailsVerificationStatusUpdate(false);
     });
 }

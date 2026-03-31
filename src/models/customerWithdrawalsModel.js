@@ -112,7 +112,6 @@ class customerWithdrawalsModel
             FROM customer_transactions ct
             WHERE ct.customer_id = ?;
         `, [customerId, customerId, customerId]);
-        console.log("rows[0]", rows[0]);
         return rows[0] || 0;
     }
 

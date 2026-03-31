@@ -250,7 +250,6 @@ export const addDataTableRow = (dataTable, data) =>
 
 export const editDataTableRow = (dataTable, data) =>
 {
-    console.log(data);
     const path = window.location.pathname;
     const rowSelector = `tr[data-id="${data.id}"]`;
     const withdrawalStatusBadge = WITHDRAWAL_STATUS[data.status]?.badge;

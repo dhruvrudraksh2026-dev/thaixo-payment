@@ -154,7 +154,7 @@ export const renderTotalPendingWithdrawals = (data, container) =>
     container.html(
         `
         <div class="card-body px-4 py-1">
-            <h6 class="fs-5 fw-semibold mb-1">Total Pending Withdrawal <small class="text-muted fw-normal">(Requested)</small></h6>
+            <h6 class="fs-5 fw-semibold mb-1">Total Pending Withdrawal</h6>
             <div class="fw-semibold fs-6 text-info mb-0">
                 ฿ <span id="totalEarningsValue">${data.total_pending || "0.00"}</span>
             </div>
@@ -172,11 +172,12 @@ export const renderCustomerBreadcrumbs = (isCreator, container) =>
     let breadcrumbHtml = '';
 
     // If the user navigated from the Agencies section
-    if (activeSidebar && activeSidebar.includes('/agencies')) {
+    if (activeSidebar && activeSidebar.includes('/agencies'))
+    {
         // Try to capture the specific agency-details URL from the referrer, otherwise fallback
         const referrer = document.referrer;
         const agencyDetailsUrl = (referrer && referrer.includes('/agency-details')) ? referrer : 'javascript:history.back()';
-        
+
         breadcrumbHtml = `
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/agencies">Agencies</a></li>
@@ -184,11 +185,12 @@ export const renderCustomerBreadcrumbs = (isCreator, container) =>
                 <li class="breadcrumb-item active" aria-current="page">Customer Transactions</li>
             </ol>
         `;
-    } else {
+    } else
+    {
         // Default behavior for Creators / Non-Creators
         const listPath = `/thai-customers/${isCreator ? "creators" : "non-creators"}`;
         const listName = isCreator ? "Creator Thai Customers" : "Non Creator Thai Customers";
-        
+
         breadcrumbHtml = `
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="${listPath}">${listName}</a></li>

@@ -66,7 +66,6 @@ export const fetchAndViewCustomersWithdrawals = async () =>
     checkAndExecute(response, () =>
     {
         const data = response.data;
-        // console.log(data);
         renderCustomerWithdrawals(data, $("#customer-withdrawals-table-body"));
         if ($.fn.DataTable.isDataTable('#customer-withdrawals-table'))
         {
