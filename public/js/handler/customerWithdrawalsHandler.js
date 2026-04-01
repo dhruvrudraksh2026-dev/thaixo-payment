@@ -676,9 +676,19 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                 var api = this.api();
                 var intVal = (i) => typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
 
-                var total = api.column(4, { search: 'applied' }).data().reduce((a, b) => intVal(a) + intVal(b), 0);
+                var total = api.column(4, { search: 'applied' }).data().reduce((a, b, index) =>
+                {
+                    var statusHtml = api.column(6, { search: 'applied' }).data()[index];
 
-                // Highlight Footer in Browser UI
+                    var statusText = $(statusHtml).text().trim().toUpperCase();
+
+                    if (statusText === 'DONE' || statusText === 'PENDING')
+                    {
+                        return intVal(a) + intVal(b);
+                    }
+                    return intVal(a);
+                }, 0);
+
                 var footerCell = $(api.column(4).footer());
                 footerCell.html(total.toLocaleString('en-US', { minimumFractionDigits: 2 }));
                 footerCell.css({

@@ -161,7 +161,7 @@ class customerWithdrawalsModel
     // For Customer Withdrawals Page - All
     static getAllCustomerWithdrawalsTotalAmountByDateRange = async (data, transaction = db) =>
     {
-        const [rows] = await transaction.query("SELECT SUM(withdrawal_amount) as total_amount FROM customer_withdrawals WHERE created_at BETWEEN ? AND ?", [data.startDate, data.endDate]);
+        const [rows] = await transaction.query("SELECT SUM(withdrawal_amount) as total_amount FROM customer_withdrawals WHERE status IN ('DONE','PENDING') AND created_at BETWEEN ? AND ?", [data.startDate, data.endDate]);
         return rows[0] || {};
     }
 

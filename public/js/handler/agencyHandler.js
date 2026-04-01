@@ -225,7 +225,7 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
     const id = pathParts[pathParts.length - 1];
 
     const response = await getAllPendingAgencyCustomerWithdrawals(id);
-    const agencyInfo = await getAgencyById(id);
+    const agencyInfo = (await getAgencyById(id))?.data;
 
     checkAndExecute(response, () =>
     {
@@ -241,8 +241,8 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
             buttons: [
                 {
                     extend: 'excel',
-                    title: 'Agency - ' + agencyInfo.name + ' Customers Withdrawal Report - ' + new Date().toLocaleString("en-CA", { month: 'long', year: 'numeric' }),
-                    filename: `Agency_${agencyInfo.name}_Customers_Withdrawal_Report_${new Date().toLocaleDateString('en-CA')}`,
+                    title: `Agency - ${agencyInfo?.name} Customers Withdrawal Report - ${new Date().toLocaleString("en-CA", { month: 'long', year: 'numeric' })}`,
+                    filename: `Agency_${agencyInfo?.name}_Customers_Withdrawal_Report_${new Date().toLocaleDateString('en-CA')}`,
                     footer: true,
                     messageTop: `Generated on: ${new Date().toLocaleString()}`,
                     exportOptions: {
@@ -322,8 +322,8 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                 },
                 {
                     extend: 'pdf',
-                    title: 'Agency - ' + agencyInfo.name + ' Customers Withdrawal Report - ' + new Date().toLocaleString("en-CA", { month: 'long', year: 'numeric' }),
-                    filename: `Agency_${agencyInfo.name}_Customers_Withdrawal_Report_${new Date().toLocaleDateString('en-CA')}`,
+                    title: `Agency - ${agencyInfo?.name} Customers Withdrawal Report - ${new Date().toLocaleString("en-CA", { month: 'long', year: 'numeric' })}`,
+                    filename: `Agency_${agencyInfo?.name}_Customers_Withdrawal_Report_${new Date().toLocaleDateString('en-CA')}`,
                     footer: true,
                     orientation: 'landscape',
                     pageSize: 'A4',
