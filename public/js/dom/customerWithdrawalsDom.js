@@ -112,6 +112,8 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
                 <td>${`${withdrawal.customer_id} - ${withdrawal.customer_name}` ?? "NA"}</td>
                 <td>${withdrawal.method ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_amount ?? "NA"}</td>
+                <td>${withdrawal.platform_fees_percentage ?? "NA"}</td>
+                <td>${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2) ?? "NA"}</td>
                 <td>
                     <div class="text-break">${formattedPayoutDetails}</div>
                     <div class="text-break">
@@ -158,6 +160,8 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                     `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
                     withdrawal.method ?? '',
                     withdrawal.withdrawal_amount ?? '',
+                    withdrawal.platform_fees_percentage ?? '',
+                    (withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2) ?? '',
                     `
                         <div class="text-break">${formattedPayoutDetails}</div>
                         <div class="text-break">
@@ -178,6 +182,8 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                 `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
                 withdrawal.method ?? '',
                 withdrawal.withdrawal_amount ?? '',
+                withdrawal.platform_fees_percentage ?? '',
+                (withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2) ?? '',
                 `
                     <div class="text-break">${formattedPayoutDetails}</div>
                     <div class="text-break">
@@ -250,6 +256,8 @@ export const addDataTableRow = (dataTable, data) =>
         `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
+        data.platform_fees_percentage ?? "NA",
+        (data.withdrawal_amount - (data.withdrawal_amount * data.platform_fees_percentage / 100)).toFixed(2) ?? "NA",
         `
             <div class="text-break">${formattedPayoutDetails}</div>
             <div class="text-break">
@@ -284,6 +292,8 @@ export const editDataTableRow = (dataTable, data) =>
         `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
+        data.platform_fees_percentage ?? "NA",
+        (data.withdrawal_amount - (data.withdrawal_amount * data.platform_fees_percentage / 100)).toFixed(2) ?? "NA",
         `
             <div class="text-break">${formattedPayoutDetails}</div>
             <div class="text-break">
@@ -308,25 +318,28 @@ export const editDataTableRowStatus = (dataTable, ids, status) =>
     {
         const rowSelector = `tr[data-id="${id}"]`;
         const withdrawalStatusBadge = WITHDRAWAL_STATUS[status]?.badge;
-        dataTable.cell(rowSelector, 6).data(withdrawalStatusBadge).draw(false);
+        dataTable.cell(rowSelector, 8).data(withdrawalStatusBadge).draw(false);
     });
 }
 
-export const createKVRow = (key = "", value = "") =>
+// modes: add, edit
+export const createKVRow = (key = "", value = "", mode = "edit") =>
 {
     return `
       <div class="row g-2 align-items-center kv-row mb-2">
         <div class="col-md-5">
-          <input type="text" name="keys[]" class="form-control" placeholder="Key" value="${key}" required>
+          <input type="text" name="keys[]" class="form-control" placeholder="Key" value="${key}" required ${mode == "edit" ? "readonly" : ""}>
         </div>
         <div class="col-md-5">
-          <input type="text" name="values[]" class="form-control" placeholder="Value" value="${value}" required>
+          <input type="text" name="values[]" class="form-control" placeholder="Value" value="${value}" required ${mode == "edit" ? "readonly" : ""}>
         </div>
+        ${mode === "add" ? `
         <div class="col-md-2 text-center">
             <button type="button" class="btn btn-danger btn-sm py-1 remove-row">
                 <i class="ti ti-trash fs-5"></i>
             </button>
         </div>
+        ` : ""}
       </div>
     `;
 }

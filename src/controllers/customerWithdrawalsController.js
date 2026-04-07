@@ -4,6 +4,7 @@ import customerModel from "../models/customerModel.js";
 import { safeJSONParse } from "../../public/js/utils/helper.js";
 import webNotificationsModel from "../models/webNotificationsModel.js";
 import agencyModel from "../models/agencyModel.js";
+import transactionRulesModel from "../models/transactionRulesModel.js";
 
 class customerWithdrawalsController
 {
@@ -432,7 +433,7 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Payout Details Not Found"));
             }
 
-            if (!this.isJSONArrayOfObjects(data.payoutDetails))
+            if (!this.isJSONArrayOfObjects(data.payoutDetails) && !this.isJSONObject(data.payoutDetails))
             {
                 return res.json(Response.failure("Payout Details Having Invalid JSON Data"));
             }
@@ -460,6 +461,20 @@ class customerWithdrawalsController
             {
                 return res.json(Response.failure("Invalid Status"));
             }
+
+            // ---------------------------------------------------------------
+            // Fetching transaction Rules
+            // ---------------------------------------------------------------
+            const transactionRules = await transactionRulesModel.getTransactionRules();
+            const platform_fees_percentage = transactionRules.platform_fees_percentage;
+
+            if (!platform_fees_percentage)
+            {
+                return res.json(Response.failure("Platform Fees Percentage Not Found"));
+            }
+
+            data.platform_fees_percentage = platform_fees_percentage;
+            // ---------------------------------------------------------------
 
             const withdrawal = await customerWithdrawalsModel.addCustomerWithdrawal(data);
             if (!withdrawal)

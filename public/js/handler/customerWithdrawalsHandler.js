@@ -86,7 +86,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                     footer: true,
                     messageTop: `Generated on: ${new Date().toLocaleString()}`,
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                         format: {
                             header: function (data)
                             {
@@ -127,10 +127,10 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                         cols.eq(0).attr('width', 20);
                         cols.eq(1).attr('width', 25);
                         cols.eq(2).attr('width', 20);
-                        cols.eq(3).attr('width', 60); // payout json column bigger
+                        cols.eq(3).attr('width', 20);
                         cols.eq(4).attr('width', 18);
                         cols.eq(5).attr('width', 18);
-                        cols.eq(6).attr('width', 20);
+                        cols.eq(6).attr('width', 60); // payout json column bigger
                         /* -------------------------
                            WRAP TEXT + AUTO HEIGHT
                         -------------------------- */
@@ -168,7 +168,7 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                     orientation: 'landscape',
                     pageSize: 'A4',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                         stripHtml: false, // Prevents DataTables from stripping our manual \n
                         format: {
                             body: function (data, row, column)
@@ -182,14 +182,14 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                     {
                         // 1. Set Table Widths (Adjust the 3rd index if your JSON is in a different column)
                         // 'auto' lets the text dictate height, '*' distributes remaining space
-                        doc.content[1].table.widths = ['auto', 'auto', '30%', 'auto', 'auto', 'auto', 'auto'];
+                        doc.content[1].table.widths = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', '30%', 'auto', 'auto'];
 
                         // 2. Force Alignment and Wrapping
                         var rowCount = doc.content[1].table.body.length;
                         for (var i = 1; i < rowCount; i++)
                         {
                             // This forces the "Details" cell to allow wrapping
-                            doc.content[1].table.body[i][2].alignment = 'left';
+                            doc.content[1].table.body[i][6].alignment = 'left';
                         }
 
                         // 3. Define Table Borders
@@ -219,10 +219,10 @@ export const fetchAndViewCustomersWithdrawals = async () =>
                 var api = this.api();
                 var intVal = (i) => typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
 
-                var total = api.column(4, { search: 'applied' }).data().reduce((a, b) => intVal(a) + intVal(b), 0);
+                var total = api.column(6, { search: 'applied' }).data().reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 // Highlight Footer in Browser UI
-                var footerCell = $(api.column(4).footer());
+                var footerCell = $(api.column(6).footer());
                 footerCell.html(total.toLocaleString('en-US', { minimumFractionDigits: 2 }));
                 footerCell.css({
                     'background-color': '#f1f2f6',
@@ -274,7 +274,7 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
             {
                 Object.entries(obj).forEach(([key, value]) =>
                 {
-                    $container.append(createKVRow(key, value));
+                    $container.append(createKVRow(key, value, "edit"));
                 });
             });
         }
@@ -282,7 +282,7 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         {
             Object.entries(data.payout_details).forEach(([key, value]) =>
             {
-                $container.append(createKVRow(key, value));
+                $container.append(createKVRow(key, value, "edit"));
             });
         }
 
@@ -337,7 +337,7 @@ const handleAddRow = (e) =>
 {
     const btn = $(e.currentTarget);
     const target = btn.data("target");
-    $(target).append(createKVRow("", ""));
+    $(target).append(createKVRow("", "", "add"));
 }
 
 const handleRemoveRow = (e) =>
@@ -418,13 +418,14 @@ const handleUpdateStatusSubmit = async (e) =>
 
     checkAndExecute(response, () =>
     {
-        if (status !== "PENDING" && path === "/pending-customer-withdrawals")
-        {
-            removeDataTableRow(dataTable, ids);
-        } else
-        {
-            editDataTableRowStatus(dataTable, ids, status);
-        }
+        editDataTableRowStatus(dataTable, ids, status);
+        // if (status !== "PENDING" && path === "/pending-customer-withdrawals")
+        // {
+        //     removeDataTableRow(dataTable, ids);
+        // } else
+        // {
+        //     editDataTableRowStatus(dataTable, ids, status);
+        // }
         $("#editWithdrawalsStatusModal").modal("hide");
         resetForm("#updateStatusForm");
         $(".row-checkbox").prop("checked", false);
@@ -442,7 +443,7 @@ const handleUpdateStatusSubmit = async (e) =>
 export const setUpAllCustomerWithdrawalsHandler = async () =>
 {
     fetchAndViewLastMonthAllCustomersWithdrawals();
-    fetchAllCustomerWithdrawalsTotalAmount();
+    // fetchAllCustomerWithdrawalsTotalAmount();
 
     // Date Range Logic
     $("#dateRangeForm").on("submit", handleDateRangeSubmit);
@@ -541,7 +542,7 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                     footer: true,
                     messageTop: `Generated on: ${new Date().toLocaleString()}`,
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                         format: {
                             header: function (data, columnIdx)
                             {
@@ -582,10 +583,10 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                         cols.eq(0).attr('width', 20);
                         cols.eq(1).attr('width', 25);
                         cols.eq(2).attr('width', 20);
-                        cols.eq(3).attr('width', 60); // payout json column bigger
+                        cols.eq(3).attr('width', 20);
                         cols.eq(4).attr('width', 18);
                         cols.eq(5).attr('width', 18);
-                        cols.eq(6).attr('width', 20);
+                        cols.eq(6).attr('width', 60); // payout json column bigger
                         /* -------------------------
                            WRAP TEXT + AUTO HEIGHT
                         -------------------------- */
@@ -623,7 +624,7 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                     orientation: 'landscape',
                     pageSize: 'A4',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                         stripHtml: false, // Prevents DataTables from stripping our manual \n
                         format: {
                             header: function (data)
@@ -641,14 +642,14 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                     {
                         // 1. Set Table Widths (Adjust the 3rd index if your JSON is in a different column)
                         // 'auto' lets the text dictate height, '*' distributes remaining space
-                        doc.content[1].table.widths = ['auto', 'auto', '30%', 'auto', 'auto', 'auto', 'auto'];
+                        doc.content[1].table.widths = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', '30%', 'auto', 'auto'];
 
                         // 2. Force Alignment and Wrapping
                         var rowCount = doc.content[1].table.body.length;
                         for (var i = 1; i < rowCount; i++)
                         {
                             // This forces the "Details" cell to allow wrapping
-                            doc.content[1].table.body[i][2].alignment = 'left';
+                            doc.content[1].table.body[i][6].alignment = 'left';
                         }
 
                         // 3. Define Table Borders
@@ -678,9 +679,9 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                 var api = this.api();
                 var intVal = (i) => typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
 
-                var total = api.column(4, { search: 'applied' }).data().reduce((a, b, index) =>
+                var total = api.column(6, { search: 'applied' }).data().reduce((a, b, index) =>
                 {
-                    var statusHtml = api.column(6, { search: 'applied' }).data()[index];
+                    var statusHtml = api.column(8, { search: 'applied' }).data()[index];
 
                     var statusText = $(statusHtml).text().trim().toUpperCase();
 
@@ -691,7 +692,7 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
                     return intVal(a);
                 }, 0);
 
-                var footerCell = $(api.column(4).footer());
+                var footerCell = $(api.column(6).footer());
                 footerCell.html(total.toLocaleString('en-US', { minimumFractionDigits: 2 }));
                 footerCell.css({
                     'background-color': '#f1f2f6',
@@ -736,25 +737,25 @@ export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
 }
 
 // Initially Showing Last Months All Withdrawals Total
-export const fetchAllCustomerWithdrawalsTotalAmount = async () =>
-{
-    // Fetching Last Months Start Date and End Date From current date
-    const formData = new FormData();
+// export const fetchAllCustomerWithdrawalsTotalAmount = async () =>
+// {
+//     // Fetching Last Months Start Date and End Date From current date
+//     const formData = new FormData();
 
-    const currentDate = new Date();
-    const lastMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-    formData.append("startDate", lastMonthStartDate.toISOString().split("T")[0]);
-    formData.append("endDate", lastMonthEndDate.toISOString().split("T")[0]);
+//     const currentDate = new Date();
+//     const lastMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+//     const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+//     formData.append("startDate", lastMonthStartDate.toISOString().split("T")[0]);
+//     formData.append("endDate", lastMonthEndDate.toISOString().split("T")[0]);
 
-    const params = new URLSearchParams(formData);
-    const response = await getAllCustomerWithdrawalsTotalAmountByDateRange({ params });
+//     const params = new URLSearchParams(formData);
+//     const response = await getAllCustomerWithdrawalsTotalAmountByDateRange({ params });
 
-    checkAndExecute(response, () =>
-    {
-        renderTotalAllWithdrawalsAmount(response.data, $("#totalAllWithdrawalsAmount"));
-    });
-}
+//     checkAndExecute(response, () =>
+//     {
+//         renderTotalAllWithdrawalsAmount(response.data, $("#totalAllWithdrawalsAmount"));
+//     });
+// }
 
 // Handling Date Range Filter
 const handleDateRangeSubmit = async (e) =>
@@ -876,7 +877,7 @@ export const handleCopyWithdrawalBtnClick = (e) =>
 
     const copyText = `
 Withdrawal ID: ${data.id ?? "NA"}
-Amount: ${data.withdrawal_amount ?? "NA"}
+Net Payable Amount: ฿${(data.withdrawal_amount - (data.withdrawal_amount * data.platform_fees_percentage / 100)).toFixed(2) ?? "NA"}
 ${payoutText}
     `.trim();
 

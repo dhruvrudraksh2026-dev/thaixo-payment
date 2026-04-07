@@ -78,6 +78,11 @@
                 color: #fff !important;
                 background-color: rgb(15 98 106) !important;
             }
+
+            /* For Datatables */
+            td {
+                user-select: text !important;
+            }
         </style>
 
 </head>
@@ -197,7 +202,9 @@
                                                                         <th>Withdrawal Id</th>
                                                                         <th>Customer</th>
                                                                         <th>Method</th>
-                                                                        <th>Amount</th>
+                                                                        <th>Requested Amount</th>
+                                                                        <th>Platform Fees (%)</th>
+                                                                        <th>Payable Net Amount</th>
                                                                         <th>Payout Details</th>
                                                                         <th>Status</th>
                                                                         <th>Created At</th>
@@ -207,6 +214,8 @@
                                                                 <tbody id="customer-withdrawals-table-body"></tbody>
                                                                 <tfoot>
                                                                     <tr>
+                                                                        <th></th>
+                                                                        <th></th>
                                                                         <th></th>
                                                                         <th></th>
                                                                         <th></th>

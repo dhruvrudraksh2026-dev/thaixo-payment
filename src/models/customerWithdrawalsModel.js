@@ -185,7 +185,7 @@ class customerWithdrawalsModel
 
     static addCustomerWithdrawal = async (data, transaction = db) =>
     {
-        const [result] = await transaction.query("INSERT INTO customer_withdrawals(customer_id, method, withdrawal_amount, payout_details, status , note) VALUES (?, ? , ?, ?, ? , ?)", [data.customerId, data.method, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status, data.note]);
+        const [result] = await transaction.query("INSERT INTO customer_withdrawals(customer_id, method, withdrawal_amount, payout_details, status , note , platform_fees_percentage) VALUES (?, ? , ?, ?, ? , ? , ?)", [data.customerId, data.method, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status, data.note, data.platform_fees_percentage]);
         if (result.affectedRows > 0)
         {
             return this.getCustomerWithdrawalByWithdrawalId(result.insertId);

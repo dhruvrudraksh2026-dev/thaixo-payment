@@ -246,7 +246,7 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                     footer: true,
                     messageTop: `Generated on: ${new Date().toLocaleString()}`,
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                         format: {
                             header: function (data)
                             {
@@ -287,10 +287,10 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                         cols.eq(0).attr('width', 20);
                         cols.eq(1).attr('width', 25);
                         cols.eq(2).attr('width', 20);
-                        cols.eq(3).attr('width', 60); // payout json column bigger
+                        cols.eq(3).attr('width', 20);
                         cols.eq(4).attr('width', 18);
                         cols.eq(5).attr('width', 18);
-                        cols.eq(6).attr('width', 20);
+                        cols.eq(6).attr('width', 60); // payout json column bigger
                         /* -------------------------
                            WRAP TEXT + AUTO HEIGHT
                         -------------------------- */
@@ -328,7 +328,7 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                     orientation: 'landscape',
                     pageSize: 'A4',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                         stripHtml: false, // Prevents DataTables from stripping our manual \n
                         format: {
                             body: function (data, row, column)
@@ -342,14 +342,14 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                     {
                         // 1. Set Table Widths (Adjust the 3rd index if your JSON is in a different column)
                         // 'auto' lets the text dictate height, '*' distributes remaining space
-                        doc.content[1].table.widths = ['auto', 'auto', '30%', 'auto', 'auto', 'auto', 'auto'];
+                        doc.content[1].table.widths = ['auto', 'auto', '30%', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
 
                         // 2. Force Alignment and Wrapping
                         var rowCount = doc.content[1].table.body.length;
                         for (var i = 1; i < rowCount; i++)
                         {
                             // This forces the "Details" cell to allow wrapping
-                            doc.content[1].table.body[i][2].alignment = 'left';
+                            doc.content[1].table.body[i][6].alignment = 'left';
                         }
 
                         // 3. Define Table Borders
@@ -379,10 +379,10 @@ export const fetchAndViewAgencyCustomerWithdrawals = async () =>
                 var api = this.api();
                 var intVal = (i) => typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
 
-                var total = api.column(4, { search: 'applied' }).data().reduce((a, b) => intVal(a) + intVal(b), 0);
+                var total = api.column(6, { search: 'applied' }).data().reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 // Highlight Footer in Browser UI
-                var footerCell = $(api.column(4).footer());
+                var footerCell = $(api.column(6).footer());
                 footerCell.html(total.toLocaleString('en-US', { minimumFractionDigits: 2 }));
                 footerCell.css({
                     'background-color': '#f1f2f6',
@@ -427,7 +427,7 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
             {
                 Object.entries(obj).forEach(([key, value]) =>
                 {
-                    $container.append(createKVRow(key, value));
+                    $container.append(createKVRow(key, value, "edit"));
                 });
             });
         }
@@ -435,7 +435,7 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         {
             Object.entries(data.payout_details).forEach(([key, value]) =>
             {
-                $container.append(createKVRow(key, value));
+                $container.append(createKVRow(key, value, "edit"));
             });
         }
 
@@ -482,7 +482,7 @@ const handleAddRow = (e) =>
 {
     const btn = $(e.currentTarget);
     const target = btn.data("target");
-    $(target).append(createKVRow("", ""));
+    $(target).append(createKVRow("", "", "add"));
 }
 
 const handleRemoveRow = (e) =>

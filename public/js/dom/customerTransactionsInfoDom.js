@@ -224,25 +224,6 @@ export const renderCustomerWithdrawalsTableHeader = (isCreator, container) =>
     `);
 };
 
-export const createKVRow = (key = "", value = "") =>
-{
-    return `
-      <div class="row g-2 align-items-center kv-row mb-2">
-        <div class="col-md-5">
-          <input type="text" name="keys[]" class="form-control" placeholder="Key" value="${key}" required>
-        </div>
-        <div class="col-md-5">
-          <input type="text" name="values[]" class="form-control" placeholder="Value" value="${value}" required>
-        </div>
-        <div class="col-md-2 text-center">
-            <button type="button" class="btn btn-danger btn-sm py-1 remove-row">
-                <i class="ti ti-trash fs-5"></i>
-            </button>
-        </div>
-      </div>
-    `;
-}
-
 export const resetForm = (form) =>
 {
     $(form)[0].reset();

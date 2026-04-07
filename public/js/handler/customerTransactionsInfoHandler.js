@@ -2,10 +2,10 @@ import { getCustomerById, unverifyCustomerLegalDetailsById, verifyCustomerLegalD
 import { handlerCustomerLegalDetailsVerificationStatusUpdate, renderCustomerInfo } from "../dom/customerDom.js";
 
 import { toggleCreatorById, updateGeneratedOtpById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsInfoAPI.js";
-import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleCreatorSection, renderCreatorBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals, renderCustomerBreadcrumbs, renderCustomerWithdrawalsTableHeader, resetForm, createKVRow } from "../dom/customerTransactionsInfoDom.js";
+import { renderCustomerOtp, renderCustomerOtpSection, renderCustomerTransactions, renderToggleCreatorSection, renderCreatorBadge, renderCoinsValue, renderTotalEarningAmount, renderTotalDateRangeEarnings, renderCustomerTransactionsFilter, renderTotalPaidWithdrawals, renderTotalPendingWithdrawals, renderCustomerBreadcrumbs, renderCustomerWithdrawalsTableHeader, resetForm } from "../dom/customerTransactionsInfoDom.js";
 
 import { addCustomerWithdrawal, editCustomerWithdrawal, getCustomerEarningsStatsByCustomerId, getCustomerWithdrawalsByCustomerId, getCustomerWithdrawalsByDateRangeByCustomerId, getCustomerWithdrawalsById, getCustomerWithdrawalsTotalAmountByDateRangeByCustomerId, getTotalPaidCustomerWithdrawalsByCustomerId, getTotalPendingCustomerWithdrawalsByCustomerId } from "../api/customerWithdrawalsApi.js";
-import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals } from "../dom/customerWithdrawalsDom.js";
+import { addDataTableRow, editDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalDateRangeWithdrawals, createKVRow } from "../dom/customerWithdrawalsDom.js";
 import { handleCopyWithdrawalBtnClick } from "./customerWithdrawalsHandler.js";
 
 import { checkAndExecute } from "../utils/helper.js";
@@ -343,7 +343,7 @@ const handleAddCustomerWithdrawalSubmit = async (e) =>
         }
     });
 
-    formData.append("payoutDetails", JSON.stringify([withdrawalDetails]));
+    formData.append("payoutDetails", JSON.stringify(withdrawalDetails));
 
     const response = await addCustomerWithdrawal(formData);
 
@@ -395,7 +395,7 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
             {
                 Object.entries(obj).forEach(([key, value]) =>
                 {
-                    $container.append(createKVRow(key, value));
+                    $container.append(createKVRow(key, value, "edit"));
                 });
             });
         }
@@ -403,7 +403,7 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         {
             Object.entries(data.payout_details).forEach(([key, value]) =>
             {
-                $container.append(createKVRow(key, value));
+                $container.append(createKVRow(key, value, "edit"));
             });
         }
 
@@ -431,7 +431,7 @@ const handleEditCustomerWithdrawalSubmit = async (e) =>
         }
     });
 
-    formData.append("payoutDetails", JSON.stringify([payoutDetails]));
+    formData.append("payoutDetails", JSON.stringify(payoutDetails));
 
     const response = await editCustomerWithdrawal(formData);
 
@@ -455,7 +455,7 @@ const handleAddRow = (e) =>
 {
     const btn = $(e.currentTarget);
     const target = btn.data("target");
-    $(target).append(createKVRow("", ""));
+    $(target).append(createKVRow("", "", "add"));
 }
 
 const handleRemoveRow = (e) =>
