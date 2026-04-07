@@ -45,6 +45,8 @@ export const resetForm = (form) =>
 export const renderObjectDetails = (obj) =>
 {
     return Object.entries(obj)
+        .filter(([key]) => !key.toLowerCase().includes('image') && !key.toLowerCase().includes('type'))
+        .sort(([keyA], [keyB]) => keyB.localeCompare(keyA))
         .map(([key, value]) => `
             <div class="mt-1">
                 <span class="fw-semibold">${key}:</span>
@@ -110,12 +112,16 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
                 <td>${`${withdrawal.customer_id} - ${withdrawal.customer_name}` ?? "NA"}</td>
                 <td>${withdrawal.method ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_amount ?? "NA"}</td>
-                <td>${formattedPayoutDetails}</td>
+                <td>
+                    <div class="text-break">${formattedPayoutDetails}</div>
+                    <div class="text-break">
+                        <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
+                    </div>
+                </td>
                 <td>${withdrawalStatusBadge}</td>
                 <td>${withdrawal.created_at ?? "NA"}</td>
                 <td>
                     <button class="btn btn-warning btn-sm editBtn m-1" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                    <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
                 </td>
             </tr>
         `);
@@ -152,12 +158,16 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                     `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
                     withdrawal.method ?? '',
                     withdrawal.withdrawal_amount ?? '',
-                    formattedPayoutDetails,
+                    `
+                        <div class="text-break">${formattedPayoutDetails}</div>
+                        <div class="text-break">
+                            <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
+                        </div>
+                    `,
                     WITHDRAWAL_STATUS[withdrawal.status]?.badge ?? '',
                     withdrawal.created_at ?? '',
                     `
                 <button class="btn btn-warning btn-sm editBtn m-1" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
             `
                 ]);
         }
@@ -168,12 +178,16 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                 `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
                 withdrawal.method ?? '',
                 withdrawal.withdrawal_amount ?? '',
-                formattedPayoutDetails,
+                `
+                    <div class="text-break">${formattedPayoutDetails}</div>
+                    <div class="text-break">
+                        <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
+                    </div>
+                `,
                 WITHDRAWAL_STATUS[withdrawal.status]?.badge ?? '',
                 withdrawal.created_at ?? '',
                 `
                 <button class="btn btn-warning btn-sm editBtn m-1" data-id="${withdrawal.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(withdrawal))}">Copy</button>
             `
             ]);
     });
@@ -236,12 +250,16 @@ export const addDataTableRow = (dataTable, data) =>
         `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
-        formattedPayoutDetails,
+        `
+            <div class="text-break">${formattedPayoutDetails}</div>
+            <div class="text-break">
+                <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
+            </div>
+        `,
         WITHDRAWAL_STATUS[data.status]?.badge ?? "NA",
         data.created_at ?? "NA",
         `
         <button class="btn btn-warning btn-sm editBtn m-1" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-        <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
         `
     ]).draw(false).node();
 
@@ -266,12 +284,16 @@ export const editDataTableRow = (dataTable, data) =>
         `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
-        formattedPayoutDetails,
+        `
+            <div class="text-break">${formattedPayoutDetails}</div>
+            <div class="text-break">
+                <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
+            </div>
+        `,
         withdrawalStatusBadge,
         data.created_at ?? "",
         `
         <button class="btn btn-warning btn-sm editBtn m-1" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-        <button class="btn btn-info btn-sm copyBtn m-1" data-withdrawal="${encodeURIComponent(JSON.stringify(data))}">Copy</button>
         `
     ];
 

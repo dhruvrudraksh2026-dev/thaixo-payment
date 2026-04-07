@@ -172,7 +172,16 @@ export const renderCustomerBreadcrumbs = (isCreator, container) =>
     let breadcrumbHtml = '';
 
     // If the user navigated from the Agencies section
-    if (activeSidebar && activeSidebar.includes('/agencies'))
+    if (activeSidebar && activeSidebar.includes('/pending-legal-details-verification'))
+    {
+        breadcrumbHtml = `
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/pending-legal-details-verification">Pending Legal Verification</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Customer Transactions</li>
+            </ol>
+        `;
+    }
+    else if (activeSidebar && activeSidebar.includes('/agencies'))
     {
         // Try to capture the specific agency-details URL from the referrer, otherwise fallback
         const referrer = document.referrer;

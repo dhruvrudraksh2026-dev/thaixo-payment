@@ -85,3 +85,19 @@ export const unverifyCustomerLegalDetailsById = async (id) =>
             }
         });
 };
+
+// --------------------------
+// For Pending Customer Legal Details Verification
+// --------------------------
+export const getPendingLegalDetailsVerificationThaiCustomers = async () => 
+{
+    return await $.ajax(
+        {
+            url: "/api/customers/thai/pending-legal-details-verification",
+            method: "GET",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};

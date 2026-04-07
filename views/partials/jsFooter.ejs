@@ -151,3 +151,29 @@
         setTimeout(updateLogo, 10);
     });
 </script>
+
+<!-- Disable Dev Tools and Right Click -->
+<!-- <script>
+    $(document).ready(function ()
+    {
+        // Disable context menu (right-click)
+        $(document).on("contextmenu", function (e)
+        {
+            e.preventDefault();
+        });
+
+        // Disable DevTools shortcuts
+        $(document).keydown(function (e)
+        {
+            if (
+                e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
+                (e.ctrlKey && e.key === "U")
+            )
+            {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+</script> -->

@@ -12,6 +12,7 @@ router.get('/dashboard', (req, res) => res.render('dashboard'));
 router.get("/thai-customers/creators", (req, res) => res.render('creatorThaiCustomers'));
 router.get("/thai-customers/non-creators", (req, res) => res.render('nonCreatorThaiCustomers'));
 router.get("/customer-transactions-details/:id", (req, res) => res.render('customerTransactionsInfo'));
+router.get("/pending-legal-details-verification", (req, res) => res.render('pendingLegalDetailsVerification'));
 router.get('/pending-customer-withdrawals', (req, res) => res.render('pendingCustomerWithdrawals'));
 router.get('/customer-withdrawals', (req, res) => res.render('customerWithdrawals'));
 router.get('/agencies', (req, res) => res.render('agencies'));

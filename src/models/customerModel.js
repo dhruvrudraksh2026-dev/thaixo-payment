@@ -162,6 +162,22 @@ class customerModel
         }
         return false;
     }
+
+    static getPendingLegalDetailsVerificationThaiCustomers = async (transaction = db) =>
+    {
+        const [rows] = await transaction.query(`
+            SELECT 
+                c.*
+            FROM customer c 
+            WHERE 
+                c.country_code = '+66'
+                AND c.is_creator = 1
+                AND c.is_verified = 1
+                AND c.is_legal_details_verified = false
+                AND c.legal_details_verification_status = 'PENDING';
+            `);
+        return rows;
+    }
 }
 
 export default customerModel;

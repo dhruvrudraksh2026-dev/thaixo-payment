@@ -26,6 +26,7 @@ router.get("/customer-transactions/:id/earnings", customerTransactionsController
 router.get("/customers/thai", customerController.getThaiCustomers);
 router.get("/customers/thai/creator", customerController.getCreatorThaiCustomers);
 router.get("/customers/thai/non-creator", customerController.getNonCreatorThaiCustomers);
+router.get("/customers/thai/pending-legal-details-verification", customerController.getPendingLegalDetailsVerificationThaiCustomers);
 router.post("/customer/:id/generate-otp", customerController.updateGeneratedOtpById);
 router.patch("/customer/:id/toggle-creator", customerController.toggleCreatorById);
 router.get("/customer/:id", customerController.getCustomerById);

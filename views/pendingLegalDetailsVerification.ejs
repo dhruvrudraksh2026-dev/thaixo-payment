@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Multipurpose, super flexible, powerful, clean modern responsive bootstrap 5 admin template"
+        name="description">
+    <meta
+        content="admin template, ki-admin admin template, dashboard template, flat admin template, responsive admin template, web app"
+        name="keywords">
+    <meta content="la-themes" name="author">
+
+    <title>Pending Legal Details Verification</title>
+
+    <%- include('partials/cssHeader') %>
+
+</head>
+
+<body>
+    <div class="app-wrapper">
+
+        <div class="loader-wrapper">
+            <div class="loader_24"></div>
+        </div>
+
+        <%- include('partials/sidebar') %>
+
+            <div class="app-content">
+                <div class="">
+                    <%- include('partials/header') %>
+
+
+                        <main>
+                            <div class="page-body">
+                                <div class="container-fluid">
+                                    <div class="row page-title">
+                                        <div class="col-sm-6">
+                                            <h3>Pending Legal Details Verification List</h3>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="card-header pb-0 card-no-border">
+                                                    <h4></h4>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <div class="app-datatable-default overflow-auto">
+                                                        <table class="display app-data-table default-data-table table"
+                                                            id="customer-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Username</th>
+                                                                    <th>Phone</th>
+                                                                    <th>Status</th>
+                                                                    <th>Suspended</th>
+                                                                    <th>Creator</th>
+                                                                    <th>Legal Details Verification Status</th>
+                                                                    <th>Agency Creator</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="customer-table-body"></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                        <div class="go-top">
+                            <span class="progress-value">
+                                <i class="ti ti-arrow-up"></i>
+                            </span>
+                        </div>
+                </div>
+            </div>
+    </div>
+
+    <%- include('partials/modals') %>
+
+        <%- include('partials/jsFooter') %>
+            <script src="/js/init/pendingLegalDetailsVerificationInit.js" type="module"></script>
+</body>
+
+</html>

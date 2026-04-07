@@ -26,6 +26,22 @@ class customerController
         }
     };
 
+    static getPendingLegalDetailsVerificationThaiCustomers = async (req, res, next) =>
+    {
+        try
+        {
+            const customers = await customerModel.getPendingLegalDetailsVerificationThaiCustomers();
+            customers.forEach((c) =>
+            {
+                if (c.photos) c.photos = safeJSONParse(c.photos);
+            });
+            return res.json(Response.success("Pending Legal Details Verification Thai Customers Fetched Successfully", customers));
+        } catch (error)
+        {
+            next(error);
+        }
+    }
+
     static getCreatorThaiCustomers = async (req, res, next) =>
     {
         try

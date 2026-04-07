@@ -6,7 +6,7 @@ class customerWithdrawalsModel
     static getAllCustomerWithdrawals = async (transaction = db) =>
     {
         // Fetching Withdrawals With Package Details
-        const [rows] = await transaction.query("SELECT cw.*, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw order by cw.created_at DESC");
+        const [rows] = await transaction.query("SELECT cw.*, c.name AS customer_name, DATE_FORMAT(cw.created_at, '%d %b %Y, %h:%i:%s %p') as created_at FROM customer_withdrawals cw LEFT JOIN customer c ON cw.customer_id = c.id order by cw.created_at DESC");
         return rows;
     }
 

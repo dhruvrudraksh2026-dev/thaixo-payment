@@ -1,4 +1,4 @@
-import { editCustomerWithdrawal, getAllCustomerWithdrawalsByDateRange, getAllCustomerWithdrawalsTotalAmountByDateRange, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
+import { editCustomerWithdrawal, getAllCustomerWithdrawals, getAllCustomerWithdrawalsByDateRange, getAllCustomerWithdrawalsTotalAmountByDateRange, getAllPendingCustomerWithdrawals, getCustomerWithdrawalsById, getTotalPendingWithdrawalsAmount, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
 import { createKVRow, editDataTableRow, editDataTableRowStatus, removeDataTableRow, renderCustomerWithdrawals, renderCustomerWithdrawalsFilter, renderTotalAllWithdrawalsAmount, renderTotalPendingWithdrawalsAmount, resetForm } from "../dom/customerWithdrawalsDom.js";
 import { checkAndExecute, formatExportData, formatKeyName, showAlert } from "../utils/helper.js";
 
@@ -501,17 +501,19 @@ export const setUpAllCustomerWithdrawalsHandler = async () =>
 export const fetchAndViewLastMonthAllCustomersWithdrawals = async () =>
 {
     // Fetching Last Months Start Date and End Date From current date
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    const currentDate = new Date();
-    const lastMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-    formData.append("startDate", lastMonthStartDate.toISOString().split("T")[0]);
-    formData.append("endDate", lastMonthEndDate.toISOString().split("T")[0]);
+    // const currentDate = new Date();
+    // const lastMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+    // const lastMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    // formData.append("startDate", lastMonthStartDate.toISOString().split("T")[0]);
+    // formData.append("endDate", lastMonthEndDate.toISOString().split("T")[0]);
 
-    const params = new URLSearchParams(formData);
+    // const params = new URLSearchParams(formData);
 
-    const response = await getAllCustomerWithdrawalsByDateRange({ params });
+    // const response = await getAllCustomerWithdrawalsByDateRange({ params });
+
+    const response = await getAllCustomerWithdrawals();
 
     checkAndExecute(response, () =>
     {
@@ -831,6 +833,15 @@ export const handleCopyWithdrawalBtnClick = (e) =>
             parsedPayout = data.payout_details;
         }
 
+        const formatSortedObject = (obj) =>
+        {
+            return Object.entries(obj)
+                .filter(([key]) => !skipWithdrawalDetailsCondition(key))
+                .sort(([keyA], [keyB]) => keyB.localeCompare(keyA))
+                .map(([key, value]) => `${formatKeyName(key)}: ${value ?? "NA"}`)
+                .join('\n');
+        };
+
         // Handle array of objects or single object
         const skipWithdrawalDetailsCondition = (key) =>
         {
@@ -839,22 +850,13 @@ export const handleCopyWithdrawalBtnClick = (e) =>
 
         if (Array.isArray(parsedPayout))
         {
-            parsedPayout.forEach((pd, index) =>
+            payoutText = parsedPayout.map((pd, index) =>
             {
-                payoutText += `\nEntry ${index + 1}:\n`;
-                for (let key in pd)
-                {
-                    if (skipWithdrawalDetailsCondition(key)) continue;
-                    payoutText += `${formatKeyName(key)}: ${pd[key] ?? "NA"}\n`;
-                }
-            });
+                return `\nEntry ${index + 1}:\n${formatSortedObject(pd)}`;
+            }).join('\n');
         } else if (typeof parsedPayout === "object" && parsedPayout !== null)
         {
-            for (let key in parsedPayout)
-            {
-                if (skipWithdrawalDetailsCondition(key)) continue;
-                payoutText += `${formatKeyName(key)}: ${parsedPayout[key] ?? "NA"}\n`;
-            }
+            payoutText = formatSortedObject(parsedPayout);
         } else
         {
             payoutText = parsedPayout;
