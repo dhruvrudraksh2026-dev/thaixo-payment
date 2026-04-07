@@ -572,7 +572,7 @@ class customerWithdrawalsController
                     customer_id: data.customerId,
                     type: "WITHDRAWAL_DONE",
                     title: "Withdrawal Done",
-                    body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been successfully completed.`
+                    body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been successfully completed.`
                 });
 
                 if (!webNotification)
@@ -585,7 +585,7 @@ class customerWithdrawalsController
                     customer_id: data.customerId,
                     type: "WITHDRAWAL_CANCELLED",
                     title: "Withdrawal Cancelled",
-                    body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been cancelled. Note: ${data.note}`
+                    body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been cancelled. Note: ${data.note}`
                 });
 
                 if (!webNotification)
@@ -671,7 +671,7 @@ class customerWithdrawalsController
                         customer_id: withdrawal.customer_id,
                         type: "WITHDRAWAL_DONE",
                         title: "Withdrawal Done",
-                        body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been successfully completed.`
+                        body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been successfully completed.`
                     });
 
                     if (!webNotification)
@@ -688,7 +688,7 @@ class customerWithdrawalsController
                         customer_id: withdrawal.customer_id,
                         type: "WITHDRAWAL_CANCELLED",
                         title: "Withdrawal Cancelled",
-                        body: `Your withdrawal of ${withdrawal.withdrawal_amount} has been cancelled. Note: ${data.note}`
+                        body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been cancelled. Note: ${data.note}`
                     });
 
                     if (!webNotification)
