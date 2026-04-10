@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Multipurpose, super flexible, powerful, clean modern responsive bootstrap 5 admin template"
+        name="description">
+    <meta
+        content="admin template, ki-admin admin template, dashboard template, flat admin template, responsive admin template, web app"
+        name="keywords">
+    <meta content="la-themes" name="author">
+
+    <title>Customer Payments</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <%- include('partials/cssHeader') %>
+
+        <style>
+            td {
+                user-select: text !important;
+            }
+        </style>
+</head>
+
+<body>
+    <div class="app-wrapper">
+
+        <div class="loader-wrapper">
+            <div class="loader_24"></div>
+        </div>
+
+        <!-- Menu Navigation starts -->
+        <%- include('partials/sidebar') %>
+            <!-- Menu Navigation ends -->
+
+            <div class="app-content">
+                <div class="">
+                    <!-- Header Section starts -->
+                    <%- include('partials/header') %>
+
+                        <main class="page-wrapper compact-wrapper" id="pageWrapper">
+
+
+                            <div class="page-body-wrapper">
+
+
+                                <div class="page-body">
+
+                                    <div class="container-fluid">
+                                        <div class="row page-title">
+                                            <div class="col-sm-6">
+                                                <h3>Customer Payments</h3>
+                                            </div>
+                                            <!-- <div class="col-sm-6">
+                                                <nav>
+                                                    <ol class="breadcrumb justify-content-sm-end align-items-center">
+                                                        <li class="breadcrumb-item">
+                                                            <a href="/">
+                                                                <svg class="svg-color">
+                                                                    <use href="/assets/svg/iconly-sprite.svg#Home">
+                                                                    </use>
+                                                                </svg>
+                                                            </a>
+                                                        </li>
+                                                        <li class="breadcrumb-item">Masters</li>
+                                                        <li class="breadcrumb-item active">Girls Package</li>
+                                                    </ol>
+                                                </nav>
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+
+                                                <div class="card">
+                                                    <div
+                                                        class="card-header pb-2 card-no-border d-flex justify-content-between align-items-center">
+                                                        <div id="customer-payments-total-amount"></div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="app-datatable-default overflow-auto">
+                                                            <table
+                                                                class="display app-data-table default-data-table table"
+                                                                id="customer-payments-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Customer (Id - Name)</th>
+                                                                        <th>Razorpay Order Id</th>
+                                                                        <th>Receipt</th>
+                                                                        <th>Package (Id - Name)</th>
+                                                                        <th>Amount</th>
+                                                                        <th>Coins</th>
+                                                                        <th>Bonus Coins</th>
+                                                                        <th>Status</th>
+                                                                        <th>Created At</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="customer-payments-table-body"></tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </main>
+                        <!-- Add Modal -->
+                        <!-- <div class="modal fade bd-example-modal-lg" id="addModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary-900">
+                                        <h5 class="modal-title text-white">Add Customer Payment</h5>
+                                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body dark-modal">
+                                        <form id="addCustomerPaymentForm" class="row g-3 custom-input">
+
+                                            <div class="col-12">
+                                                <label class="form-label" for="addPackageId">Package ID (Razorpay)
+                                                    *</label>
+                                                <input type="text" id="addPackageId" name="packageId"
+                                                    class="form-control" placeholder="Package ID" required>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label" for="addPackageName">Package Name *</label>
+                                                <input type="text" id="addPackageName" name="packageName"
+                                                    class="form-control" placeholder="Package Name" required>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label" for="addAmount">Amount *</label>
+                                                <input type="number" id="amount" name="amount" class="form-control"
+                                                    placeholder="Amount" min="0" required>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label" for="addCoins">Coins *</label>
+                                                <input type="number" id="addCoins" name="coins" class="form-control"
+                                                    placeholder="Coins" min="1" required>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label">Bonus Coins *</label>
+                                                <input type="number" id="addBonusCoins" name="bonusCoins"
+                                                    class="form-control" placeholder="Bonus Coins" min="0" required>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label">Description</label>
+                                                <textarea id="addDescription" name="description"
+                                                    class="form-control description"></textarea>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-check checkbox-checked form-check-inline">
+                                                    <input class="form-check-input" id="addStatus" name="status"
+                                                        type="checkbox" value="1">
+                                                    <label class="form-check-label" for="addStatus">Status</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <button class="btn btn-primary" type="submit">Add</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- Edit Modal -->
+                        <!-- <div class="modal fade bd-example-modal-lg" id="editModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+
+                                    <div class="modal-header bg-primary-900">
+                                        <h5 class="modal-title text-white">Edit Purchase Package</h5>
+                                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body dark-modal">
+
+                                        <form id="editPurchasePackageForm" class="row g-3 custom-input">
+                                            <input type="hidden" id="editId" name="id">
+
+                                            <div class="col-12">
+                                                <label class="form-label" for="editPackageId">Package ID (Razorpay)
+                                                    *</label>
+                                                <input type="text" id="editPackageId" name="packageId"
+                                                    class="form-control" required>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label">Package Name *</label>
+                                                <input type="text" id="editName" name="packageName" class="form-control"
+                                                    required>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label">Amount *</label>
+                                                <input type="number" id="editAmount" name="amount" class="form-control"
+                                                    min="0" required>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label">Coins *</label>
+                                                <input type="number" id="editCoins" name="coins" class="form-control"
+                                                    min="1" required>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label">Bonus Coins *</label>
+                                                <input type="number" id="editBonusCoins" name="bonusCoins"
+                                                    class="form-control" min="0" required>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label">Description</label>
+                                                <textarea id="editDescription" name="description"
+                                                    class="form-control description"></textarea>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-check checkbox-checked form-check-inline">
+                                                    <input class="form-check-input" id="editStatus" name="status"
+                                                        type="checkbox" value="1">
+                                                    <label class="form-check-label" for="editStatus">Status</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div> -->
+                </div>
+            </div>
+    </div>
+    <%- include('partials/modals') %>
+        <%- include('partials/jsFooter') %>
+            <!-- EasyMDE -->
+            <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+            <script src="/js/init/customerPaymentsInit.js" type="module"></script>
+
+</body>
+
+
+</html>

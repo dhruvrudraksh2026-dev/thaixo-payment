@@ -8,6 +8,7 @@ import customerTransactionsController from '../controllers/customerTransactionsC
 import customerWithdrawalsController from '../controllers/customerWithdrawalsController.js';
 import agencyController from '../controllers/agencyController.js';
 import customerAgencyController from '../controllers/customerAgencyController.js';
+import customerPaymentsController from '../controllers/customerPaymentsController.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -37,6 +38,16 @@ router.get("/customer/:id", customerController.getCustomerById);
 router.patch("/customer/legal-details/approve/:id", customerController.verifyCustomerLegalDetailsById);
 router.patch("/customer/legal-details/reject/:id", customerController.unverifyCustomerLegalDetailsById);
 // =============================================================================================================================
+
+
+// =============================================================================================================================
+// Customer Payments
+// =============================================================================================================================
+router.get("/customer-payments/total-amount", customerPaymentsController.getAllCustomerPaymentsTotalAmount);
+router.get("/customer-payments", customerPaymentsController.getAllCustomerPayments);
+router.get("/customer-payments/:id", customerPaymentsController.getCustomerPaymentById);
+// =============================================================================================================================
+
 
 // =============================================================================================================================
 // =============================================================================================================================

@@ -507,11 +507,11 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Customer Id Not Found"));
             }
 
-            const isCustomerExists = await customerModel.doesThaiCustomerExists(data.customerId);
-            if (!isCustomerExists)
-            {
-                return res.json(Response.failure("Thai Customer Not Found With This Id"));
-            }
+            // const isCustomerExists = await customerModel.doesThaiCustomerExists(data.customerId);
+            // if (!isCustomerExists)
+            // {
+            //     return res.json(Response.failure("Thai Customer Not Found With This Id"));
+            // }
 
             if (!data.method)
             {

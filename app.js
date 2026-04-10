@@ -26,20 +26,20 @@ app.use("/api", apiRouter);
 app.use(pageRouter);
 
 // Generates Withdrawals On Monthly Bases
-cron.schedule("0 0 1 * *", async () =>
-{
-    try
-    {
-        // await customerWithdrawalsModel.insertLastMonthsWithdrawals();
-        // await customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
+// cron.schedule("0 0 1 * *", async () =>
+// {
+//     try
+//     {
+//         // await customerWithdrawalsModel.insertLastMonthsWithdrawals();
+//         // await customerWithdrawalsModel.insertLastMonthsWithdrawalsForAgencies();
 
-        await customerWithdrawalsModel.insertLastMonthsWithdrawals();
-        console.log("[WITHDRAWALS] Monthly Withdrawals Generated Successfully");
-    } catch (error)
-    {
-        console.log("[WITHDRAWALS] Error Generating Monthly Withdrawals", error);
-    }
-});
+//         await customerWithdrawalsModel.insertLastMonthsWithdrawals();
+//         console.log("[WITHDRAWALS] Monthly Withdrawals Generated Successfully");
+//     } catch (error)
+//     {
+//         console.log("[WITHDRAWALS] Error Generating Monthly Withdrawals", error);
+//     }
+// });
 
 // Generates Withdrawals On Minute Bases
 // cron.schedule("*/1 * * * *", async () =>

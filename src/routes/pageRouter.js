@@ -15,6 +15,7 @@ router.get("/customer-transactions-details/:id", (req, res) => res.render('custo
 router.get("/pending-legal-details-verification", (req, res) => res.render('pendingLegalDetailsVerification'));
 router.get('/pending-customer-withdrawals', (req, res) => res.render('pendingCustomerWithdrawals'));
 router.get('/customer-withdrawals', (req, res) => res.render('customerWithdrawals'));
+router.get("/customer-payments", (req, res) => res.render("customerPayments"));
 router.get('/agencies', (req, res) => res.render('agencies'));
 router.get("/agency-details/:id", (req, res) => res.render("agencyInfo"));
 router.get('/logout', (req, res) => { res.clearCookie("token"); res.redirect('/login') });
