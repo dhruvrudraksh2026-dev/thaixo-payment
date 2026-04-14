@@ -2,14 +2,16 @@
 // ====================================================================
 export const renderCustomerTransactions = (transactions, tableBody) =>
 {
+    console.log("transactions", transactions);
     tableBody.empty();
-    transactions.forEach((transaction, index) => 
+    transactions.forEach((transaction, index) =>
     {
         tableBody.append(`
             <tr data-id=${index}>
                 <td>${index ?? ""}</td>
                 <td>${(transaction.package_name == (undefined || null)) ? "New Creator Bonus" : transaction.package_name}</td>
                 <td>${transaction.minutes ?? ""}</td>
+                <td>${transaction.formatted_time ?? ""}</td>
                 <td>${transaction.rate_per_minute ?? ""}</td>
                 <td>${transaction.earnings ?? ""}</td>
                 <td>${transaction.created_at ?? ""}</td>
@@ -21,11 +23,13 @@ export const renderCustomerTransactions = (transactions, tableBody) =>
 // Rendering The Customer's Transactions Data After Applying The Date Range Filter
 export const renderCustomerTransactionsFilter = (transactions, dataTable) => 
 {
+    console.log("transactions while date range", transactions);
     const rows = transactions.map((transaction, index) => (
         [
             index,
             (transaction.package_name == (undefined || null)) ? "New Creator Bonus" : transaction.package_name ?? '',
             transaction.minutes ?? '',
+            transaction.formatted_time ?? '',
             transaction.rate_per_minute ?? '',
             transaction.earnings ?? '',
             transaction.created_at ?? '',

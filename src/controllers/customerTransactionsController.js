@@ -1,5 +1,6 @@
 import { datetimeConverter } from "../helpers/helper.js";
 import Response from "../helpers/response.js";
+import { formatMinutesToClock } from "../helpers/timeFormatHelperFunctions.js";
 import customerTransactionsModel from "../models/customerTransactionsModel.js";
 
 class customerTransactionsController
@@ -24,6 +25,11 @@ class customerTransactionsController
             {
                 return res.json(Response.failure("Customer Transactions Not Found"));
             }
+
+            customer_transactions.forEach(transaction =>
+            {
+                transaction.formatted_time = formatMinutesToClock(transaction.minutes);
+            });
 
             return res.json(Response.success("Customer Transactions Fetched Successfully", customer_transactions));
         } catch (error)
@@ -68,6 +74,11 @@ class customerTransactionsController
             {
                 return res.json(Response.failure("Customer Transactions Not Found"));
             }
+
+            customer_transactions.forEach(transaction =>
+            {
+                transaction.formatted_time = formatMinutesToClock(transaction.minutes);
+            });
 
             return res.json(Response.success(`Customer Transactions Between ${data.startDate} To ${data.endDate} Fetched Successfully`, customer_transactions));
         } catch (error)
