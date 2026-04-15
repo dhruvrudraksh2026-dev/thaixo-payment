@@ -154,7 +154,7 @@ export const setupAgencyInfoHandlers = () =>
     // Cancel Note Logic
     $(document).on("change", "#editWithdrawalStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#editCancelNoteContainer").removeClass("d-none");
             $("#editCancelNote").prop("required", true);
@@ -167,7 +167,7 @@ export const setupAgencyInfoHandlers = () =>
 
     $(document).on("change", "#editWithdrawalsStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#editBulkCancelNoteContainer").removeClass("d-none");
             $("#editBulkCancelNote").prop("required", true);
@@ -549,7 +549,7 @@ const handleUpdateStatusSubmit = async (e) =>
     formData.append("ids", JSON.stringify(ids));
     formData.append("status", status);
 
-    if (status === "CANCELLED")
+    if (status === "REJECTED")
     {
         formData.append("note", $("#editBulkCancelNote").val());
     } else if (status === "DONE")

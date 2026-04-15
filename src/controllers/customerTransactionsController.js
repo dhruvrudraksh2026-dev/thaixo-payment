@@ -8,7 +8,7 @@ class customerTransactionsController
     static TRANSACTION_STATUS = [
         "PENDING",
         "DONE",
-        "CANCELLED"
+        "REJECTED"
     ];
 
     static getAllCustomerTransactionsById = async (req, res, next) =>

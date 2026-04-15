@@ -30,29 +30,45 @@ export const formatTransactionTime = (timestamp, minutes, timezone = "Asia/Bangk
     };
 }
 
-export const formatDateTimeByTimezone = (timestamp, timezone = "Asia/Bangkok") =>
+// export const formatDateTimeByTimezone = (timestamp, timezone = "Asia/Bangkok") =>
+// {
+//     const date = new Date(timestamp);
+
+//     const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+//         timeZone: timezone,
+//         day: "2-digit",
+//         month: "2-digit",
+//         year: "numeric"
+//     });
+
+//     const timeFormatter = new Intl.DateTimeFormat("en-US", {
+//         timeZone: timezone,
+//         hour: "2-digit",
+//         minute: "2-digit",
+//         second: "2-digit",
+//         hour12: true
+//     });
+
+//     return {
+//         date: dateFormatter.format(date),
+//         time: timeFormatter.format(date)
+//     };
+// };
+
+export const formatDateTimeByTimezone = (timestamp, format = "en-GB", timezone = "Asia/Bangkok") =>
 {
     const date = new Date(timestamp);
 
-    const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    return new Intl.DateTimeFormat(format, {
         timeZone: timezone,
         day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-    });
-
-    const timeFormatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: timezone,
+        month: "short",  // Gives "Apr" instead of "04"
+        year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
         hour12: true
-    });
-
-    return {
-        date: dateFormatter.format(date),
-        time: timeFormatter.format(date)
-    };
+    }).format(date).replace(/\//g, ' '); // Replaces default slashes with spaces
 };
 
 export const getISODateByTimezone = (timestamp, timezone = "Asia/Bangkok") =>

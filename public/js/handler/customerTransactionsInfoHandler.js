@@ -76,7 +76,7 @@ export const setupTransactionsViewHandler = () =>
     // Cancel Note Logic
     $(document).on("change", "#addWithdrawalStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#addCancelNoteContainer").removeClass("d-none");
             $("#addCancelNote").prop("required", true);
@@ -89,7 +89,7 @@ export const setupTransactionsViewHandler = () =>
 
     $(document).on("change", "#editWithdrawalStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#editCancelNoteContainer").removeClass("d-none");
             $("#editCancelNote").prop("required", true);

@@ -5,13 +5,14 @@ import { safeJSONParse } from "../../public/js/utils/helper.js";
 import webNotificationsModel from "../models/webNotificationsModel.js";
 import agencyModel from "../models/agencyModel.js";
 import transactionRulesModel from "../models/transactionRulesModel.js";
+import { formatDateTimeByTimezone } from "../helpers/timeFormatHelperFunctions.js";
 
 class customerWithdrawalsController
 {
     static WITHDRAWAL_STATUS = [
         "PENDING",
         "DONE",
-        "CANCELLED"
+        "REJECTED"
     ];
 
     static getAllCustomerWithdrawals = async (req, res, next) =>
@@ -19,6 +20,11 @@ class customerWithdrawalsController
         try
         {
             const withdrawals = await customerWithdrawalsModel.getAllCustomerWithdrawals();
+
+            for (const withdrawal of withdrawals)
+            {
+                withdrawal.created_at = formatDateTimeByTimezone(withdrawal.created_at, "en-GB", "Asia/Bangkok");
+            }
 
             return res.json(Response.success("Withdrawals Fetched Successfully", withdrawals));
         }
@@ -126,6 +132,11 @@ class customerWithdrawalsController
             if (!pendingWithdrawals)
             {
                 return res.json(Response.failure("Pending Withdrawals Not Found"));
+            }
+
+            for (const withdrawal of pendingWithdrawals)
+            {
+                withdrawal.created_at = formatDateTimeByTimezone(withdrawal.created_at, "en-GB", "Asia/Bangkok");
             }
 
             return res.json(Response.success("Pending Withdrawals Fetched Successfully", pendingWithdrawals));
@@ -466,14 +477,14 @@ class customerWithdrawalsController
             // Fetching transaction Rules
             // ---------------------------------------------------------------
             const transactionRules = await transactionRulesModel.getTransactionRules();
-            const platform_fees_percentage = transactionRules.platform_fees_percentage;
+            const legal_tax_fees_percentage = transactionRules.legal_tax_fees_percentage;
 
-            if (!platform_fees_percentage)
+            if (!legal_tax_fees_percentage)
             {
-                return res.json(Response.failure("Platform Fees Percentage Not Found"));
+                return res.json(Response.failure("Legal Tax Fees Percentage Not Found"));
             }
 
-            data.platform_fees_percentage = platform_fees_percentage;
+            data.legal_tax_fees_percentage = legal_tax_fees_percentage;
             // ---------------------------------------------------------------
 
             const withdrawal = await customerWithdrawalsModel.addCustomerWithdrawal(data);
@@ -572,20 +583,20 @@ class customerWithdrawalsController
                     customer_id: data.customerId,
                     type: "WITHDRAWAL_DONE",
                     title: "Withdrawal Done",
-                    body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been successfully completed.`
+                    body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.legal_tax_fees_percentage / 100)).toFixed(2)} has been successfully completed.`
                 });
 
                 if (!webNotification)
                 {
                     return res.json(Response.failure("Failed To Create Web Notification"));
                 }
-            } else if (data.status === "CANCELLED")
+            } else if (data.status === "REJECTED")
             {
                 const webNotification = await webNotificationsModel.createWebNotification({
                     customer_id: data.customerId,
-                    type: "WITHDRAWAL_CANCELLED",
-                    title: "Withdrawal Cancelled",
-                    body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been cancelled. Note: ${data.note}`
+                    type: "WITHDRAWAL_REJECTED",
+                    title: "Withdrawal Rejected",
+                    body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.legal_tax_fees_percentage / 100)).toFixed(2)} has been rejected. Note: ${data.note}`
                 });
 
                 if (!webNotification)
@@ -671,7 +682,7 @@ class customerWithdrawalsController
                         customer_id: withdrawal.customer_id,
                         type: "WITHDRAWAL_DONE",
                         title: "Withdrawal Done",
-                        body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been successfully completed.`
+                        body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.legal_tax_fees_percentage / 100)).toFixed(2)} has been successfully completed.`
                     });
 
                     if (!webNotification)
@@ -679,16 +690,16 @@ class customerWithdrawalsController
                         return res.json(Response.failure("Failed To Create Web Notification"));
                     }
                 }
-            } else if (data.status === "CANCELLED")
+            } else if (data.status === "REJECTED")
             {
                 for (const id of ids)
                 {
                     const withdrawal = await customerWithdrawalsModel.getCustomerWithdrawalByWithdrawalId(id);
                     const webNotification = await webNotificationsModel.createWebNotification({
                         customer_id: withdrawal.customer_id,
-                        type: "WITHDRAWAL_CANCELLED",
-                        title: "Withdrawal Cancelled",
-                        body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2)} has been cancelled. Note: ${data.note}`
+                        type: "WITHDRAWAL_REJECTED",
+                        title: "Withdrawal Rejected",
+                        body: `Your withdrawal of ${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.legal_tax_fees_percentage / 100)).toFixed(2)} has been rejected. Note: ${data.note}`
                     });
 
                     if (!webNotification)

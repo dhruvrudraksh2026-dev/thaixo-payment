@@ -27,7 +27,7 @@ export const setUpPendingCustomerWithdrawalsHandler = async () =>
     // Cancel Note Logic
     $(document).on("change", "#editWithdrawalStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#editCancelNoteContainer").removeClass("d-none");
             $("#editCancelNote").prop("required", true);
@@ -40,7 +40,7 @@ export const setUpPendingCustomerWithdrawalsHandler = async () =>
 
     $(document).on("change", "#editWithdrawalsStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#editBulkCancelNoteContainer").removeClass("d-none");
             $("#editBulkCancelNote").prop("required", true);
@@ -403,7 +403,7 @@ const handleUpdateStatusSubmit = async (e) =>
     formData.append("ids", JSON.stringify(ids));
     formData.append("status", status);
 
-    if (status === "CANCELLED")
+    if (status === "REJECTED")
     {
         formData.append("note", $("#editBulkCancelNote").val());
     } else if (status === "DONE")
@@ -467,7 +467,7 @@ export const setUpAllCustomerWithdrawalsHandler = async () =>
     // Cancel Note Logic
     $(document).on("change", "#editWithdrawalStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#editCancelNoteContainer").removeClass("d-none");
             $("#editCancelNote").prop("required", true);
@@ -480,7 +480,7 @@ export const setUpAllCustomerWithdrawalsHandler = async () =>
 
     $(document).on("change", "#editWithdrawalsStatus", function ()
     {
-        if ($(this).val() === "CANCELLED")
+        if ($(this).val() === "REJECTED")
         {
             $("#editBulkCancelNoteContainer").removeClass("d-none");
             $("#editBulkCancelNote").prop("required", true);
@@ -877,7 +877,7 @@ export const handleCopyWithdrawalBtnClick = (e) =>
 
     const copyText = `
 Withdrawal ID: ${data.id ?? "NA"}
-Net Payable Amount: ฿${(data.withdrawal_amount - (data.withdrawal_amount * data.platform_fees_percentage / 100)).toFixed(2) ?? "NA"}
+Net Payable Amount: ฿${(data.withdrawal_amount - (data.withdrawal_amount * data.legal_tax_fees_percentage / 100)).toFixed(2) ?? "NA"}
 ${payoutText}
     `.trim();
 

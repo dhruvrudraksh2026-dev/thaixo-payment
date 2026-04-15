@@ -9,9 +9,9 @@ const WITHDRAWAL_STATUS = {
         label: "Done",
         badge: `<span class="badge bg-success">Done</span>`
     },
-    CANCELLED: {
-        label: "Cancelled",
-        badge: `<span class="badge bg-danger">Cancelled</span>`
+    REJECTED: {
+        label: "Rejected",
+        badge: `<span class="badge bg-danger">Rejected</span>`
     }
 };
 
@@ -112,8 +112,8 @@ export const renderCustomerWithdrawals = (withdrawals, tableBody) =>
                 <td>${`${withdrawal.customer_id} - ${withdrawal.customer_name}` ?? "NA"}</td>
                 <td>${withdrawal.method ?? "NA"}</td>
                 <td>${withdrawal.withdrawal_amount ?? "NA"}</td>
-                <td>${withdrawal.platform_fees_percentage ?? "NA"}</td>
-                <td>${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2) ?? "NA"}</td>
+                <td>${withdrawal.legal_tax_fees_percentage ?? "NA"}</td>
+                <td>${(withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.legal_tax_fees_percentage / 100)).toFixed(2) ?? "NA"}</td>
                 <td>
                     <div class="text-break">${formattedPayoutDetails}</div>
                     <div class="text-break">
@@ -160,8 +160,8 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                     `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
                     withdrawal.method ?? '',
                     withdrawal.withdrawal_amount ?? '',
-                    withdrawal.platform_fees_percentage ?? '',
-                    (withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2) ?? '',
+                    withdrawal.legal_tax_fees_percentage ?? '',
+                    (withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.legal_tax_fees_percentage / 100)).toFixed(2) ?? '',
                     `
                         <div class="text-break">${formattedPayoutDetails}</div>
                         <div class="text-break">
@@ -182,8 +182,8 @@ export const renderCustomerWithdrawalsFilter = (withdrawals, dataTable) =>
                 `${withdrawal.customer_id} - ${withdrawal.customer_name}`,
                 withdrawal.method ?? '',
                 withdrawal.withdrawal_amount ?? '',
-                withdrawal.platform_fees_percentage ?? '',
-                (withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.platform_fees_percentage / 100)).toFixed(2) ?? '',
+                withdrawal.legal_tax_fees_percentage ?? '',
+                (withdrawal.withdrawal_amount - (withdrawal.withdrawal_amount * withdrawal.legal_tax_fees_percentage / 100)).toFixed(2) ?? '',
                 `
                     <div class="text-break">${formattedPayoutDetails}</div>
                     <div class="text-break">
@@ -256,8 +256,8 @@ export const addDataTableRow = (dataTable, data) =>
         `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
-        data.platform_fees_percentage ?? "NA",
-        (data.withdrawal_amount - (data.withdrawal_amount * data.platform_fees_percentage / 100)).toFixed(2) ?? "NA",
+        data.legal_tax_fees_percentage ?? "NA",
+        (data.withdrawal_amount - (data.withdrawal_amount * data.legal_tax_fees_percentage / 100)).toFixed(2) ?? "NA",
         `
             <div class="text-break">${formattedPayoutDetails}</div>
             <div class="text-break">
@@ -292,8 +292,8 @@ export const editDataTableRow = (dataTable, data) =>
         `${data.customer_id} - ${data.customer_name}`,
         data.method ?? "NA",
         data.withdrawal_amount ?? "NA",
-        data.platform_fees_percentage ?? "NA",
-        (data.withdrawal_amount - (data.withdrawal_amount * data.platform_fees_percentage / 100)).toFixed(2) ?? "NA",
+        data.legal_tax_fees_percentage ?? "NA",
+        (data.withdrawal_amount - (data.withdrawal_amount * data.legal_tax_fees_percentage / 100)).toFixed(2) ?? "NA",
         `
             <div class="text-break">${formattedPayoutDetails}</div>
             <div class="text-break">

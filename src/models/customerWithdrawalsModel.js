@@ -54,7 +54,7 @@ class customerWithdrawalsModel
             ON cw.customer_id = c.id
 
         WHERE ca.agency_id = ?
-        AND cw.status IN ('PENDING','CANCELLED')
+        AND cw.status IN ('PENDING','REJECTED')
 
         ORDER BY cw.created_at DESC
     `, [agencyId]);
@@ -185,7 +185,7 @@ class customerWithdrawalsModel
 
     static addCustomerWithdrawal = async (data, transaction = db) =>
     {
-        const [result] = await transaction.query("INSERT INTO customer_withdrawals(customer_id, method, withdrawal_amount, payout_details, status , note , platform_fees_percentage) VALUES (?, ? , ?, ?, ? , ? , ?)", [data.customerId, data.method, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status, data.note, data.platform_fees_percentage]);
+        const [result] = await transaction.query("INSERT INTO customer_withdrawals(customer_id, method, withdrawal_amount, payout_details, status , note , legal_tax_fees_percentage) VALUES (?, ? , ?, ?, ? , ? , ?)", [data.customerId, data.method, data.withdrawalAmount, JSON.stringify(data.payoutDetails), data.status, data.note, data.legal_tax_fees_percentage]);
         if (result.affectedRows > 0)
         {
             return this.getCustomerWithdrawalByWithdrawalId(result.insertId);
