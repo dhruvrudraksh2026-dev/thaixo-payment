@@ -24,6 +24,20 @@ class customerModel
     // For Creators Page
     static getCreatorThaiCustomers = async (transaction = db) =>
     {
+        // const [rows] = await transaction.query(`
+        //     SELECT 
+        //         c.*,
+        //         EXISTS (
+        //             SELECT 1 
+        //             FROM customer_agency ca 
+        //             WHERE ca.customer_id = c.id
+        //         ) AS is_from_agency
+
+        //     FROM customer c
+
+        //     WHERE c.country_code = '+66'
+        //     AND c.is_creator = 1;
+        //     `);
         const [rows] = await transaction.query(`
             SELECT 
                 c.*,
@@ -35,8 +49,7 @@ class customerModel
 
             FROM customer c
 
-            WHERE c.country_code = '+66'
-            AND c.is_creator = 1;
+            WHERE c.is_creator = 1;
             `);
         return rows;
     }

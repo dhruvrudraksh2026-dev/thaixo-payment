@@ -240,6 +240,11 @@ class customerWithdrawalsController
                 return res.json(Response.failure("Withdrawals By Customer Id Not Found"));
             }
 
+            for (const withdrawal of withdrawals)
+            {
+                withdrawal.created_at = formatDateTimeByTimezone(withdrawal.created_at, "en-GB", "Asia/Bangkok");
+            }
+
             return res.json(Response.success("Withdrawals By Customer Id Fetched Successfully", withdrawals));
         }
         catch (error)

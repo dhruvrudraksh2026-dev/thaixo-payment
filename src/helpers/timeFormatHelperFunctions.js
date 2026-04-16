@@ -55,20 +55,18 @@ export const formatTransactionTime = (timestamp, minutes, timezone = "Asia/Bangk
 //     };
 // };
 
-export const formatDateTimeByTimezone = (timestamp, format = "en-GB", timezone = "Asia/Bangkok") =>
+export const formatDateTimeByTimezone = (timestamp, locale = "en-GB", timezone = "Asia/Bangkok") =>
 {
-    const date = new Date(timestamp);
-
-    return new Intl.DateTimeFormat(format, {
+    return new Intl.DateTimeFormat(locale, {
         timeZone: timezone,
         day: "2-digit",
-        month: "short",  // Gives "Apr" instead of "04"
+        month: "short",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
         hour12: true
-    }).format(date).replace(/\//g, ' '); // Replaces default slashes with spaces
+    }).format(new Date(timestamp));
 };
 
 export const getISODateByTimezone = (timestamp, timezone = "Asia/Bangkok") =>
