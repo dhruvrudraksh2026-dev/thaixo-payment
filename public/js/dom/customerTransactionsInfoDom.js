@@ -2,7 +2,6 @@
 // ====================================================================
 export const renderCustomerTransactions = (transactions, tableBody) =>
 {
-    console.log("transactions", transactions);
     tableBody.empty();
     transactions.forEach((transaction, index) =>
     {

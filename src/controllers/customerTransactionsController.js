@@ -1,6 +1,6 @@
 import { datetimeConverter } from "../helpers/helper.js";
 import Response from "../helpers/response.js";
-import { formatMinutesToClock } from "../helpers/timeFormatHelperFunctions.js";
+import { formatDateTimeByTimezone, formatMinutesToClock } from "../helpers/timeFormatHelperFunctions.js";
 import customerTransactionsModel from "../models/customerTransactionsModel.js";
 
 class customerTransactionsController
@@ -21,14 +21,11 @@ class customerTransactionsController
                 return res.json(Response.failure("Customer Transactions Id Not Found"));
             }
             const customer_transactions = await customerTransactionsModel.getAllCustomerTransactionsById(id);
-            if (!customer_transactions)
-            {
-                return res.json(Response.failure("Customer Transactions Not Found"));
-            }
 
             customer_transactions.forEach(transaction =>
             {
                 transaction.formatted_time = formatMinutesToClock(transaction.minutes);
+                transaction.created_at = formatDateTimeByTimezone(transaction.created_at, "en-GB", "Asia/Bangkok");
             });
 
             return res.json(Response.success("Customer Transactions Fetched Successfully", customer_transactions));
@@ -70,14 +67,11 @@ class customerTransactionsController
             data.id = id;
 
             const customer_transactions = await customerTransactionsModel.getAllCustomerTransactionsByIdAndDateRange(data);
-            if (!customer_transactions)
-            {
-                return res.json(Response.failure("Customer Transactions Not Found"));
-            }
 
             customer_transactions.forEach(transaction =>
             {
                 transaction.formatted_time = formatMinutesToClock(transaction.minutes);
+                transaction.created_at = formatDateTimeByTimezone(transaction.created_at, "en-GB", "Asia/Bangkok");
             });
 
             return res.json(Response.success(`Customer Transactions Between ${data.startDate} To ${data.endDate} Fetched Successfully`, customer_transactions));

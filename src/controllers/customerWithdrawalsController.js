@@ -129,10 +129,6 @@ class customerWithdrawalsController
         try
         {
             const pendingWithdrawals = await customerWithdrawalsModel.getAllPendingCustomerWithdrawals();
-            if (!pendingWithdrawals)
-            {
-                return res.json(Response.failure("Pending Withdrawals Not Found"));
-            }
 
             for (const withdrawal of pendingWithdrawals)
             {
@@ -164,9 +160,10 @@ class customerWithdrawalsController
             }
 
             const pendingWithdrawals = await customerWithdrawalsModel.getAllPendingAgencyCustomerWithdrawalsByAgencyId(agencyId);
-            if (!pendingWithdrawals)
+
+            for (const withdrawal of pendingWithdrawals)
             {
-                return res.json(Response.failure("Pending Withdrawals Not Found"));
+                withdrawal.created_at = formatDateTimeByTimezone(withdrawal.created_at, "en-GB", "Asia/Bangkok");
             }
 
             return res.json(Response.success("Pending Withdrawals Fetched Successfully", pendingWithdrawals));
@@ -209,6 +206,8 @@ class customerWithdrawalsController
             {
                 return res.json(Response.failure("Withdrawal Not Found"));
             }
+
+            withdrawal.created_at = formatDateTimeByTimezone(withdrawal.created_at, "en-GB", "Asia/Bangkok");
 
             return res.json(Response.success("Withdrawal Fetched Successfully", withdrawal));
         }
@@ -277,9 +276,10 @@ class customerWithdrawalsController
             }
 
             const withdrawals = await customerWithdrawalsModel.getAllCustomerWithdrawalsByDateRange(data);
-            if (!withdrawals)
+
+            for (const withdrawal of withdrawals)
             {
-                return res.json(Response.failure("Withdrawals By Date Range Not Found"));
+                withdrawal.created_at = formatDateTimeByTimezone(withdrawal.created_at, "en-GB", "Asia/Bangkok");
             }
 
             return res.json(Response.success(`Withdrawals Between ${data.startDate} To ${data.endDate} Fetched Successfully`, withdrawals));
@@ -359,9 +359,10 @@ class customerWithdrawalsController
             data.customerId = id;
 
             const withdrawals = await customerWithdrawalsModel.getCustomerWithdrawalsByDateRangeByCustomerId(data);
-            if (!withdrawals)
+
+            for (const withdrawal of withdrawals)
             {
-                return res.json(Response.failure("Withdrawals By Date Range Not Found"));
+                withdrawal.created_at = formatDateTimeByTimezone(withdrawal.created_at, "en-GB", "Asia/Bangkok");
             }
 
             return res.json(Response.success(`Withdrawals Between ${data.startDate} To ${data.endDate} Fetched Successfully`, withdrawals));
