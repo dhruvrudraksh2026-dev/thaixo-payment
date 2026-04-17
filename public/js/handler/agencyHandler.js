@@ -3,7 +3,7 @@ import { getAgencyCustomers } from "../api/customerAgencyApi.js";
 import { getAllPendingAgencyCustomerWithdrawals, getCustomerWithdrawalsById, editCustomerWithdrawal, updateSelectedCustomerWithdrawalStatus } from "../api/customerWithdrawalsApi.js";
 import { renderAgencies, addAgencyTableRow, editDataTableRow, renderAgencyInfo, renderAgencyCustomers } from "../dom/agencyDom.js";
 import { renderCustomerWithdrawals, createKVRow, resetForm, editDataTableRowStatus, editDataTableRow as editWithdrawalDataTableRow } from "../dom/customerWithdrawalsDom.js";
-import { handleCopyWithdrawalBtnClick } from "./customerWithdrawalsHandler.js";
+import { handleCopyWithdrawalBtnClick, PREDEFINED_REJECTION_NOTES } from "./customerWithdrawalsHandler.js";
 import { checkAndExecute, formatExportData } from "../utils/helper.js";
 
 let dataTable;
@@ -157,11 +157,30 @@ export const setupAgencyInfoHandlers = () =>
         if ($(this).val() === "REJECTED")
         {
             $("#editCancelNoteContainer").removeClass("d-none");
-            $("#editCancelNote").prop("required", true);
+            $("#editCancelNoteSelect").prop("required", true);
+            if (!$("#editCancelNoteSelect").val())
+            {
+                $("#editCancelNoteSelect").prop("selectedIndex", 1).trigger("change");
+            } else if ($("#editCancelNoteSelect").val() === "Other")
+            {
+                $("#editCancelNote").prop("required", true);
+            }
         } else
         {
             $("#editCancelNoteContainer").addClass("d-none");
+            $("#editCancelNoteSelect").prop("required", false);
             $("#editCancelNote").prop("required", false);
+        }
+    });
+
+    $(document).on("change", "#editCancelNoteSelect", function ()
+    {
+        if ($(this).val() === "Other")
+        {
+            $("#editCancelNote").removeClass("d-none").prop("required", true).val("").focus();
+        } else
+        {
+            $("#editCancelNote").addClass("d-none").prop("required", false).val($(this).val());
         }
     });
 
@@ -170,18 +189,39 @@ export const setupAgencyInfoHandlers = () =>
         if ($(this).val() === "REJECTED")
         {
             $("#editBulkCancelNoteContainer").removeClass("d-none");
-            $("#editBulkCancelNote").prop("required", true);
+            $("#editBulkCancelNoteSelect").prop("required", true);
+            if (!$("#editBulkCancelNoteSelect").val())
+            {
+                $("#editBulkCancelNoteSelect").prop("selectedIndex", 1).trigger("change");
+            } else if ($("#editBulkCancelNoteSelect").val() === "Other")
+            {
+                $("#editBulkCancelNote").prop("required", true);
+            }
         } else
         {
             $("#editBulkCancelNoteContainer").addClass("d-none");
+            $("#editBulkCancelNoteSelect").prop("required", false);
             $("#editBulkCancelNote").prop("required", false);
+        }
+    });
+
+    $(document).on("change", "#editBulkCancelNoteSelect", function ()
+    {
+        if ($(this).val() === "Other")
+        {
+            $("#editBulkCancelNote").removeClass("d-none").prop("required", true).val("").focus();
+        } else
+        {
+            $("#editBulkCancelNote").addClass("d-none").prop("required", false).val($(this).val());
         }
     });
 
     $("#editModal, #editWithdrawalsStatusModal").on("hidden.bs.modal", function ()
     {
         $("#editCancelNoteContainer, #editBulkCancelNoteContainer").addClass("d-none");
-        $("#editCancelNote, #editBulkCancelNote").prop("required", false);
+        $("#editCancelNoteSelect, #editBulkCancelNoteSelect, #editCancelNote, #editBulkCancelNote").prop("required", false);
+        $("#editCancelNoteSelect, #editBulkCancelNoteSelect").val("");
+        $("#editCancelNote, #editBulkCancelNote").addClass("d-none").val("");
     });
 }
 
@@ -415,6 +455,22 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         $("#editWithdrawalAmount").val(data.withdrawal_amount);
         $("#editWithdrawalStatus").val(data.status).trigger("change");
         $("#editCancelNote").val(data.note || "");
+        if (data.note)
+        {
+            if (PREDEFINED_REJECTION_NOTES.includes(data.note))
+            {
+                $("#editCancelNoteSelect").val(data.note);
+                $("#editCancelNote").addClass("d-none");
+            } else
+            {
+                $("#editCancelNoteSelect").val("Other");
+                $("#editCancelNote").removeClass("d-none");
+            }
+        } else
+        {
+            $("#editCancelNoteSelect").val("");
+            $("#editCancelNote").addClass("d-none");
+        }
 
         // Clearing old KV rows
         const $container = $("#kv-edit-container");

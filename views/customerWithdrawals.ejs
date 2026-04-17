@@ -267,7 +267,7 @@
                                             <div class="col-12">
                                                 <label class="form-label">Withdrawal Amount *</label>
                                                 <input type="number" id="editWithdrawalAmount" name="withdrawalAmount"
-                                                    class="form-control" min="1" step="any" required>
+                                                    class="form-control" step="any" required>
                                             </div>
 
                                             <div class="col-12">
@@ -298,10 +298,17 @@
                                             </div>
 
                                             <div class="col-12 d-none" id="editCancelNoteContainer">
-                                                <label class="form-label fw-semibold" for="editCancelNote">
+                                                <label class="form-label fw-semibold" for="editCancelNoteSelect">
                                                     Cancel Note <span class="text-danger">*</span>
                                                 </label>
-                                                <textarea class="form-control shadow-sm" name="note" id="editCancelNote"
+                                                <select class="form-select shadow-sm mb-2" id="editCancelNoteSelect">
+                                                    <option value="" disabled selected>Select Rejection Reason</option>
+                                                    <option value="Incorrect bank account details">Incorrect bank account details</option>
+                                                    <option value="Name mismatch with bank account">Name mismatch with bank account</option>
+                                                    <option value="Suspicious activity">Suspicious activity</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                                <textarea class="form-control shadow-sm d-none" name="note" id="editCancelNote"
                                                     rows="3" placeholder="Enter reason for cancellation..."></textarea>
                                             </div>
 
@@ -346,11 +353,18 @@
                                             </div>
 
                                             <div class="mb-4 d-none" id="editBulkCancelNoteContainer">
-                                                <label class="form-label fs-6 text-dark mb-2" for="editBulkCancelNote">
+                                                <label class="form-label fs-6 text-dark mb-2" for="editBulkCancelNoteSelect">
                                                     Cancel Note <span class="text-danger">*</span>
                                                 </label>
+                                                <select class="form-select form-select-lg shadow-sm border-primary-subtle mb-2" id="editBulkCancelNoteSelect">
+                                                    <option value="" disabled selected>Select Rejection Reason</option>
+                                                    <option value="Incorrect bank account details">Incorrect bank account details</option>
+                                                    <option value="Name mismatch with bank account">Name mismatch with bank account</option>
+                                                    <option value="Suspicious activity">Suspicious activity</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                                 <textarea
-                                                    class="form-control form-control-lg shadow-sm border-primary-subtle"
+                                                    class="form-control form-control-lg shadow-sm border-primary-subtle d-none"
                                                     name="note" id="editBulkCancelNote" rows="3"
                                                     placeholder="Enter reason for cancellation..."></textarea>
                                             </div>
