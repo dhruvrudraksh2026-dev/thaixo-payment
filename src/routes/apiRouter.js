@@ -36,6 +36,7 @@ router.get("/customer/:id", customerController.getCustomerById);
 // Customer Legal Details Verification
 // =============================================================================================================================
 router.patch("/customer/legal-details/approve/:id", customerController.verifyCustomerLegalDetailsById);
+router.patch("/customer/legal-details/remove/:id", customerController.removeCustomerLegalDetailsById);
 router.patch("/customer/legal-details/reject/:id", customerController.unverifyCustomerLegalDetailsById);
 // =============================================================================================================================
 

@@ -1,4 +1,4 @@
-import { getCustomerById, unverifyCustomerLegalDetailsById, verifyCustomerLegalDetailsById } from "../api/customerApi.js";
+import { getCustomerById, removeCustomerLegalDetailsById, unverifyCustomerLegalDetailsById, verifyCustomerLegalDetailsById } from "../api/customerApi.js";
 import { handlerCustomerLegalDetailsVerificationStatusUpdate, renderCustomerInfo } from "../dom/customerDom.js";
 
 import { toggleCreatorById, updateGeneratedOtpById, getCustomerEarningsTotalAmountByDateRange, getCustomerEarningsTotalAmountById, getCustomerTransactionMinutesById, getCustomerTransactionsByIdAndDateRange } from "../api/customerTransactionsInfoAPI.js";
@@ -71,6 +71,7 @@ export const setupTransactionsViewHandler = () =>
 
     // (6.) For Verifying Legal Details
     $(document).on("click", "#approveCustomerLegalDetailsBtn", handleApproveLegalDetailsVerificationBtnClick);
+    $(document).on("click", "#removeCustomerLegalDetailsBtn", handleRemoveLegalDetailsVerificationBtnClick);
     $(document).on("click", "#rejectCustomerLegalDetailsBtn", handleRejectLegalDetailsVerificationBtnClick);
 
     // Cancel Note Logic
@@ -80,9 +81,11 @@ export const setupTransactionsViewHandler = () =>
         {
             $("#addCancelNoteContainer").removeClass("d-none");
             $("#addCancelNoteSelect").prop("required", true);
-            if (!$("#addCancelNoteSelect").val()) {
+            if (!$("#addCancelNoteSelect").val())
+            {
                 $("#addCancelNoteSelect").prop("selectedIndex", 1).trigger("change");
-            } else if ($("#addCancelNoteSelect").val() === "Other") {
+            } else if ($("#addCancelNoteSelect").val() === "Other")
+            {
                 $("#addCancelNote").prop("required", true);
             }
         } else
@@ -93,10 +96,13 @@ export const setupTransactionsViewHandler = () =>
         }
     });
 
-    $(document).on("change", "#addCancelNoteSelect", function () {
-        if ($(this).val() === "Other") {
+    $(document).on("change", "#addCancelNoteSelect", function ()
+    {
+        if ($(this).val() === "Other")
+        {
             $("#addCancelNote").removeClass("d-none").prop("required", true).val("").focus();
-        } else {
+        } else
+        {
             $("#addCancelNote").addClass("d-none").prop("required", false).val($(this).val());
         }
     });
@@ -107,9 +113,11 @@ export const setupTransactionsViewHandler = () =>
         {
             $("#editCancelNoteContainer").removeClass("d-none");
             $("#editCancelNoteSelect").prop("required", true);
-            if (!$("#editCancelNoteSelect").val()) {
+            if (!$("#editCancelNoteSelect").val())
+            {
                 $("#editCancelNoteSelect").prop("selectedIndex", 1).trigger("change");
-            } else if ($("#editCancelNoteSelect").val() === "Other") {
+            } else if ($("#editCancelNoteSelect").val() === "Other")
+            {
                 $("#editCancelNote").prop("required", true);
             }
         } else
@@ -120,10 +128,13 @@ export const setupTransactionsViewHandler = () =>
         }
     });
 
-    $(document).on("change", "#editCancelNoteSelect", function () {
-        if ($(this).val() === "Other") {
+    $(document).on("change", "#editCancelNoteSelect", function ()
+    {
+        if ($(this).val() === "Other")
+        {
             $("#editCancelNote").removeClass("d-none").prop("required", true).val("").focus();
-        } else {
+        } else
+        {
             $("#editCancelNote").addClass("d-none").prop("required", false).val($(this).val());
         }
     });
@@ -413,15 +424,19 @@ const handleEditCustomerWithdrawalBtnClick = async (e) =>
         $("#editWithdrawalAmount").val(data.withdrawal_amount);
         $("#editWithdrawalStatus").val(data.status).trigger("change");
         $("#editCancelNote").val(data.note || "");
-        if (data.note) {
-            if (PREDEFINED_REJECTION_NOTES.includes(data.note)) {
+        if (data.note)
+        {
+            if (PREDEFINED_REJECTION_NOTES.includes(data.note))
+            {
                 $("#editCancelNoteSelect").val(data.note);
                 $("#editCancelNote").addClass("d-none");
-            } else {
+            } else
+            {
                 $("#editCancelNoteSelect").val("Other");
                 $("#editCancelNote").removeClass("d-none");
             }
-        } else {
+        } else
+        {
             $("#editCancelNoteSelect").val("");
             $("#editCancelNote").addClass("d-none");
         }
@@ -525,6 +540,22 @@ const handleApproveLegalDetailsVerificationBtnClick = async (e) =>
     checkAndExecute(response, () => 
     {
         handlerCustomerLegalDetailsVerificationStatusUpdate(true);
+    });
+}
+
+const handleRemoveLegalDetailsVerificationBtnClick = async (e) => 
+{
+    const id = $(e.currentTarget).data("id");
+
+    if (!confirm("Are you sure you want to remove this legal details verification?"))
+    {
+        return;
+    }
+
+    const response = await removeCustomerLegalDetailsById(id);
+    checkAndExecute(response, () => 
+    {
+        handlerCustomerLegalDetailsVerificationStatusUpdate(false, true);
     });
 }
 

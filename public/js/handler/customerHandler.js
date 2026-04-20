@@ -46,7 +46,25 @@ const fetchAndRenderNonCreatorThaiCustomers = () =>
     getNonCreatorThaiCustomers().then(response => checkAndExecute(response, () => 
     {
         renderCustomers(response.data, $("#customer-table-body"));
-        dataTable = $("#customer-table").DataTable();
+        dataTable = $("#customer-table").DataTable(
+            {
+                columnDefs: [
+                    {
+                        targets: 0,
+                        type: "num",
+                        render: function (data, type, row)
+                        {
+                            if (type === 'sort' || type === 'type')
+                            {
+                                return parseInt(data.replace(/\D/g, ''), 10) || 0;
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                order: [[0, "desc"]],
+            }
+        );
     })
     );
 };
@@ -72,7 +90,25 @@ const fetchAndRenderCreatorThaiCustomers = () =>
     getCreatorThaiCustomers().then(response => checkAndExecute(response, () => 
     {
         renderCustomers(response.data, $("#customer-table-body"));
-        dataTable = $("#customer-table").DataTable();
+        dataTable = $("#customer-table").DataTable(
+            {
+                columnDefs: [
+                    {
+                        targets: 0,
+                        type: "num",
+                        render: function (data, type, row)
+                        {
+                            if (type === 'sort' || type === 'type')
+                            {
+                                return parseInt(data.replace(/\D/g, ''), 10) || 0;
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                order: [[0, "desc"]],
+            }
+        );
     })
     );
 };

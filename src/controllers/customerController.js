@@ -229,6 +229,60 @@ class customerController
         }
     }
 
+    static removeCustomerLegalDetailsById = async (req, res, next) =>
+    {
+        const connection = await db.getConnection();
+        await connection.beginTransaction();
+
+        try
+        {
+            const id = req.params.id;
+            if (!id)
+            {
+                await connection.rollback();
+                return res.json(Response.failure("Customer Id Not Found"));
+            }
+
+            const customer = await customerModel.getCustomerById(id, connection);
+            if (!customer)
+            {
+                await connection.rollback();
+                return res.json(Response.failure("Customer Not Found"));
+            }
+
+            const updatedCustomer = await customerModel.removeCustomerLegalDetailsById(id, connection);
+            if (!updatedCustomer)
+            {
+                await connection.rollback();
+                return res.json(Response.failure("Failed To Remove Customer Legal Details"));
+            }
+
+            // Web Notifications
+            const webNotification = await webNotificationsModel.createWebNotification({
+                customer_id: id,
+                type: "LEGAL_DETAILS_REMOVED",
+                title: "Legal Details Removed",
+                body: `Hi ${customer.name}, your legal details has been successfully removed.`
+            }, connection);
+
+            if (!webNotification)
+            {
+                await connection.rollback();
+                return res.json(Response.failure("Failed To Create Web Notification"));
+            }
+
+            await connection.commit();
+            return res.json(Response.success("Customer Profile Legal Details Removed Successfully", updatedCustomer));
+        } catch (error)
+        {
+            await connection.rollback();
+            next(error);
+        } finally
+        {
+            connection.release();
+        }
+    }
+
     // Reject Customer's Legal Details Verification
     static unverifyCustomerLegalDetailsById = async (req, res, next) =>
     {

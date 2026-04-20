@@ -222,6 +222,13 @@ export const renderCustomerInfo = (data, container) =>
                                 Approve Customer Legal Details Verification
                             </button>
 
+                            <!-- Remove Customer Legal Details Verification Request Button -->
+                            <button type="button" class="btn btn-warning me-2 text-truncate" data-id="${id}" id="removeCustomerLegalDetailsBtn">
+                                <span class="spinner-border spinner-border-sm d-none" id="removeCustomerLegalDetailsSpinner"></span>
+                                <i class="fa-regular fa-trash-can"></i>
+                                Remove Customer Legal Details
+                            </button>
+
                             <!-- Reject Customer Legal Details Verification Request Button -->
                             <button type="button" class="btn btn-danger" data-id="${id}" id="rejectCustomerLegalDetailsBtn">
                                 <span class="spinner-border spinner-border-sm d-none" id="rejectCustomerLegalDetailsSpinner"></span>
@@ -241,10 +248,10 @@ export const renderCustomerInfo = (data, container) =>
     renderLegalDetails("customerLegalDetailsJson", customerLegalDetailsJson);
 };
 
-export const handlerCustomerLegalDetailsVerificationStatusUpdate = (status) =>
+export const handlerCustomerLegalDetailsVerificationStatusUpdate = (status, isRemove = false) =>
 {
-    updateAndRenderCustomerLegalDetailsVerificationStatus(status ? "APPROVED" : "REJECTED");
-    updateAndRenderIsCustomerLegalDetailsVerified(status ? true : false);
+    updateAndRenderCustomerLegalDetailsVerificationStatus(isRemove ? "NOT_STARTED" : (status) ? "APPROVED" : "REJECTED");
+    updateAndRenderIsCustomerLegalDetailsVerified(isRemove ? false : (status ? true : false));
     if (!status)
     {
         renderCustomerLegalPhotosDeletion();

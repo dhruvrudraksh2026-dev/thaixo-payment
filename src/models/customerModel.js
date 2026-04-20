@@ -49,7 +49,8 @@ class customerModel
 
             FROM customer c
 
-            WHERE c.is_creator = 1;
+            WHERE c.is_creator = 1
+            ORDER BY c.id DESC;
             `);
         return rows;
     }
@@ -69,7 +70,8 @@ class customerModel
             FROM customer c 
 
             WHERE c.country_code = '+66'
-            AND c.is_creator = 0;
+            AND c.is_creator = 0
+            ORDER BY c.id DESC;
             `);
         return rows;
     }
@@ -149,6 +151,16 @@ class customerModel
     static verifyCustomerLegalDetailsById = async (id, transaction = db) =>
     {
         const [result] = await transaction.query(`UPDATE customer SET is_legal_details_verified = true , legal_details_verification_status = 'APPROVED'  WHERE id = ?`, [id]);
+        if (result.affectedRows > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    static removeCustomerLegalDetailsById = async (id, transaction = db) =>
+    {
+        const [result] = await transaction.query(`UPDATE customer SET customer_legal_details = '{}', legal_details_verification_status = 'NOTSTARTED', is_legal_details_verified = false WHERE id = ?`, [id]);
         if (result.affectedRows > 0)
         {
             return true;

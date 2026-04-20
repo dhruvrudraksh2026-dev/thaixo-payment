@@ -73,6 +73,19 @@ export const verifyCustomerLegalDetailsById = async (id) =>
         });
 };
 
+export const removeCustomerLegalDetailsById = async (id) => 
+{
+    return await $.ajax(
+        {
+            url: `/api/customer/legal-details/remove/${id}`,
+            method: "PATCH",
+            headers:
+            {
+                Authorization: Cookies.get("token")
+            }
+        });
+};
+
 export const unverifyCustomerLegalDetailsById = async (id) => 
 {
     return await $.ajax(
