@@ -78,37 +78,31 @@
 
 <!-- Sidebar Admin Panel Logo Changes -->
 <script>
-    const desktopLogo = "/assets/images/logo/ThaiXoAdminLogo.png";
+    const desktopLogo = "/assets/images/logo/ThaiXo_Favicon.png";
+    // const desktopLogo = "/assets/images/logo/ThaiXoAdminLogo.png";
     const mobileLogo = "/assets/images/logo/ThaiXo_Favicon.png";
 
-    const desktopWidth = "180px";
+    // const desktopWidth = "180px";
+    const desktopWidth = "90px";
     const mobileWidth = "47px";
 
     function updateLogo()
     {
         if ($(window).width() < 768)
         {
-            // On mobile, sidebar is off-canvas so show full logo but slightly smaller to avoid overflow
-            $(".app-logo .logo img").attr("style", `width: ${mobileWidth} !important`);
+            // On mobile, sidebar is off-canvas so show full logo
+            $(".app-logo .logo img").css("cssText", `width: ${desktopWidth} !important; object-fit: contain;`);
             $(".app-logo .logo img").attr("src", desktopLogo);
         }
-        if ($("nav").hasClass("semi-nav"))
+        else if ($("nav").hasClass("semi-nav"))
         {
-            if ($(window).width() < 768)
-            {
-                // Collapsed sidebar
-                $(".app-logo .logo img").attr("style", `width: ${desktopWidth} !important`);
-                $(".app-logo .logo img").attr("src", desktopLogo);
-            } else
-            {
-                // Collapsed sidebar
-                $(".app-logo .logo img").attr("style", `width: ${mobileWidth} !important`);
-                $(".app-logo .logo img").attr("src", mobileLogo);
-            }
+            // Collapsed sidebar
+            $(".app-logo .logo img").css("cssText", `width: ${mobileWidth} !important; object-fit: contain;`);
+            $(".app-logo .logo img").attr("src", mobileLogo);
         } else
         {
             // Full sidebar
-            $(".app-logo .logo img").attr("style", `width: ${desktopWidth} !important`);
+            $(".app-logo .logo img").css("cssText", `width: ${desktopWidth} !important; object-fit: contain;`);
             $(".app-logo .logo img").attr("src", desktopLogo);
         }
     }
@@ -131,7 +125,7 @@
     {
         if ($(this).hasClass("semi-nav") && $(window).width() >= 768)
         {
-            $(".app-logo .logo img").attr("style", `width: ${desktopWidth} !important`);
+            $(".app-logo .logo img").css("cssText", `width: ${desktopWidth} !important; object-fit: contain;`);
             $(".app-logo .logo img").attr("src", desktopLogo);
         }
     });
@@ -140,7 +134,7 @@
     {
         if ($(this).hasClass("semi-nav") && $(window).width() >= 768)
         {
-            $(".app-logo .logo img").attr("style", `width: ${mobileWidth} !important`);
+            $(".app-logo .logo img").css("cssText", `width: ${mobileWidth} !important; object-fit: contain;`);
             $(".app-logo .logo img").attr("src", mobileLogo);
         }
     });
