@@ -257,6 +257,15 @@ class customerController
                 return res.json(Response.failure("Failed To Remove Customer Legal Details"));
             }
 
+            // Calling API To Delete Customer Legal Photos
+            const deleteCustomerLegalPhotosResponse = await axios.delete(`${process.env.BASE_IMAGE_URL}/api/customer/legal-photos/${id}`);
+
+            if (!deleteCustomerLegalPhotosResponse?.data?.success)
+            {
+                await connection.rollback();
+                return res.json(Response.failure("Failed To Delete Customer Legal Photos"));
+            }
+
             // Web Notifications
             const webNotification = await webNotificationsModel.createWebNotification({
                 customer_id: id,
