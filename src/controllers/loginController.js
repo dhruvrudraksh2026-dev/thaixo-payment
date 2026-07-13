@@ -4,8 +4,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt'
 class LoginController 
 {
-    static validEmail = "admin@gmail.com";
-    static validPassword = "$2a$05$l1PjOpxZL7B3I2d6RVKGo.z57PTunx8SGIpbK/DQmkcxlvIYPTtS2";
+    static validEmail = "thaixo@payment";
+    // static validEmail = "admin@gmail.com";
+    // static validPassword = "$2a$05$l1PjOpxZL7B3I2d6RVKGo.z57PTunx8SGIpbK/DQmkcxlvIYPTtS2"; // 1234
+    static validPassword = "$2b$10$AaptxJ6LPErL76fI99pg3e6zbDPDQsG8ZC4cOHk6ZtKUvlN6bKiWK"; //RS@Pay#Thai1015
 
     static login = async (req, res, next) =>
     {
